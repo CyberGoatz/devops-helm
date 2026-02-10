@@ -2,7 +2,7 @@ replicasCount: 1
 
 image:
   url: ghcr.io/cyberrangecz/frontend-platform/frontend-platform
-  tag: v2.5.3
+  tag: v2.5.5
 
 mounts:
   config:
