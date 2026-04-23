@@ -51,7 +51,7 @@ spec:
             {{- if and (eq .protocol "TCP") (.probe) }}
             tcpSocket:
               port: {{ .port }}
-            initialDelaySeconds: 5
+            initialDelaySeconds: 180
             periodSeconds: 10
             {{- end }}
             {{- end }}
