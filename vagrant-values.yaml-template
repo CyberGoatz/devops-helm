@@ -45,12 +45,27 @@ sandbox:
   djangoSecretKey:
   headHost: 172.19.0.22
   stackNamePrefix: default0
+  image:
+    # Override these to run a sandbox-service image built inside the Vagrant VM.
+    # Example:
+    # url: sandbox-service
+    # tag: local
+    # pullPolicy: Never
+    url: ghcr.io/cyberrangecz/backend-sandbox-service/sandbox-service
+    tag: v1.6.1
   dnsNameServers:
     - 1.1.1.1
     - 1.0.0.1
   osAuthUrl:
   osApplicationCredentialId:
   osApplicationCredentialSecret:
+  azure:
+    subscriptionId:
+    tenantId:
+    clientId:
+    clientSecret:
+    resourceGroupName:
+    location:
   proxyHost:
   proxyUser:
   proxyKey:

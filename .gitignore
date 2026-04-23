@@ -3,3 +3,5 @@
 vagrant-oidc.yaml
 vagrant-values.yaml
 .idea
+.serena
+.codex

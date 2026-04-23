@@ -65,8 +65,8 @@ defaultWorkerCount: 4
 sandboxBuildTimeout: 7200
 sandboxDeleteTimeout: 3600
 sandboxAnsibleTimeout: 7200
-manFlavor: standard.small
-manImage: ubuntu-noble-x86_64
+manFlavor: Standard_B2ats_v2
+manImage: Canonical:0001-com-ubuntu-server-jammy:22_04-lts-gen2:latest
 manUser: ubuntu
 sandboxManCidr:
 proxyHost:
@@ -107,5 +107,13 @@ aws:
   availabilityZone: eu-central-1a
   baseVpc: BaseNet
   baseSubnet: BaseSubnetA
+
+azure:
+  subscriptionId:
+  tenantId:
+  clientId:
+  clientSecret:
+  resourceGroupName:
+  location:
 
 keystoneCA:
