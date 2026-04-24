@@ -12,3 +12,10 @@ keycloakPassword:
 development: false
 
 realm: CRCZP
+
+realmConfig:
+  registrationAllowed: true
+  registrationEmailAsUsername: false
+  rememberMe: true
+  verifyEmail: false
+  resetPasswordAllowed: true

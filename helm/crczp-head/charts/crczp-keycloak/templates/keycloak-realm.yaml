@@ -9,6 +9,11 @@ spec:
     matchLabels:
       app: external-sso
   realm:
+    registrationAllowed: {{ .Values.realmConfig.registrationAllowed }}
+    registrationEmailAsUsername: {{ .Values.realmConfig.registrationEmailAsUsername }}
+    rememberMe: {{ .Values.realmConfig.rememberMe }}
+    verifyEmail: {{ .Values.realmConfig.verifyEmail }}
+    resetPasswordAllowed: {{ .Values.realmConfig.resetPasswordAllowed }}
     clientScopes:
       - name: email
         attributes:
