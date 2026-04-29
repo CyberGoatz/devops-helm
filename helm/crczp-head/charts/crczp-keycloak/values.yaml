@@ -5,9 +5,14 @@ db:
   username: keycloak
 
 grafanaClientSecret:
+cyberGoatzFrontendUrl: http://localhost:3000
 
 keycloakAdmin: admin
 keycloakPassword:
+realmSync:
+  enabled: true
+  image: quay.io/keycloak/keycloak:25.0.1
+  imagePullPolicy: IfNotPresent
 
 development: false
 
@@ -19,3 +24,29 @@ realmConfig:
   rememberMe: true
   verifyEmail: false
   resetPasswordAllowed: true
+  passwordPolicy:
+  smtp:
+    enabled: false
+    host:
+    port: 587
+    from:
+    fromDisplayName:
+    replyTo:
+    replyToDisplayName:
+    envelopeFrom:
+    ssl: false
+    starttls: true
+    auth: true
+    user:
+    password:
+  googleIdentityProvider:
+    enabled: false
+    alias: google
+    displayName: Google
+    trustEmail: true
+    storeToken: false
+    addReadTokenRoleOnCreate: false
+    firstBrokerLoginFlowAlias: first broker login
+    clientId:
+    clientSecret:
+    hostedDomain:

@@ -1,3 +1,4 @@
+{{- $cyberGoatzFrontendUrl := trimSuffix "/" (.Values.cyberGoatzFrontendUrl | default "http://localhost:3000") -}}
 apiVersion: legacy.k8s.keycloak.org/v1alpha1
 kind: KeycloakClient
 metadata:
@@ -11,7 +12,7 @@ spec:
   client:
     attributes:
       pkce.code.challenge.method: S256
-      post.logout.redirect.uris: "http://localhost:3000/login"
+      post.logout.redirect.uris: "{{ $cyberGoatzFrontendUrl }}/login"
     clientId: cyber-goatz
     clientAuthenticatorType: client-secret
     defaultClientScopes:
@@ -26,6 +27,7 @@ spec:
     protocol: openid-connect
     publicClient: false
     redirectUris:
-      - "http://localhost:3000/api/auth/callback/keycloak"
+      - "{{ $cyberGoatzFrontendUrl }}/api/auth/callback/keycloak"
+      - "{{ $cyberGoatzFrontendUrl }}/api/auth/callback/keycloak-register"
     secret: "cyber-goatz-client"
     standardFlowEnabled: true

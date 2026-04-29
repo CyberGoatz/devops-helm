@@ -35,8 +35,39 @@ global:
     password: password
 
 crczp-keycloak:
+  realmSync:
+    enabled: true
+  realmConfig:
+    passwordPolicy: "length(8) and digits(1) and upperCase(1) and specialChars(1)"
+    googleIdentityProvider:
+      enabled: false
+      alias: google
+      displayName: Google
+      trustEmail: true
+      storeToken: false
+      addReadTokenRoleOnCreate: false
+      firstBrokerLoginFlowAlias: first broker login
+      clientId:
+      clientSecret:
+      hostedDomain:
+    smtp:
+      enabled: false
+      host: smtp.resend.com
+      port: 587
+      from: no-reply@example.com
+      fromDisplayName: Cyber Goatz
+      replyTo: support@example.com
+      replyToDisplayName: Cyber Goatz Support
+      envelopeFrom: no-reply@example.com
+      ssl: false
+      starttls: true
+      auth: true
+      user: resend
+      password:
   keycloakPassword: password
   grafanaClientSecret: secret
+  # Override when Cyber Goatz is exposed on a public URL, e.g. https://your-frontend.ngrok-free.app
+  cyberGoatzFrontendUrl: http://localhost:3000
 
 crczp-guacamole:
   enabled: False
