@@ -18,12 +18,20 @@ development: false
 
 realm: CRCZP
 
+theme:
+  enabled: true
+  name: cyber-goatz
+  disableCache: true
+  writableDevMount: true
+
 realmConfig:
   registrationAllowed: true
   registrationEmailAsUsername: false
   rememberMe: true
   verifyEmail: false
   resetPasswordAllowed: true
+  termsAndConditions:
+    enabled: true
   passwordPolicy:
   smtp:
     enabled: false

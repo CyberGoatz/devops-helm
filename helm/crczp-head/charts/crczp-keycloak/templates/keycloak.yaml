@@ -46,3 +46,75 @@ spec:
       value: /keycloak
     - name: http-relative-path
       value: /keycloak
+    {{- if and .Values.theme.enabled .Values.theme.disableCache }}
+    - name: spi-theme--cache-themes
+      value: "false"
+    - name: spi-theme--cache-templates
+      value: "false"
+    - name: spi-theme--static-max-age
+      value: "-1"
+    {{- end }}
+  {{- if .Values.theme.enabled }}
+  unsupported:
+    podTemplate:
+      spec:
+        {{- if .Values.theme.writableDevMount }}
+        initContainers:
+          - name: copy-{{ .Values.theme.name }}-theme
+            image: {{ .Values.realmSync.image }}
+            imagePullPolicy: {{ .Values.realmSync.imagePullPolicy }}
+            command:
+              - /bin/sh
+              - -ec
+              - |
+                rm -rf /theme-work/{{ .Values.theme.name }}/*
+                cp -R /theme-source/. /theme-work/{{ .Values.theme.name }}/
+            volumeMounts:
+              - name: {{ .Values.theme.name }}-theme-source
+                mountPath: /theme-source
+                readOnly: true
+              - name: {{ .Values.theme.name }}-theme-work
+                mountPath: /theme-work/{{ .Values.theme.name }}
+        {{- end }}
+        containers:
+          - name: keycloak
+            volumeMounts:
+              {{- if .Values.theme.writableDevMount }}
+              - name: {{ .Values.theme.name }}-theme-work
+                mountPath: /opt/keycloak/themes/{{ .Values.theme.name }}
+              {{- else }}
+              - name: {{ .Values.theme.name }}-theme
+                mountPath: /opt/keycloak/themes/{{ .Values.theme.name }}
+                readOnly: true
+              {{- end }}
+        volumes:
+          {{- if .Values.theme.writableDevMount }}
+          - name: {{ .Values.theme.name }}-theme-work
+            emptyDir: {}
+          - name: {{ .Values.theme.name }}-theme-source
+            configMap:
+              name: {{ .Values.name }}-theme-{{ .Values.theme.name }}
+              items:
+                - key: theme.properties
+                  path: login/theme.properties
+                {{ range $path, $_ := .Files.Glob (printf "files/keycloak-theme/%s/login/*.ftl" .Values.theme.name) }}
+                - key: {{ base $path }}
+                  path: login/{{ base $path }}
+                {{ end }}
+                - key: cyber-goatz.css
+                  path: login/resources/css/cyber-goatz.css
+          {{- else }}
+          - name: {{ .Values.theme.name }}-theme
+            configMap:
+              name: {{ .Values.name }}-theme-{{ .Values.theme.name }}
+              items:
+                - key: theme.properties
+                  path: login/theme.properties
+                {{ range $path, $_ := .Files.Glob (printf "files/keycloak-theme/%s/login/*.ftl" .Values.theme.name) }}
+                - key: {{ base $path }}
+                  path: login/{{ base $path }}
+                {{ end }}
+                - key: cyber-goatz.css
+                  path: login/resources/css/cyber-goatz.css
+          {{- end }}
+  {{- end }}

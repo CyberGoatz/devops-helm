@@ -21,8 +21,7 @@ spec:
     lastName: {{ .familyName }}
     email: {{ .email }}
     enabled: True
-    emailVerified: {{ hasKey . "emailVerified" | ternary .emailVerified true }}
-    id: {{ .email }}
+    emailVerified: {{ .emailVerified }}
     credentials:
       - type: "password"
         value: {{ .keycloakPassword }}

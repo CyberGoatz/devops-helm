@@ -14,6 +14,9 @@ spec:
     rememberMe: {{ .Values.realmConfig.rememberMe }}
     verifyEmail: {{ .Values.realmConfig.verifyEmail }}
     resetPasswordAllowed: {{ .Values.realmConfig.resetPasswordAllowed }}
+    {{- if .Values.theme.enabled }}
+    loginTheme: {{ .Values.theme.name | quote }}
+    {{- end }}
     {{- if .Values.realmConfig.passwordPolicy }}
     passwordPolicy: {{ .Values.realmConfig.passwordPolicy | quote }}
     {{- end }}

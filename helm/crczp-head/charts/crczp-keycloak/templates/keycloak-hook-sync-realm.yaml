@@ -41,6 +41,43 @@ spec:
             -s "verifyEmail=${VERIFY_EMAIL}" \
             -s "passwordPolicy=${PASSWORD_POLICY}"
 
+          if [ -n "${LOGIN_THEME}" ]; then
+            echo "Syncing login theme ${LOGIN_THEME}..."
+            THEME_SYNCED=false
+            for attempt in 1 2 3 4 5 6 7 8 9 10 11 12; do
+              if /opt/keycloak/bin/kcadm.sh update "realms/${REALM_NAME}" \
+                -s "loginTheme=${LOGIN_THEME}"; then
+                THEME_SYNCED=true
+                break
+              fi
+
+              echo "Login theme ${LOGIN_THEME} is not available yet; retrying (${attempt}/12)..."
+              sleep 5
+            done
+
+            if [ "${THEME_SYNCED}" != "true" ]; then
+              echo "WARNING: Login theme ${LOGIN_THEME} could not be applied during this hook run."
+              echo "WARNING: Keycloak may need to restart with the mounted theme before the realm can reference it."
+            fi
+          fi
+
+          if [ "${TERMS_AND_CONDITIONS_ENABLED}" = "true" ]; then
+            echo "Enabling Terms and Conditions required action..."
+            if /opt/keycloak/bin/kcadm.sh get "authentication/required-actions/TERMS_AND_CONDITIONS" -r "${REALM_NAME}" >/dev/null 2>&1; then
+              /opt/keycloak/bin/kcadm.sh update "authentication/required-actions/TERMS_AND_CONDITIONS" -r "${REALM_NAME}" \
+                -s enabled=true \
+                -s defaultAction=true
+            else
+              echo "WARNING: TERMS_AND_CONDITIONS required action was not found in this Keycloak realm."
+            fi
+          else
+            echo "Disabling Terms and Conditions required action..."
+            if /opt/keycloak/bin/kcadm.sh get "authentication/required-actions/TERMS_AND_CONDITIONS" -r "${REALM_NAME}" >/dev/null 2>&1; then
+              /opt/keycloak/bin/kcadm.sh update "authentication/required-actions/TERMS_AND_CONDITIONS" -r "${REALM_NAME}" \
+                -s defaultAction=false
+            fi
+          fi
+
           {{- if .Values.realmConfig.smtp.enabled }}
           /opt/keycloak/bin/kcadm.sh update "realms/${REALM_NAME}" \
             -s "smtpServer.host=${SMTP_HOST}" \
@@ -112,6 +149,10 @@ spec:
           value: {{ ternary "true" "false" .Values.realmConfig.verifyEmail | quote }}
         - name: PASSWORD_POLICY
           value: {{ .Values.realmConfig.passwordPolicy | default "" | quote }}
+        - name: LOGIN_THEME
+          value: {{ ternary .Values.theme.name "" .Values.theme.enabled | quote }}
+        - name: TERMS_AND_CONDITIONS_ENABLED
+          value: {{ ternary "true" "false" .Values.realmConfig.termsAndConditions.enabled | quote }}
         - name: SMTP_HOST
           value: {{ .Values.realmConfig.smtp.host | default "" | quote }}
         - name: SMTP_PORT
