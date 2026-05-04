@@ -12,7 +12,7 @@ spec:
   client:
     attributes:
       pkce.code.challenge.method: S256
-      post.logout.redirect.uris: "{{ $cyberGoatzFrontendUrl }}/login"
+      post.logout.redirect.uris: "{{ $cyberGoatzFrontendUrl }}/"
     clientId: cyber-goatz
     clientAuthenticatorType: client-secret
     defaultClientScopes:

@@ -259,6 +259,20 @@ input {
   margin-bottom: 30px;
 }
 
+@media (max-width: 1120px) {
+  .cg-auth-frame {
+    grid-template-columns: minmax(360px, 0.85fr) minmax(390px, 1fr);
+  }
+
+  .cg-visual-panel {
+    padding: 32px;
+  }
+
+  .cg-form-panel {
+    padding: 40px 36px;
+  }
+}
+
 .cg-form-heading .cg-eyebrow {
   color: var(--cg-blue-600);
 }
@@ -663,7 +677,7 @@ input {
   width: 100%;
 }
 
-.cg-form-shell form,
+.cg-form-shell form:not(.cg-form),
 .cg-form-shell .pf-v5-c-form,
 .cg-form-shell .pf-c-form {
   display: flex;
@@ -680,7 +694,7 @@ input {
   margin: 0;
 }
 
-.cg-form-shell label,
+.cg-form-shell form:not(.cg-form) label,
 .cg-form-shell .pf-v5-c-form__label,
 .cg-form-shell .pf-c-form__label {
   color: var(--cg-muted);
@@ -691,12 +705,12 @@ input {
   text-transform: uppercase;
 }
 
-.cg-form-shell input[type="text"],
-.cg-form-shell input[type="email"],
-.cg-form-shell input[type="password"],
-.cg-form-shell input[type="number"],
-.cg-form-shell select,
-.cg-form-shell textarea,
+.cg-form-shell form:not(.cg-form) input[type="text"],
+.cg-form-shell form:not(.cg-form) input[type="email"],
+.cg-form-shell form:not(.cg-form) input[type="password"],
+.cg-form-shell form:not(.cg-form) input[type="number"],
+.cg-form-shell form:not(.cg-form) select,
+.cg-form-shell form:not(.cg-form) textarea,
 .cg-form-shell .pf-v5-c-form-control,
 .cg-form-shell .pf-c-form-control {
   background: #fff;
@@ -710,12 +724,12 @@ input {
   width: 100%;
 }
 
-.cg-form-shell input[type="text"]:focus,
-.cg-form-shell input[type="email"]:focus,
-.cg-form-shell input[type="password"]:focus,
-.cg-form-shell input[type="number"]:focus,
-.cg-form-shell select:focus,
-.cg-form-shell textarea:focus,
+.cg-form-shell form:not(.cg-form) input[type="text"]:focus,
+.cg-form-shell form:not(.cg-form) input[type="email"]:focus,
+.cg-form-shell form:not(.cg-form) input[type="password"]:focus,
+.cg-form-shell form:not(.cg-form) input[type="number"]:focus,
+.cg-form-shell form:not(.cg-form) select:focus,
+.cg-form-shell form:not(.cg-form) textarea:focus,
 .cg-form-shell .pf-v5-c-form-control:focus,
 .cg-form-shell .pf-c-form-control:focus {
   border-color: var(--cg-blue-500);
@@ -727,8 +741,8 @@ input {
   accent-color: var(--cg-blue-600);
 }
 
-.cg-form-shell input[type="submit"],
-.cg-form-shell button[type="submit"],
+.cg-form-shell form:not(.cg-form) input[type="submit"],
+.cg-form-shell form:not(.cg-form) button[type="submit"],
 .cg-form-shell .pf-v5-c-button.pf-m-primary,
 .cg-form-shell .pf-c-button.pf-m-primary,
 .cg-form-shell #kc-login {
@@ -747,8 +761,8 @@ input {
   width: 100%;
 }
 
-.cg-form-shell input[type="submit"]:hover,
-.cg-form-shell button[type="submit"]:hover,
+.cg-form-shell form:not(.cg-form) input[type="submit"]:hover,
+.cg-form-shell form:not(.cg-form) button[type="submit"]:hover,
 .cg-form-shell .pf-v5-c-button.pf-m-primary:hover,
 .cg-form-shell .pf-c-button.pf-m-primary:hover,
 .cg-form-shell #kc-login:hover {
@@ -759,8 +773,8 @@ input {
 
 .cg-form-shell .pf-v5-c-button.pf-m-secondary,
 .cg-form-shell .pf-c-button.pf-m-secondary,
-.cg-form-shell button:not(.cg-password-toggle):not([type="submit"]),
-.cg-form-shell input[type="button"] {
+.cg-form-shell form:not(.cg-form) button:not(.cg-password-toggle):not([type="submit"]),
+.cg-form-shell form:not(.cg-form) input[type="button"] {
   background: #fff;
   border: 1px solid var(--cg-border);
   border-radius: 6px;
@@ -817,6 +831,21 @@ input {
   gap: 10px;
 }
 
+.cg-form-shell .cg-input-wrap input {
+  padding: 10px 12px 10px 52px !important;
+}
+
+.cg-form-shell .cg-input-wrap input[type="password"],
+.cg-form-shell .cg-input-wrap input[type="text"][name="password"],
+.cg-form-shell .cg-input-wrap input[type="text"][name="password-confirm"],
+.cg-form-shell .cg-input-wrap input[type="text"][name="password-new"] {
+  padding-right: 72px !important;
+}
+
+.cg-form-shell .cg-input-icon {
+  width: 52px;
+}
+
 @media (max-width: 980px) {
   .cg-auth-page {
     padding: 0;
@@ -835,14 +864,22 @@ input {
   }
 
   .cg-form-panel {
+    flex-direction: column;
+    justify-content: center;
     min-height: 100vh;
     padding: 32px 24px;
+    width: 100%;
+  }
+
+  .cg-form-shell {
+    max-width: 520px;
   }
 
   .cg-mobile-brand {
     display: flex;
     justify-content: center;
     margin-bottom: 30px;
+    width: 100%;
   }
 
   .cg-mobile-brand .cg-mark {
@@ -861,6 +898,10 @@ input {
 }
 
 @media (max-width: 560px) {
+  .cg-auth-frame {
+    min-width: 0;
+  }
+
   .cg-form-panel {
     padding: 28px 18px;
   }
@@ -869,7 +910,38 @@ input {
     font-size: 28px;
   }
 
+  .cg-form-heading p:not(.cg-eyebrow) {
+    font-size: 14px;
+  }
+
   .cg-field-grid {
     grid-template-columns: 1fr;
+  }
+
+  .cg-label-row {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 6px;
+  }
+
+  .cg-primary,
+  .cg-secondary,
+  .cg-social,
+  .cg-input-wrap input {
+    min-height: 46px;
+  }
+}
+
+@media (max-width: 380px) {
+  .cg-form-panel {
+    padding: 24px 14px;
+  }
+
+  .cg-form-heading h2 {
+    font-size: 25px;
+  }
+
+  .cg-mobile-brand span {
+    font-size: 20px;
   }
 }

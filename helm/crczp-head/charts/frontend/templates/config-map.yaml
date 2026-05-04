@@ -54,7 +54,7 @@ data:
               "redirectUri": "https://{{ $.Values.global.headHost }}",
               "scope": "openid email profile{{ if $element.refreshToken }} offline_access{{ end }}",
               "logoutUrl": "{{ $element.logoutUrl }}",
-              "postLogoutRedirectUri": "https://{{ $.Values.global.headHost }}/login",
+              "postLogoutRedirectUri": "https://{{ $.Values.global.headHost }}/",
               "silentRefreshRedirectUri": "https://{{ $.Values.global.headHost }}/silent-refresh.html",
               "clearHashAfterLogin": true,
               "strictDiscoveryDocumentValidation": false,
