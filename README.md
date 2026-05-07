@@ -2,6 +2,10 @@
 
 * tested on **Linux**
 
+## Architecture
+
+See [ARCHITECTURE.md](ARCHITECTURE.md) for the platform service architecture, runtime flows, ingress routes, data stores, identity model, and Helm hook behavior.
+
 ## Prerequisites (Vagrant)
 
 Install the following technology:
