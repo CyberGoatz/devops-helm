@@ -2,6 +2,7 @@
 .vagrant
 vagrant-oidc.yaml
 vagrant-values.yaml
+azure-values.yaml
 .idea
 .serena
 .codex
