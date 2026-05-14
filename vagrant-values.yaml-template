@@ -66,7 +66,11 @@ crczp-keycloak:
       password:
   keycloakPassword: password
   grafanaClientSecret: secret
-  # Override when Cyber Goatz is exposed on a public URL, e.g. https://your-frontend.ngrok-free.app
+  # Add every frontend origin that should use the CyberGoatz Keycloak client.
+  cyberGoatzFrontendUrls:
+    - http://localhost:3000
+    # - https://your-frontend.app
+  # Deprecated: use cyberGoatzFrontendUrls for multiple deployed/local frontend origins.
   cyberGoatzFrontendUrl: http://localhost:3000
 
 crczp-guacamole:

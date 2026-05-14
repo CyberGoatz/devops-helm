@@ -5,6 +5,12 @@ db:
   username: keycloak
 
 grafanaClientSecret:
+# List of frontend origins that are allowed to use the CyberGoatz OIDC client.
+# Keep localhost here when testing a local Next.js frontend against a deployed backend.
+cyberGoatzFrontendUrls:
+  - http://localhost:3000
+
+# Deprecated: use cyberGoatzFrontendUrls for multiple deployed/local frontend origins.
 cyberGoatzFrontendUrl: http://localhost:3000
 
 keycloakAdmin: admin

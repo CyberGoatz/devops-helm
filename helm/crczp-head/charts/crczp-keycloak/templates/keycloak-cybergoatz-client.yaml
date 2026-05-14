@@ -1,4 +1,11 @@
-{{- $cyberGoatzFrontendUrl := trimSuffix "/" (.Values.cyberGoatzFrontendUrl | default "http://localhost:3000") -}}
+{{- $cyberGoatzFrontendUrls := list -}}
+{{- if .Values.cyberGoatzFrontendUrls -}}
+{{- range .Values.cyberGoatzFrontendUrls -}}
+{{- $cyberGoatzFrontendUrls = append $cyberGoatzFrontendUrls (trimSuffix "/" .) -}}
+{{- end -}}
+{{- else -}}
+{{- $cyberGoatzFrontendUrls = append $cyberGoatzFrontendUrls (trimSuffix "/" (.Values.cyberGoatzFrontendUrl | default "http://localhost:3000")) -}}
+{{- end -}}
 apiVersion: legacy.k8s.keycloak.org/v1alpha1
 kind: KeycloakClient
 metadata:
@@ -12,7 +19,7 @@ spec:
   client:
     attributes:
       pkce.code.challenge.method: S256
-      post.logout.redirect.uris: "{{ $cyberGoatzFrontendUrl }}/"
+      post.logout.redirect.uris: +
     clientId: cyber-goatz
     clientAuthenticatorType: client-secret
     defaultClientScopes:
@@ -27,7 +34,13 @@ spec:
     protocol: openid-connect
     publicClient: false
     redirectUris:
-      - "{{ $cyberGoatzFrontendUrl }}/api/auth/callback/keycloak"
-      - "{{ $cyberGoatzFrontendUrl }}/api/auth/callback/keycloak-register"
+      {{- range $frontendUrl := $cyberGoatzFrontendUrls }}
+      - "{{ $frontendUrl }}/api/auth/callback/keycloak"
+      - "{{ $frontendUrl }}/api/auth/callback/keycloak-register"
+      {{- end }}
     secret: "cyber-goatz-client"
     standardFlowEnabled: true
+    webOrigins:
+      {{- range $frontendUrl := $cyberGoatzFrontendUrls }}
+      - "{{ $frontendUrl }}"
+      {{- end }}
