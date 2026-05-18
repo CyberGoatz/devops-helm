@@ -109,7 +109,28 @@ sandbox:
     #providers: {"https://github.com/": "TOKEN"}
     user: git
     ansibleNetworkingUrl: https://github.com/cyberrangecz/ansible-stage-one.git
-    ansibleNetworkingRev: v1.0.0
+    ansibleNetworkingRev: v2.0.3
+
+frontend:
+  image:
+    # Use a frontend-platform image built from this fork so the Angular admin track UI is available.
+    url: ghcr.io/cybergoatz/frontend-platform
+    tag: v0.1.0
+
+cybergoatz:
+  image:
+    url: ghcr.io/cybergoatz/backend-cybergoatz
+    tag: v0.1.0
+    pullPolicy: IfNotPresent
+  database:
+    synchronize: true
+  publicTraining:
+    timeoutMs: 1500
+  htb:
+    apiUrl: https://labs.hackthebox.com/api/v4
+    profileBaseUrl: https://app.hackthebox.com/public/users
+    tokenEncryptionKey: change-me-generate-32-byte-secret
+    timeoutMs: 5000
 
 cluster:
   superuserPassword: password

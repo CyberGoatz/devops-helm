@@ -1,0 +1,82 @@
+{{- $service := .Values.global.services.cybergoatz -}}
+{{- $postgres := .Values.global.postgres -}}
+{{- $database := .Values.global.postgresServices.cybergoatz -}}
+{{- $oidcProvider := first .Values.global.oidcProviders -}}
+{{- $globalPrefix := trimAll "/" $service.contextPath -}}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ $service.name }}
+  annotations:
+    reloader.stakater.com/auto: "true"
+  labels: {{- include "common.labels" (dict "name" $service.name "chart" .Chart "release" .Release "extraLabels" .Values.extraLabels) | nindent 4 }}
+spec:
+  replicas: {{ .Values.replicasCount }}
+  selector:
+    matchLabels: {{- include "common.matchLabels" (dict "name" $service.name "release" .Release) | nindent 6 }}
+  template:
+    metadata:
+      labels: {{- include "common.labels" (dict "name" $service.name "chart" .Chart "release" .Release "extraLabels" .Values.extraLabels) | nindent 8 }}
+    spec:
+      containers:
+        - name: {{ $service.name }}
+          image: "{{ .Values.image.url }}:{{ .Values.image.tag }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          ports:
+            - containerPort: {{ $service.port }}
+              protocol: TCP
+          env:
+            - name: PORT
+              value: {{ $service.port | quote }}
+            - name: APP_GLOBAL_PREFIX
+              value: {{ $globalPrefix | quote }}
+            - name: DB_HOST
+              value: {{ $postgres.serviceName | quote }}
+            - name: DB_PORT
+              value: {{ $postgres.port | quote }}
+            - name: DB_USERNAME
+              value: {{ $database.dbUser | quote }}
+            - name: DB_PASSWORD
+              value: {{ $database.dbPassword | quote }}
+            - name: DB_DATABASE
+              value: {{ $database.dbName | quote }}
+            - name: DB_SYNCHRONIZE
+              value: {{ .Values.database.synchronize | quote }}
+            - name: OIDC_ISSUER_URL
+              value: {{ ($oidcProvider.issuerIdentifier | default $oidcProvider.url) | quote }}
+            - name: USER_AND_GROUP_API_URL
+              value: "http://{{ .Values.global.services.userAndGroup.name }}:{{ .Values.global.services.userAndGroup.port }}{{ .Values.global.services.userAndGroup.contextPath }}"
+            - name: TRAINING_API_URL
+              value: "http://{{ .Values.global.services.training.name }}:{{ .Values.global.services.training.port }}{{ .Values.global.services.training.contextPath }}"
+            - name: TRAINING_PUBLIC_API_TIMEOUT_MS
+              value: {{ .Values.publicTraining.timeoutMs | quote }}
+            - name: HTB_API_URL
+              value: {{ .Values.htb.apiUrl | quote }}
+            - name: HTB_PROFILE_BASE_URL
+              value: {{ .Values.htb.profileBaseUrl | quote }}
+            - name: HTB_API_TIMEOUT_MS
+              value: {{ .Values.htb.timeoutMs | quote }}
+            - name: HTB_TOKEN_ENCRYPTION_KEY
+              value: {{ .Values.htb.tokenEncryptionKey | quote }}
+            - name: CORS_ORIGIN
+              value: "https://{{ .Values.global.headHost }}{{- range $origin := .Values.global.corsWhitelist }},{{ $origin }}{{- end }}"
+          readinessProbe:
+            httpGet:
+              path: "/{{ $globalPrefix }}/health"
+              port: {{ $service.port }}
+            initialDelaySeconds: 10
+            periodSeconds: 10
+          livenessProbe:
+            httpGet:
+              path: "/{{ $globalPrefix }}/health"
+              port: {{ $service.port }}
+            initialDelaySeconds: 30
+            periodSeconds: 20
+          {{- with .Values.resources }}
+          resources:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+      {{- if .Values.global.imageCredentials.username }}
+      imagePullSecrets:
+        - name: github-auth-secret
+      {{- end }}

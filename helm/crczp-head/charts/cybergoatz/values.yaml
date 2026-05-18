@@ -1,0 +1,20 @@
+replicasCount: 1
+
+image:
+  url: ghcr.io/cybergoatz/backend-cybergoatz
+  tag: v0.1.0
+  pullPolicy: IfNotPresent
+
+database:
+  synchronize: true
+
+publicTraining:
+  timeoutMs: 1500
+
+htb:
+  apiUrl: https://labs.hackthebox.com/api/v4
+  profileBaseUrl: https://app.hackthebox.com/public/users
+  tokenEncryptionKey: change-me-generate-32-byte-secret
+  timeoutMs: 5000
+
+resources: {}

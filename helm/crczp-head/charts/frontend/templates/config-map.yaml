@@ -18,6 +18,7 @@ data:
         "adaptiveTraining": "https://{{ .Values.global.headHost }}{{ .Values.global.services.adaptiveTraining.contextPath }}",
         "sandbox": "https://{{ .Values.global.headHost }}{{ .Values.global.services.sandbox.contextPath }}",
         "userAndGroup": "https://{{ .Values.global.headHost }}{{ .Values.global.services.userAndGroup.contextPath }}",
+        "cybergoatz": "https://{{ .Values.global.headHost }}{{ .Values.global.services.cybergoatz.contextPath }}",
         "mitre": "https://{{ .Values.global.headHost }}{{ .Values.global.services.mitre.contextPath }}",
         "guacamole": "https://{{ .Values.global.headHost }}{{ .Values.global.services.guacamole.contextPath }}"
       },
