@@ -1,8 +1,8 @@
 replicasCount: 1
 
 image:
-  url: ghcr.io/cyberrangecz/backend-adaptive-smart-assistant/adaptive-smart-assistant-service
-  tag: v1.2.0
+  url: cybergoatz.azurecr.io/adaptive-smart-assistant-service
+  tag: v1.2.1
 
 mounts:
   adaptive-smart-assistant:

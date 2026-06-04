@@ -134,3 +134,6 @@ cybergoatz:
 
 cluster:
   superuserPassword: password
+
+mitre:
+  djangoSecretKey:

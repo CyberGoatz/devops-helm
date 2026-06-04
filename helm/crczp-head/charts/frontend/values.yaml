@@ -1,8 +1,8 @@
 replicasCount: 1
 
 image:
-  url: ghcr.io/cyberrangecz/frontend-platform/frontend-platform
-  tag: v2.5.5
+  url: cybergoatz.azurecr.io/admin-frontend
+  tag: v1.0.4
 
 mounts:
   config:

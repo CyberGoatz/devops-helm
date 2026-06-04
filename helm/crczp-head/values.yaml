@@ -10,7 +10,7 @@ global:
   crczpTerraformBackendType: 'kubernetes'
   corsWhitelist:
   imageCredentials:
-    registry: ghcr.io
+    registry: cybergoatz.azurecr.io
     username:
     password:
 

@@ -1,8 +1,8 @@
 replicasCount: 1
 
 image:
-  url: ghcr.io/cybergoatz/backend-cybergoatz
-  tag: v0.1.0
+  url: cybergoatz.azurecr.io/cybergoatz-service
+  tag: v1.0.0
   pullPolicy: IfNotPresent
 
 database:

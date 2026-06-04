@@ -1,8 +1,8 @@
 replicasCount: 1
 
 image:
-  url: ghcr.io/cyberrangecz/backend-user-and-group/user-and-group-service
-  tag: v1.2.0
+  url: cybergoatz.azurecr.io/user-and-group-service
+  tag: v1.0.0
 
 mounts:
   configs:

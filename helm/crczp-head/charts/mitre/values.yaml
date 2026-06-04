@@ -1,11 +1,18 @@
 replicasCount: 1
 
 image:
-  url: ghcr.io/cyberrangecz/backend-mitre-technique-service/mitre-technique-service
-  tag: v1.1.0
+  url: cybergoatz.azurecr.io/mitre-technique-service
+  tag: v1.1.1
+
+djangoSecretKey:
 
 environments:
   SERVICE_PRECONDITION: uag-service:8084
+
+secretEnvironments:
+  DJANGO_SECRET_KEY:
+    secretName: mitre-service-secret
+    secretKey: django-secret-key
 
 mounts:
   config:
