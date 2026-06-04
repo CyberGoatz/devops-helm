@@ -110,6 +110,11 @@ sandbox:
     user: git
     ansibleNetworkingUrl: https://github.com/cyberrangecz/ansible-stage-one.git
     ansibleNetworkingRev: v2.0.3
+  idleCleanup:
+    enabled: true
+    schedule: "*/15 * * * *"
+    idleMinutes: 60
+    replace: true
 
 frontend:
   image:

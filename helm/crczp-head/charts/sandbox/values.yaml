@@ -71,6 +71,11 @@ osConsoleType: spice-html5
 openstackWorkerCount: 4
 ansibleWorkerCount: 4
 defaultWorkerCount: 4
+idleCleanup:
+  enabled: true
+  schedule: "*/15 * * * *"
+  idleMinutes: 60
+  replace: true
 sandboxBuildTimeout: 7200
 sandboxDeleteTimeout: 3600
 sandboxAnsibleTimeout: 7200
