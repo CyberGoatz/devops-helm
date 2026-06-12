@@ -10,6 +10,10 @@ global:
       issuerIdentifier:
       userInfoUrl:
       responseType:
+  serviceAccounts:
+    training:
+      clientId: training-service
+      clientSecret:
   users:
     - email: crczp-admin@example.com
       iss:

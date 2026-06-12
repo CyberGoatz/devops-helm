@@ -6,6 +6,10 @@ image:
 
 environments:
   SERVICE_PRECONDITION: uag-service:8084
+secretEnvironments:
+  TRAINING_SANDBOX_SERVICE_ACCOUNT_CLIENT_SECRET:
+    secretName: training-service-service-account
+    secretKey: client-secret
 
 mounts:
   training:
@@ -27,3 +31,13 @@ mounts:
 
 connectionTimeout:
 maximumPoolSize:
+
+sandboxExpiration:
+  enabled: true
+  scanDelayMs: 60000
+  initialDelayMs: 60000
+
+sandboxServiceAccount:
+  tokenUri: http://keycloak-service:8080/keycloak/realms/CRCZP/protocol/openid-connect/token
+  clientId: training-service
+  clientSecret: training-service-secret

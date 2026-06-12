@@ -22,6 +22,10 @@ realmSync:
 
 development: false
 
+trainingServiceClient:
+  clientId: training-service
+  clientSecret: training-service-secret
+
 realm: CRCZP
 
 theme:

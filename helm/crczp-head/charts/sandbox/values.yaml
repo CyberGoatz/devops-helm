@@ -76,6 +76,8 @@ idleCleanup:
   schedule: "*/15 * * * *"
   idleMinutes: 60
   replace: true
+serviceAccountClients:
+  - training-service
 sandboxBuildTimeout: 7200
 sandboxDeleteTimeout: 3600
 sandboxAnsibleTimeout: 7200

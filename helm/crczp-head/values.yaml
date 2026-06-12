@@ -14,6 +14,10 @@ global:
     username:
     password:
 
+  serviceAccounts:
+    training:
+      clientId: training-service
+      clientSecret: training-service-secret
 
   oidcProviders:
     - url:

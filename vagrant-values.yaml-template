@@ -28,6 +28,10 @@ global:
       label: Login with local Keycloak
       responseType: code
       refreshToken: true
+  serviceAccounts:
+    training:
+      clientId: training-service
+      clientSecret:
   postgres:
     serviceName: postgres-rw.cnpg-system.svc.cluster.local
     port: 5432

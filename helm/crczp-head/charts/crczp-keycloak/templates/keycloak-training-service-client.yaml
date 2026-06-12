@@ -1,0 +1,34 @@
+{{- $trainingServiceClientId := dig "serviceAccounts" "training" "clientId" .Values.trainingServiceClient.clientId .Values.global }}
+{{- $trainingServiceClientSecret := dig "serviceAccounts" "training" "clientSecret" .Values.trainingServiceClient.clientSecret .Values.global }}
+apiVersion: legacy.k8s.keycloak.org/v1alpha1
+kind: KeycloakClient
+metadata:
+  name: training-service-client
+  labels:
+    app: external-sso
+spec:
+  realmSelector:
+    matchLabels:
+      app: external-sso
+  client:
+    clientId: {{ $trainingServiceClientId | quote }}
+    clientAuthenticatorType: client-secret
+    directAccessGrantsEnabled: false
+    implicitFlowEnabled: false
+    name: "Training Service"
+    protocol: openid-connect
+    publicClient: false
+    secret: {{ $trainingServiceClientSecret | quote }}
+    serviceAccountsEnabled: true
+    standardFlowEnabled: false
+    protocolMappers:
+      - name: sandbox-service-roles
+        protocol: openid-connect
+        protocolMapper: oidc-hardcoded-claim-mapper
+        config:
+          access.token.claim: "true"
+          claim.name: sandbox_roles
+          claim.value: ROLE_SANDBOX-SERVICE_ORGANIZER
+          id.token.claim: "false"
+          jsonType.label: String
+          userinfo.token.claim: "false"
