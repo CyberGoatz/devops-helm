@@ -7,8 +7,50 @@
     <title>${msg("loginTitle",(realm.displayName!realm.name))}</title>
     <script>
       (function () {
-        var queryTheme = new URLSearchParams(window.location.search).get("ui_theme");
-        var theme = queryTheme === "dark" || queryTheme === "light" ? queryTheme : "light";
+        var themeParamName = "ui_theme";
+        var fallbackThemeParamName = "theme";
+        var themeCookieName = "cybergoatz_theme";
+
+        function isAllowedTheme(theme) {
+          return theme === "dark" || theme === "light";
+        }
+
+        function getCookie(name) {
+          var cookies = document.cookie ? document.cookie.split("; ") : [];
+          for (var index = 0; index < cookies.length; index += 1) {
+            var cookie = cookies[index];
+            var separatorIndex = cookie.indexOf("=");
+            var cookieName = separatorIndex > -1 ? cookie.slice(0, separatorIndex) : cookie;
+            if (cookieName === name) {
+              var cookieValue = separatorIndex > -1 ? cookie.slice(separatorIndex + 1) : "";
+              return decodeURIComponent(cookieValue);
+            }
+          }
+          return "";
+        }
+
+        function setThemeCookie(theme) {
+          if (!isAllowedTheme(theme)) return;
+
+          var cookie = themeCookieName + "=" + encodeURIComponent(theme)
+            + "; Path=/; Max-Age=31536000; SameSite=Lax";
+          if (window.location.protocol === "https:") cookie += "; Secure";
+          document.cookie = cookie;
+        }
+
+        var params = new URLSearchParams(window.location.search);
+        var queryTheme = params.get(themeParamName) || params.get(fallbackThemeParamName);
+        var cookieTheme = getCookie(themeCookieName);
+        var systemTheme = window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches
+          ? "dark"
+          : "light";
+        var theme = isAllowedTheme(queryTheme)
+          ? queryTheme
+          : isAllowedTheme(cookieTheme)
+            ? cookieTheme
+            : systemTheme;
+
+        if (isAllowedTheme(queryTheme)) setThemeCookie(queryTheme);
 
         document.documentElement.dataset.theme = theme;
         document.documentElement.classList.toggle("dark", theme === "dark");
