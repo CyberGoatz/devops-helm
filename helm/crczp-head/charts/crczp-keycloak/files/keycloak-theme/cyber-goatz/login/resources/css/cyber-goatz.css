@@ -1,25 +1,111 @@
 :root {
-  --cg-blue-900: #111c2d;
-  --cg-blue-800: #18263d;
-  --cg-blue-700: #233756;
-  --cg-blue-600: #0041c8;
-  --cg-blue-500: #0055ff;
-  --cg-blue-100: #dce6ff;
-  --cg-green-500: #32d583;
-  --cg-green-100: #d7ffea;
-  --cg-red-600: #ba1a1a;
-  --cg-red-100: #ffdad6;
-  --cg-bg: #f6f8fc;
-  --cg-surface: #ffffff;
-  --cg-surface-soft: #f0f4ff;
-  --cg-border: #d7deee;
-  --cg-border-strong: #bcc7dc;
-  --cg-text: #101828;
-  --cg-muted: #596579;
-  --cg-subtle: #7b879a;
-  --cg-shadow: 0 24px 70px rgba(16, 24, 40, 0.14);
-  --cg-font-sans: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-  --cg-font-display: "Space Grotesk", Inter, ui-sans-serif, system-ui, sans-serif;
+  color-scheme: light;
+  --background: #f8f9fa;
+  --foreground: #191c1d;
+  --primary: #b23a73;
+  --primary-foreground: #ffffff;
+  --primary-container: #b23a73;
+  --primary-fixed-dim: #d84c8e;
+  --secondary: #8f4a2f;
+  --secondary-container: #8f4a2f;
+  --tertiary: #545f72;
+  --tertiary-container: #545f72;
+  --error: #ba1a1a;
+  --error-container: #ffdad6;
+  --surface: #f8f9fa;
+  --surface-bright: #ffffff;
+  --surface-container-lowest: #ffffff;
+  --surface-container-low: #f3f4f5;
+  --surface-container: #edeeef;
+  --surface-container-high: #e7e8e9;
+  --surface-container-highest: #e1e3e4;
+  --surface-variant: #e1e3e4;
+  --on-surface: #191c1d;
+  --on-surface-variant: #5b5563;
+  --outline: #7b7284;
+  --outline-variant: #d8d2df;
+  --accent-gold: #a87920;
+  --accent-copper: #a65a3a;
+  --cg-blue-900: #2e3132;
+  --cg-blue-800: var(--surface-container-highest);
+  --cg-blue-700: var(--surface-container-high);
+  --cg-blue-600: var(--primary-container);
+  --cg-blue-500: var(--primary-fixed-dim);
+  --cg-blue-100: #f7deea;
+  --cg-green-500: var(--secondary);
+  --cg-green-100: #f1d8c7;
+  --cg-red-600: var(--error);
+  --cg-red-100: var(--error-container);
+  --cg-bg: var(--background);
+  --cg-surface: var(--surface-container-lowest);
+  --cg-surface-soft: var(--surface-container);
+  --cg-input-bg: #ffffff;
+  --cg-border: var(--outline-variant);
+  --cg-border-strong: var(--outline);
+  --cg-text: var(--on-surface);
+  --cg-muted: var(--on-surface-variant);
+  --cg-subtle: #7b7284;
+  --cg-visual-bg: #191c1d;
+  --cg-visual-text: #ffffff;
+  --cg-visual-muted: rgba(255, 255, 255, 0.76);
+  --cg-visual-accent: #f1d8c7;
+  --cg-shadow: 0 24px 70px rgba(26, 32, 44, 0.12);
+  --cg-font-sans: Sora, Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  --cg-font-display: Sora, Inter, ui-sans-serif, system-ui, sans-serif;
+}
+
+.dark {
+  color-scheme: dark;
+  --background: #09090d;
+  --foreground: #f4eef6;
+  --primary: #ff7ab8;
+  --primary-foreground: #250715;
+  --primary-container: #e85fa3;
+  --primary-fixed-dim: #ff8fc1;
+  --secondary: #b69cff;
+  --secondary-container: #58447e;
+  --tertiary: #8ea7ff;
+  --tertiary-container: #34456f;
+  --error: #ffb4ab;
+  --error-container: #93000a;
+  --surface: #09090d;
+  --surface-bright: #3c344f;
+  --surface-container-lowest: #06070a;
+  --surface-container-low: #0d0d14;
+  --surface-container: #15131d;
+  --surface-container-high: #1e1a29;
+  --surface-container-highest: #2a2436;
+  --surface-variant: #342e43;
+  --on-surface: #f4eef6;
+  --on-surface-variant: #d5ccdd;
+  --outline: #978ca8;
+  --outline-variant: #494156;
+  --accent-gold: #ff7ab8;
+  --accent-copper: #b69cff;
+  --cg-blue-900: #06070a;
+  --cg-blue-800: var(--surface-container-high);
+  --cg-blue-700: var(--surface-variant);
+  --cg-blue-600: var(--primary-container);
+  --cg-blue-500: var(--primary);
+  --cg-blue-100: #3a1830;
+  --cg-green-500: var(--secondary);
+  --cg-green-100: #231d36;
+  --cg-red-600: var(--error);
+  --cg-red-100: var(--error-container);
+  --cg-bg: var(--background);
+  --cg-surface: var(--surface-container-lowest);
+  --cg-surface-soft: var(--surface-container);
+  --cg-input-bg: var(--surface-container-low);
+  --cg-border: var(--outline-variant);
+  --cg-border-strong: var(--outline);
+  --cg-text: var(--on-surface);
+  --cg-muted: var(--on-surface-variant);
+  --cg-subtle: #978ca8;
+  --cg-visual-bg: #06070a;
+  --cg-visual-text: #f4eef6;
+  --cg-visual-muted: rgba(244, 238, 246, 0.74);
+  --cg-visual-accent: #ffd7e8;
+  --cg-shadow: 0 24px 70px rgba(0, 0, 0, 0.34);
 }
 
 * {
@@ -54,7 +140,7 @@ input {
 
 .cg-auth-frame {
   background: var(--cg-surface);
-  border: 1px solid rgba(188, 199, 220, 0.65);
+  border: 1px solid var(--cg-border);
   border-radius: 8px;
   box-shadow: var(--cg-shadow);
   display: grid;
@@ -63,14 +149,19 @@ input {
   max-width: 1180px;
   min-height: calc(100vh - 48px);
   overflow: hidden;
+  position: relative;
 }
 
 .cg-visual-panel {
   background:
-    linear-gradient(135deg, rgba(0, 85, 255, 0.34), rgba(17, 28, 45, 0.96) 52%),
-    radial-gradient(circle at 26% 22%, rgba(50, 213, 131, 0.3), transparent 28rem),
-    var(--cg-blue-900);
-  color: #fff;
+    linear-gradient(
+      135deg,
+      color-mix(in oklab, var(--primary) 30%, transparent),
+      color-mix(in oklab, var(--cg-visual-bg) 96%, var(--tertiary) 4%) 52%
+    ),
+    radial-gradient(circle at 26% 22%, color-mix(in oklab, var(--secondary) 28%, transparent), transparent 28rem),
+    var(--cg-visual-bg);
+  color: var(--cg-visual-text);
   display: flex;
   flex-direction: column;
   justify-content: space-between;
@@ -82,8 +173,8 @@ input {
 
 .cg-visual-grid {
   background-image:
-    linear-gradient(rgba(220, 230, 255, 0.07) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(220, 230, 255, 0.07) 1px, transparent 1px);
+    linear-gradient(color-mix(in oklab, var(--tertiary) 18%, transparent) 1px, transparent 1px),
+    linear-gradient(90deg, color-mix(in oklab, var(--tertiary) 18%, transparent) 1px, transparent 1px);
   background-size: 28px 28px;
   inset: 0;
   mask-image: linear-gradient(to bottom, #000, transparent 88%);
@@ -93,7 +184,7 @@ input {
 
 .cg-visual-orbit {
   aspect-ratio: 1;
-  border: 1px solid rgba(220, 230, 255, 0.14);
+  border: 1px solid color-mix(in oklab, var(--tertiary) 22%, transparent);
   border-radius: 999px;
   bottom: -120px;
   position: absolute;
@@ -102,9 +193,9 @@ input {
 }
 
 .cg-visual-orbit span {
-  background: rgba(50, 213, 131, 0.5);
+  background: color-mix(in oklab, var(--secondary) 58%, transparent);
   border-radius: 999px;
-  box-shadow: 0 0 34px rgba(50, 213, 131, 0.35);
+  box-shadow: 0 0 34px color-mix(in oklab, var(--secondary) 34%, transparent);
   display: block;
   height: 10px;
   position: absolute;
@@ -139,7 +230,7 @@ input {
   align-items: center;
   background: linear-gradient(135deg, var(--cg-blue-500), var(--cg-green-500));
   border-radius: 8px;
-  color: #fff;
+  color: var(--primary-foreground);
   display: inline-flex;
   font-family: var(--cg-font-display);
   font-size: 14px;
@@ -152,7 +243,7 @@ input {
 
 .cg-brand-name,
 .cg-mobile-brand span {
-  color: #fff;
+  color: var(--cg-visual-text);
   display: block;
   font-family: var(--cg-font-display);
   font-size: 22px;
@@ -161,7 +252,7 @@ input {
 }
 
 .cg-brand-kicker {
-  color: rgba(236, 241, 255, 0.72);
+  color: var(--cg-visual-muted);
   font-size: 12px;
   margin-top: 1px;
 }
@@ -181,8 +272,12 @@ input {
   text-transform: uppercase;
 }
 
+.cg-visual-copy .cg-eyebrow {
+  color: var(--cg-visual-accent);
+}
+
 .cg-visual-copy h1 {
-  color: #fff;
+  color: var(--cg-visual-text);
   font-family: var(--cg-font-display);
   font-size: clamp(34px, 4vw, 52px);
   font-weight: 700;
@@ -192,7 +287,7 @@ input {
 }
 
 .cg-visual-copy p:not(.cg-eyebrow) {
-  color: rgba(236, 241, 255, 0.78);
+  color: var(--cg-visual-muted);
   font-size: 16px;
   line-height: 1.7;
   margin: 18px 0 0;
@@ -208,14 +303,14 @@ input {
 }
 
 .cg-status-grid div {
-  background: rgba(255, 255, 255, 0.08);
-  border: 1px solid rgba(255, 255, 255, 0.14);
+  background: color-mix(in oklab, var(--cg-visual-text) 8%, transparent);
+  border: 1px solid color-mix(in oklab, var(--cg-visual-text) 14%, transparent);
   border-radius: 6px;
   padding: 12px;
 }
 
 .cg-status-grid span {
-  color: rgba(236, 241, 255, 0.65);
+  color: var(--cg-visual-muted);
   display: block;
   font-size: 11px;
   font-weight: 700;
@@ -224,7 +319,7 @@ input {
 }
 
 .cg-status-grid strong {
-  color: #fff;
+  color: var(--cg-visual-text);
   display: block;
   font-family: var(--cg-font-display);
   font-size: 16px;
@@ -235,7 +330,7 @@ input {
 .cg-form-panel {
   align-items: center;
   background:
-    radial-gradient(circle at 100% 0%, rgba(0, 85, 255, 0.08), transparent 24rem),
+    radial-gradient(circle at 100% 0%, color-mix(in oklab, var(--primary) 8%, transparent), transparent 24rem),
     var(--cg-surface);
   display: flex;
   justify-content: center;
@@ -303,20 +398,20 @@ input {
 }
 
 .cg-alert-error {
-  background: var(--cg-red-100);
-  border-color: rgba(186, 26, 26, 0.28);
+  background: color-mix(in oklab, var(--cg-red-600) 14%, var(--cg-surface));
+  border-color: color-mix(in oklab, var(--cg-red-600) 34%, var(--cg-border));
   color: var(--cg-red-600);
 }
 
 .cg-alert-success {
   background: var(--cg-green-100);
-  border-color: rgba(50, 213, 131, 0.32);
-  color: #067647;
+  border-color: color-mix(in oklab, var(--secondary) 32%, var(--cg-border));
+  color: var(--secondary);
 }
 
 .cg-alert-warning {
-  background: #fff4d6;
-  color: #936300;
+  background: color-mix(in oklab, var(--accent-gold) 16%, var(--cg-surface));
+  color: var(--accent-gold);
 }
 
 .cg-form {
@@ -388,7 +483,7 @@ input {
 }
 
 .cg-input-wrap input {
-  background: #fff;
+  background: var(--cg-input-bg);
   border: 1px solid var(--cg-border);
   border-radius: 6px;
   color: var(--cg-text);
@@ -428,7 +523,7 @@ input {
 }
 
 .cg-password-toggle:focus {
-  box-shadow: inset 0 0 0 2px rgba(0, 85, 255, 0.18);
+  box-shadow: inset 0 0 0 2px color-mix(in oklab, var(--primary) 18%, transparent);
 }
 
 .cg-eye {
@@ -452,12 +547,12 @@ input {
 }
 
 .cg-input-wrap input::placeholder {
-  color: #98a2b3;
+  color: var(--cg-subtle);
 }
 
 .cg-input-wrap input:focus {
   border-color: var(--cg-blue-500);
-  box-shadow: 0 0 0 3px rgba(0, 85, 255, 0.12);
+  box-shadow: 0 0 0 3px color-mix(in oklab, var(--primary) 12%, transparent);
 }
 
 .cg-field-grid {
@@ -524,8 +619,8 @@ input {
 .cg-primary {
   background: var(--cg-blue-600);
   border: 1px solid var(--cg-blue-600);
-  box-shadow: 0 10px 22px rgba(0, 65, 200, 0.18);
-  color: #fff;
+  box-shadow: 0 10px 22px color-mix(in oklab, var(--primary) 18%, transparent);
+  color: var(--primary-foreground);
   cursor: pointer;
   gap: 8px;
   margin-top: 2px;
@@ -536,11 +631,11 @@ input {
 .cg-primary:focus {
   background: var(--cg-blue-500);
   border-color: var(--cg-blue-500);
-  box-shadow: 0 12px 26px rgba(0, 85, 255, 0.22);
+  box-shadow: 0 12px 26px color-mix(in oklab, var(--primary) 22%, transparent);
 }
 
 .cg-secondary {
-  background: #fff;
+  background: var(--cg-input-bg);
   border: 1px solid var(--cg-border);
   color: var(--cg-text);
   cursor: pointer;
@@ -583,7 +678,7 @@ input {
 }
 
 .cg-social {
-  background: #fff;
+  background: var(--cg-input-bg);
   border: 1px solid var(--cg-border);
   color: var(--cg-text);
   gap: 10px;
@@ -713,7 +808,7 @@ input {
 .cg-form-shell form:not(.cg-form) textarea,
 .cg-form-shell .pf-v5-c-form-control,
 .cg-form-shell .pf-c-form-control {
-  background: #fff;
+  background: var(--cg-input-bg);
   border: 1px solid var(--cg-border);
   border-radius: 6px;
   color: var(--cg-text);
@@ -733,7 +828,7 @@ input {
 .cg-form-shell .pf-v5-c-form-control:focus,
 .cg-form-shell .pf-c-form-control:focus {
   border-color: var(--cg-blue-500);
-  box-shadow: 0 0 0 3px rgba(0, 85, 255, 0.12);
+  box-shadow: 0 0 0 3px color-mix(in oklab, var(--primary) 12%, transparent);
 }
 
 .cg-form-shell input[type="checkbox"],
@@ -750,8 +845,8 @@ input {
   background: var(--cg-blue-600);
   border: 1px solid var(--cg-blue-600);
   border-radius: 6px;
-  box-shadow: 0 10px 22px rgba(0, 65, 200, 0.18);
-  color: #fff;
+  box-shadow: 0 10px 22px color-mix(in oklab, var(--primary) 18%, transparent);
+  color: var(--primary-foreground);
   cursor: pointer;
   display: inline-flex;
   font-weight: 700;
@@ -768,14 +863,14 @@ input {
 .cg-form-shell #kc-login:hover {
   background: var(--cg-blue-500);
   border-color: var(--cg-blue-500);
-  box-shadow: 0 12px 26px rgba(0, 85, 255, 0.22);
+  box-shadow: 0 12px 26px color-mix(in oklab, var(--primary) 22%, transparent);
 }
 
 .cg-form-shell .pf-v5-c-button.pf-m-secondary,
 .cg-form-shell .pf-c-button.pf-m-secondary,
 .cg-form-shell form:not(.cg-form) button:not(.cg-password-toggle):not([type="submit"]),
 .cg-form-shell form:not(.cg-form) input[type="button"] {
-  background: #fff;
+  background: var(--cg-input-bg);
   border: 1px solid var(--cg-border);
   border-radius: 6px;
   color: var(--cg-text);

@@ -4,6 +4,15 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>${msg("registerTitle")}</title>
+    <script>
+      (function () {
+        var queryTheme = new URLSearchParams(window.location.search).get("ui_theme");
+        var theme = queryTheme === "dark" || queryTheme === "light" ? queryTheme : "light";
+
+        document.documentElement.dataset.theme = theme;
+        document.documentElement.classList.toggle("dark", theme === "dark");
+      })();
+    </script>
     <link rel="icon" href="${url.resourcesPath}/img/favicon.ico">
     <link rel="stylesheet" href="${url.resourcesPath}/css/cyber-goatz.css">
   </head>
@@ -48,16 +57,18 @@
 
           <form id="kc-register-form" class="cg-form" action="${url.registrationAction}" method="post">
             <#if !realm.registrationEmailAsUsername>
-              <label class="cg-field" for="username">
-                <span>${msg("username")} *</span>
-                <div class="cg-input-wrap">
-                  <i class="cg-input-icon" aria-hidden="true">ID</i>
-                  <input id="username" name="username" type="text" value="${(register.formData.username!'')}" autocomplete="username" autofocus placeholder="username">
-                </div>
-              </label>
-              <#if messagesPerField?? && messagesPerField.existsError('username')>
-                <div class="cg-field-error">${kcSanitize(messagesPerField.getFirstError('username'))?no_esc}</div>
-              </#if>
+              <div class="cg-field-group">
+                <label class="cg-field" for="username">
+                  <span>${msg("username")} *</span>
+                  <div class="cg-input-wrap">
+                    <i class="cg-input-icon" aria-hidden="true">ID</i>
+                    <input id="username" name="username" type="text" value="${(register.formData.username!'')}" autocomplete="username" autofocus placeholder="username">
+                  </div>
+                </label>
+                <#if messagesPerField?? && messagesPerField.existsError('username')>
+                  <div class="cg-field-error">${kcSanitize(messagesPerField.getFirstError('username'))?no_esc}</div>
+                </#if>
+              </div>
             </#if>
 
             <div class="cg-field-grid">
@@ -87,63 +98,69 @@
               </div>
             </div>
 
-            <label class="cg-field" for="email">
-              <span>${msg("email")} *</span>
-              <div class="cg-input-wrap">
-                <i class="cg-input-icon" aria-hidden="true">@</i>
-                <input id="email" name="email" type="email" value="${(register.formData.email!'')}" autocomplete="email" placeholder="jane.doe@company.com">
-              </div>
-            </label>
-            <#if messagesPerField?? && messagesPerField.existsError('email')>
-              <div class="cg-field-error">${kcSanitize(messagesPerField.getFirstError('email'))?no_esc}</div>
-            </#if>
+            <div class="cg-field-group">
+              <label class="cg-field" for="email">
+                <span>${msg("email")} *</span>
+                <div class="cg-input-wrap">
+                  <i class="cg-input-icon" aria-hidden="true">@</i>
+                  <input id="email" name="email" type="email" value="${(register.formData.email!'')}" autocomplete="email" placeholder="jane.doe@company.com">
+                </div>
+              </label>
+              <#if messagesPerField?? && messagesPerField.existsError('email')>
+                <div class="cg-field-error">${kcSanitize(messagesPerField.getFirstError('email'))?no_esc}</div>
+              </#if>
+            </div>
 
             <#if !passwordRequired?? || passwordRequired>
-              <label class="cg-field" for="password">
-                <span>${msg("password")} *</span>
-                <div class="cg-input-wrap">
-                  <i class="cg-input-icon" aria-hidden="true">*</i>
-                  <input id="password" name="password" type="password" autocomplete="new-password" placeholder="Create password">
-                  <button class="cg-password-toggle" type="button" data-password-toggle="password" aria-controls="password" aria-label="Show password">
-                    <svg class="cg-eye cg-eye-open" viewBox="0 0 24 24" aria-hidden="true">
-                      <path d="M2.25 12s3.5-6.25 9.75-6.25S21.75 12 21.75 12 18.25 18.25 12 18.25 2.25 12 2.25 12Z"></path>
-                      <circle cx="12" cy="12" r="2.75"></circle>
-                    </svg>
-                    <svg class="cg-eye cg-eye-closed" viewBox="0 0 24 24" aria-hidden="true">
-                      <path d="M3 3l18 18"></path>
-                      <path d="M10.58 10.58A2.74 2.74 0 0 0 12 14.75c.76 0 1.45-.31 1.95-.8"></path>
-                      <path d="M7.45 7.45C4.15 9.08 2.25 12 2.25 12s3.5 6.25 9.75 6.25c1.78 0 3.34-.5 4.66-1.23"></path>
-                      <path d="M10.95 5.82c.34-.05.69-.07 1.05-.07 6.25 0 9.75 6.25 9.75 6.25a16.6 16.6 0 0 1-2.58 3.09"></path>
-                    </svg>
-                  </button>
-                </div>
-              </label>
-              <#if messagesPerField?? && messagesPerField.existsError('password')>
-                <div class="cg-field-error">${kcSanitize(messagesPerField.getFirstError('password'))?no_esc}</div>
-              </#if>
+              <div class="cg-field-group">
+                <label class="cg-field" for="password">
+                  <span>${msg("password")} *</span>
+                  <div class="cg-input-wrap">
+                    <i class="cg-input-icon" aria-hidden="true">*</i>
+                    <input id="password" name="password" type="password" autocomplete="new-password" placeholder="Create password">
+                    <button class="cg-password-toggle" type="button" data-password-toggle="password" aria-controls="password" aria-label="Show password">
+                      <svg class="cg-eye cg-eye-open" viewBox="0 0 24 24" aria-hidden="true">
+                        <path d="M2.25 12s3.5-6.25 9.75-6.25S21.75 12 21.75 12 18.25 18.25 12 18.25 2.25 12 2.25 12Z"></path>
+                        <circle cx="12" cy="12" r="2.75"></circle>
+                      </svg>
+                      <svg class="cg-eye cg-eye-closed" viewBox="0 0 24 24" aria-hidden="true">
+                        <path d="M3 3l18 18"></path>
+                        <path d="M10.58 10.58A2.74 2.74 0 0 0 12 14.75c.76 0 1.45-.31 1.95-.8"></path>
+                        <path d="M7.45 7.45C4.15 9.08 2.25 12 2.25 12s3.5 6.25 9.75 6.25c1.78 0 3.34-.5 4.66-1.23"></path>
+                        <path d="M10.95 5.82c.34-.05.69-.07 1.05-.07 6.25 0 9.75 6.25 9.75 6.25a16.6 16.6 0 0 1-2.58 3.09"></path>
+                      </svg>
+                    </button>
+                  </div>
+                </label>
+                <#if messagesPerField?? && messagesPerField.existsError('password')>
+                  <div class="cg-field-error">${kcSanitize(messagesPerField.getFirstError('password'))?no_esc}</div>
+                </#if>
+              </div>
 
-              <label class="cg-field" for="password-confirm">
-                <span>${msg("passwordConfirm")} *</span>
-                <div class="cg-input-wrap">
-                  <i class="cg-input-icon" aria-hidden="true">*</i>
-                  <input id="password-confirm" name="password-confirm" type="password" autocomplete="new-password" placeholder="Confirm password">
-                  <button class="cg-password-toggle" type="button" data-password-toggle="password-confirm" aria-controls="password-confirm" aria-label="Show password">
-                    <svg class="cg-eye cg-eye-open" viewBox="0 0 24 24" aria-hidden="true">
-                      <path d="M2.25 12s3.5-6.25 9.75-6.25S21.75 12 21.75 12 18.25 18.25 12 18.25 2.25 12 2.25 12Z"></path>
-                      <circle cx="12" cy="12" r="2.75"></circle>
-                    </svg>
-                    <svg class="cg-eye cg-eye-closed" viewBox="0 0 24 24" aria-hidden="true">
-                      <path d="M3 3l18 18"></path>
-                      <path d="M10.58 10.58A2.74 2.74 0 0 0 12 14.75c.76 0 1.45-.31 1.95-.8"></path>
-                      <path d="M7.45 7.45C4.15 9.08 2.25 12 2.25 12s3.5 6.25 9.75 6.25c1.78 0 3.34-.5 4.66-1.23"></path>
-                      <path d="M10.95 5.82c.34-.05.69-.07 1.05-.07 6.25 0 9.75 6.25 9.75 6.25a16.6 16.6 0 0 1-2.58 3.09"></path>
-                    </svg>
-                  </button>
-                </div>
-              </label>
-              <#if messagesPerField?? && messagesPerField.existsError('password-confirm')>
-                <div class="cg-field-error">${kcSanitize(messagesPerField.getFirstError('password-confirm'))?no_esc}</div>
-              </#if>
+              <div class="cg-field-group">
+                <label class="cg-field" for="password-confirm">
+                  <span>${msg("passwordConfirm")} *</span>
+                  <div class="cg-input-wrap">
+                    <i class="cg-input-icon" aria-hidden="true">*</i>
+                    <input id="password-confirm" name="password-confirm" type="password" autocomplete="new-password" placeholder="Confirm password">
+                    <button class="cg-password-toggle" type="button" data-password-toggle="password-confirm" aria-controls="password-confirm" aria-label="Show password">
+                      <svg class="cg-eye cg-eye-open" viewBox="0 0 24 24" aria-hidden="true">
+                        <path d="M2.25 12s3.5-6.25 9.75-6.25S21.75 12 21.75 12 18.25 18.25 12 18.25 2.25 12 2.25 12Z"></path>
+                        <circle cx="12" cy="12" r="2.75"></circle>
+                      </svg>
+                      <svg class="cg-eye cg-eye-closed" viewBox="0 0 24 24" aria-hidden="true">
+                        <path d="M3 3l18 18"></path>
+                        <path d="M10.58 10.58A2.74 2.74 0 0 0 12 14.75c.76 0 1.45-.31 1.95-.8"></path>
+                        <path d="M7.45 7.45C4.15 9.08 2.25 12 2.25 12s3.5 6.25 9.75 6.25c1.78 0 3.34-.5 4.66-1.23"></path>
+                        <path d="M10.95 5.82c.34-.05.69-.07 1.05-.07 6.25 0 9.75 6.25 9.75 6.25a16.6 16.6 0 0 1-2.58 3.09"></path>
+                      </svg>
+                    </button>
+                  </div>
+                </label>
+                <#if messagesPerField?? && messagesPerField.existsError('password-confirm')>
+                  <div class="cg-field-error">${kcSanitize(messagesPerField.getFirstError('password-confirm'))?no_esc}</div>
+                </#if>
+              </div>
             </#if>
 
             <#if recaptchaRequired??>
@@ -194,6 +211,47 @@
     </main>
     <script>
       (function () {
+        var themeParamName = "ui_theme";
+
+        function appendTheme(urlValue, theme) {
+          if (!urlValue || theme !== "dark" && theme !== "light") return urlValue;
+
+          var normalizedUrlValue = String(urlValue).trim();
+          if (
+            normalizedUrlValue.charAt(0) === "#" ||
+            normalizedUrlValue.indexOf("mailto:") === 0 ||
+            normalizedUrlValue.indexOf("tel:") === 0 ||
+            normalizedUrlValue.indexOf("javascript:") === 0
+          ) return urlValue;
+
+          try {
+            var url = new URL(normalizedUrlValue, window.location.href);
+            var isKeycloakAuthUrl = url.origin === window.location.origin
+              && (url.pathname.indexOf("/realms/") !== -1 || url.pathname.indexOf("/login-actions/") !== -1);
+
+            if (!isKeycloakAuthUrl) return urlValue;
+
+            url.searchParams.set(themeParamName, theme);
+            return url.href;
+          } catch (error) {
+            return urlValue;
+          }
+        }
+
+        var theme = document.documentElement.dataset.theme;
+
+        document.querySelectorAll("a[href]").forEach(function (link) {
+          var href = link.getAttribute("href");
+          var nextHref = appendTheme(href, theme);
+          if (nextHref !== href) link.setAttribute("href", nextHref);
+        });
+
+        document.querySelectorAll("form[action]").forEach(function (form) {
+          var action = form.getAttribute("action");
+          var nextAction = appendTheme(action, theme);
+          if (nextAction !== action) form.setAttribute("action", nextAction);
+        });
+
         document.querySelectorAll("[data-password-toggle]").forEach(function (button) {
           var input = document.getElementById(button.getAttribute("data-password-toggle"));
           if (!input) return;
