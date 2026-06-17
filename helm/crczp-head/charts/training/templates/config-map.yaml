@@ -30,6 +30,8 @@ data:
     answers-storage.uri=http://{{ .Values.global.services.answersStorage.name }}:{{ .Values.global.services.answersStorage.port }}{{ .Values.global.services.answersStorage.contextPath }}
     # calling training-feedback, e.g., http://training-feedback-service:8088/training-feedback/api/v1
     training-feedback-service.uri=http://{{ .Values.global.services.trainingFeedback.name }}:{{ .Values.global.services.trainingFeedback.port }}{{ .Values.global.services.trainingFeedback.contextPath }}
+    # calling cybergoatz, e.g., http://cybergoatz-service:30001/cybergoatz/api/v1
+    cybergoatz-service.uri=http://{{ .Values.global.services.cybergoatz.name }}:{{ .Values.global.services.cybergoatz.port }}{{ .Values.global.services.cybergoatz.contextPath }}
 
     # Specify the IP address of the Syslog server where the logs from the sandboxes are sent (default: 127.0.0.1)
     central.syslog.ip={{ .Values.global.headHost }}
