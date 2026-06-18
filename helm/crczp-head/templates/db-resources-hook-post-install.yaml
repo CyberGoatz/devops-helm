@@ -5,7 +5,7 @@ kind: Pod
 metadata:
   name: head-hook-postinstall
   annotations:
-    "helm.sh/hook": "post-install"
+    "helm.sh/hook": "post-install,post-upgrade"
     "helm.sh/hook-delete-policy": "before-hook-creation,hook-succeeded"
 spec:
   containers:
@@ -29,9 +29,17 @@ spec:
             INSERT INTO idm_group(name, external_id, status, description, expiration_date)
             VALUES ('Instructor', NULL, 'VALID', 'Adaptive and Linear Training Designer and Organizer', NULL) ON CONFLICT DO NOTHING;
 
+            INSERT INTO idm_group(name, external_id, status, description, expiration_date)
+            VALUES ('Approved Users', NULL, 'VALID', 'Approved CyberGoatz users', NULL) ON CONFLICT DO NOTHING;
+
+            INSERT INTO idm_group_role(role_id, idm_group_id)
+            VALUES ((SELECT id FROM role WHERE role_type='ROLE_CYBERGOATZ_WAITLISTED'), (SELECT id FROM idm_group WHERE name='DEFAULT-GROUP')) ON CONFLICT DO NOTHING;
+
             INSERT INTO idm_group_role(role_id, idm_group_id)
             VALUES ((SELECT id FROM role WHERE role_type='ROLE_USER_AND_GROUP_ADMINISTRATOR'), (SELECT id FROM idm_group WHERE name='All Mighty Users')) ON CONFLICT DO NOTHING;
 
+            INSERT INTO idm_group_role(role_id, idm_group_id)
+            VALUES ((SELECT id FROM role WHERE role_type='ROLE_USER_AND_GROUP_TRAINEE'), (SELECT id FROM idm_group WHERE name='All Mighty Users')) ON CONFLICT DO NOTHING;
             INSERT INTO idm_group_role(role_id, idm_group_id)
             VALUES ((SELECT id FROM role WHERE role_type='ROLE_TRAINING_ADMINISTRATOR'), (SELECT id FROM idm_group WHERE name='All Mighty Users')) ON CONFLICT DO NOTHING;
             INSERT INTO idm_group_role(role_id, idm_group_id)
@@ -40,6 +48,8 @@ spec:
             VALUES ((SELECT id FROM role WHERE role_type='ROLE_TRAINING_DESIGNER'), (SELECT id FROM idm_group WHERE name='All Mighty Users')) ON CONFLICT DO NOTHING;
             INSERT INTO idm_group_role(role_id, idm_group_id)
             VALUES ((SELECT id FROM role WHERE role_type='ROLE_TRAINING_TRAINEE'), (SELECT id FROM idm_group WHERE name='All Mighty Users')) ON CONFLICT DO NOTHING;
+            INSERT INTO idm_group_role(role_id, idm_group_id)
+            VALUES ((SELECT id FROM role WHERE role_type='ROLE_CYBERGOATZ_ACCESS'), (SELECT id FROM idm_group WHERE name='All Mighty Users')) ON CONFLICT DO NOTHING;
 
             INSERT INTO idm_group_role(role_id, idm_group_id)
             VALUES ((SELECT id FROM role WHERE role_type='ROLE_ADAPTIVE_TRAINING_ADMINISTRATOR'), (SELECT id FROM idm_group WHERE name='All Mighty Users')) ON CONFLICT DO NOTHING;
@@ -58,11 +68,30 @@ spec:
             VALUES ((SELECT id FROM role WHERE role_type='ROLE_SANDBOX-SERVICE_DESIGNER'), (SELECT id FROM idm_group WHERE name='All Mighty Users')) ON CONFLICT DO NOTHING;
             INSERT INTO idm_group_role(role_id, idm_group_id)
             VALUES ((SELECT id FROM role WHERE role_type='ROLE_SANDBOX-SERVICE_TRAINEE'), (SELECT id FROM idm_group WHERE name='All Mighty Users')) ON CONFLICT DO NOTHING;
+            INSERT INTO idm_group_role(role_id, idm_group_id)
+            VALUES ((SELECT id FROM role WHERE role_type='ROLE_GUACAMOLE_TRAINEE'), (SELECT id FROM idm_group WHERE name='All Mighty Users')) ON CONFLICT DO NOTHING;
+            INSERT INTO idm_group_role(role_id, idm_group_id)
+            VALUES ((SELECT id FROM role WHERE role_type='ROLE_GUACAMOLE_ORGANISER'), (SELECT id FROM idm_group WHERE name='All Mighty Users')) ON CONFLICT DO NOTHING;
 
             INSERT INTO idm_group_role(role_id, idm_group_id)
             VALUES ((SELECT id FROM role WHERE role_type='ROLE_TRAINING_ORGANIZER'), (SELECT id FROM idm_group WHERE name='Instructor')) ON CONFLICT DO NOTHING;
             INSERT INTO idm_group_role(role_id, idm_group_id)
             VALUES ((SELECT id FROM role WHERE role_type='ROLE_TRAINING_DESIGNER'), (SELECT id FROM idm_group WHERE name='Instructor')) ON CONFLICT DO NOTHING;
+            INSERT INTO idm_group_role(role_id, idm_group_id)
+            VALUES ((SELECT id FROM role WHERE role_type='ROLE_CYBERGOATZ_ACCESS'), (SELECT id FROM idm_group WHERE name='Instructor')) ON CONFLICT DO NOTHING;
+
+            INSERT INTO idm_group_role(role_id, idm_group_id)
+            VALUES ((SELECT id FROM role WHERE role_type='ROLE_TRAINING_TRAINEE'), (SELECT id FROM idm_group WHERE name='Approved Users')) ON CONFLICT DO NOTHING;
+            INSERT INTO idm_group_role(role_id, idm_group_id)
+            VALUES ((SELECT id FROM role WHERE role_type='ROLE_USER_AND_GROUP_TRAINEE'), (SELECT id FROM idm_group WHERE name='Approved Users')) ON CONFLICT DO NOTHING;
+            INSERT INTO idm_group_role(role_id, idm_group_id)
+            VALUES ((SELECT id FROM role WHERE role_type='ROLE_ADAPTIVE_TRAINING_TRAINEE'), (SELECT id FROM idm_group WHERE name='Approved Users')) ON CONFLICT DO NOTHING;
+            INSERT INTO idm_group_role(role_id, idm_group_id)
+            VALUES ((SELECT id FROM role WHERE role_type='ROLE_SANDBOX-SERVICE_TRAINEE'), (SELECT id FROM idm_group WHERE name='Approved Users')) ON CONFLICT DO NOTHING;
+            INSERT INTO idm_group_role(role_id, idm_group_id)
+            VALUES ((SELECT id FROM role WHERE role_type='ROLE_GUACAMOLE_TRAINEE'), (SELECT id FROM idm_group WHERE name='Approved Users')) ON CONFLICT DO NOTHING;
+            INSERT INTO idm_group_role(role_id, idm_group_id)
+            VALUES ((SELECT id FROM role WHERE role_type='ROLE_CYBERGOATZ_ACCESS'), (SELECT id FROM idm_group WHERE name='Approved Users')) ON CONFLICT DO NOTHING;
 
             INSERT INTO idm_group_role(role_id, idm_group_id)
             VALUES ((SELECT id FROM role WHERE role_type='ROLE_ADAPTIVE_TRAINING_ORGANIZER'), (SELECT id FROM idm_group WHERE name='Instructor')) ON CONFLICT DO NOTHING;

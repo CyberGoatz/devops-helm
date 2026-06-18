@@ -2,7 +2,7 @@ replicasCount: 1
 
 image:
   url: cybergoatz.azurecr.io/guacamole-service
-  tag: v1.0.2
+  tag: v1.0.3
 
 mounts:
   guacamole-service:
