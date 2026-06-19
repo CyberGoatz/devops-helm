@@ -81,6 +81,9 @@
           <h1>Your account request has been processed.</h1>
           <p>Continue when the action is complete, or return to the application to sign in again.</p>
         </div>
+        
+        <div class="cg-status-grid" aria-hidden="true">
+        </div>
       </section>
 
       <section class="cg-form-panel" aria-label="Account status">

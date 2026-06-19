@@ -652,6 +652,28 @@ input {
   text-decoration: none;
 }
 
+.cg-form-shell a.cg-primary {
+  color: var(--primary-foreground);
+  text-decoration: none;
+}
+
+.cg-form-shell a.cg-primary:hover,
+.cg-form-shell a.cg-primary:focus {
+  color: var(--primary-foreground);
+  text-decoration: none;
+}
+
+.cg-form-shell a.cg-secondary {
+  color: var(--cg-text);
+  text-decoration: none;
+}
+
+.cg-form-shell a.cg-secondary:hover,
+.cg-form-shell a.cg-secondary:focus {
+  color: var(--cg-text);
+  text-decoration: none;
+}
+
 .cg-divider {
   align-items: center;
   color: var(--cg-subtle);

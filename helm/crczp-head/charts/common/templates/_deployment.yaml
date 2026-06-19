@@ -28,6 +28,9 @@ spec:
       containers:
         - name: {{ .name }}
           image: "{{ .Values.image.url }}:{{ .Values.image.tag }}"
+          {{- if .Values.image.pullPolicy }}
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          {{- end }}
           {{- if .command }}
           command: ["{{ .command }}"]
           {{- end }}
