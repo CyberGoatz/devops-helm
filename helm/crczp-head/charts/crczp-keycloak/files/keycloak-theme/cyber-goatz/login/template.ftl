@@ -80,7 +80,7 @@
         <div class="cg-visual-copy">
           <p class="cg-eyebrow">Account security</p>
           <h1>Keep your CyberGoatz account protected.</h1>
-          <p>Complete the requested security step to continue to your training workspace.</p>
+          <p>Complete the requested security step to continue to your missions.</p>
         </div>
 
         <div></div>

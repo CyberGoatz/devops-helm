@@ -79,7 +79,7 @@
         <div class="cg-visual-copy">
           <p class="cg-eyebrow">Account registration</p>
           <h1>Create a user account for secure lab access.</h1>
-          <p>Register once to join exercises, track mission outcomes, and keep training activity tied to your profile.</p>
+          <p>Register once to join exercises, track mission outcomes, and keep mission activity tied to your profile.</p>
         </div>
         <div></div>
       </section>
@@ -94,7 +94,7 @@
           <div class="cg-form-heading">
             <p class="cg-eyebrow">Create account</p>
             <h2>Set up your account</h2>
-            <p>Use your contact details so training records stay accurate.</p>
+            <p>Use your contact details so mission records stay accurate.</p>
           </div>
 
           <form id="kc-register-form" class="cg-form" action="${url.registrationAction}" method="post">

@@ -79,7 +79,7 @@
         <div class="cg-visual-copy">
           <p class="cg-eyebrow">Email verification</p>
           <h1>Confirm your email to activate access.</h1>
-          <p>We use verified email addresses to keep account recovery and training notifications reliable.</p>
+          <p>We use verified email addresses to keep account recovery and notifications reliable.</p>
         </div>
       </section>
 

@@ -78,7 +78,7 @@
 
         <div class="cg-visual-copy">
           <p class="cg-eyebrow">Account recovery</p>
-          <h1>Reset access to your training workspace.</h1>
+          <h1>Reset access to your missions.</h1>
           <p>Enter your username or email and Keycloak will send recovery instructions if the account exists.</p>
         </div>
 

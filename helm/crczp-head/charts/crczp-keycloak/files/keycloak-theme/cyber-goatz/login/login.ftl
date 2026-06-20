@@ -78,7 +78,7 @@
 
         <div class="cg-visual-copy">
           <p class="cg-eyebrow">Secure user access</p>
-          <h1>Access your security training workspace.</h1>
+          <h1>Access your missions.</h1>
           <p>Sign in to continue labs, review mission progress, and manage activity in your CyberGoatz account.</p>
         </div>
 
