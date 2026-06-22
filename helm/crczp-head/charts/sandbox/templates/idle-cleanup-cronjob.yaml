@@ -1,0 +1,81 @@
+{{- if .Values.idleCleanup.enabled }}
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: {{ .Values.global.services.sandbox.name }}-idle-cleanup
+  labels: {{- include "common.labels" (dict "name" (print .Values.global.services.sandbox.name "-idle-cleanup") "chart" .Chart "release" .Release "extraLabels" .Values.extraLabels) | nindent 4 }}
+spec:
+  schedule: {{ .Values.idleCleanup.schedule | quote }}
+  concurrencyPolicy: Forbid
+  successfulJobsHistoryLimit: 1
+  failedJobsHistoryLimit: 3
+  jobTemplate:
+    spec:
+      template:
+        metadata:
+          labels: {{- include "common.labels" (dict "name" (print .Values.global.services.sandbox.name "-idle-cleanup") "chart" .Chart "release" .Release "extraLabels" .Values.extraLabels) | nindent 12 }}
+        spec:
+          serviceAccountName: sandbox-service
+          restartPolicy: OnFailure
+          containers:
+            - name: {{ .Values.global.services.sandbox.name }}-idle-cleanup
+              image: "{{ .Values.image.url }}:{{ .Values.image.tag }}"
+              command: ["python3"]
+              args:
+                - manage.py
+                - cleanup_idle_sandboxes
+                - --idle-minutes
+                - {{ .Values.idleCleanup.idleMinutes | quote }}
+                {{- if .Values.idleCleanup.replace }}
+                - --replace
+                {{- end }}
+              {{- if or .Values.environments .Values.secretEnvironments }}
+              env:
+                {{- range $key, $value := .Values.environments }}
+                - name: {{ $key }}
+                  value: {{ $value | quote }}
+                {{- end }}
+                {{- range $key, $value := .Values.secretEnvironments }}
+                - name: {{ $key }}
+                  valueFrom:
+                    secretKeyRef:
+                      name: {{ $value.secretName }}
+                      key: {{ $value.secretKey }}
+                {{- end }}
+              {{- end }}
+              volumeMounts:
+                {{- range $key, $mount := .Values.mounts }}
+                - name: {{ $key | replace "_" "-" }}
+                  mountPath: "{{ $mount.mountPath }}{{ if $mount.isOneFile }}{{ if $mount.subPath }}{{ $key }}{{ $mount.extension }}{{ end }}{{ end }}"
+                  {{- if $mount.subPath }}
+                  subPath: "{{ $key }}{{ $mount.extension }}"
+                  {{- end }}
+                {{- end }}
+          {{- if .Values.global.imageCredentials.username }}
+          imagePullSecrets:
+            - name: github-auth-secret
+          {{- end }}
+          volumes:
+            {{- range $key, $mount := .Values.mounts }}
+            - name: {{ $key | replace "_" "-" }}
+              {{- toYaml $mount.type | nindent 14 }}
+                {{- if $mount.isOneFile }}
+                items:
+                  {{- if $mount.items }}
+                  {{- range $mount.items }}
+                  - key: "{{ .name }}{{ .extension }}"
+                    path: "{{ .name }}{{ .extension }}"
+                    {{- if .mode }}
+                    mode: {{ .mode }}
+                    {{- end }}
+                  {{- end }}
+                  {{- else }}
+                  - key: "{{ $key }}{{ $mount.extension }}"
+                    path: "{{ $key }}{{ $mount.extension }}"
+                    {{- if $mount.mode }}
+                    mode: {{ $mount.mode }}
+                    {{- end }}
+                  {{- end }}
+                {{- end }}
+            {{- end }}
+{{- end }}

@@ -1,8 +1,8 @@
 replicasCount: 1
 
 image:
-  url: ghcr.io/cyberrangecz/backend-answers-storage/answers-storage-service
-  tag: v1.2.0
+  url: cybergoatz.azurecr.io/answers-storage-service
+  tag: v1.2.1
 
 mounts:
   answers-storage:

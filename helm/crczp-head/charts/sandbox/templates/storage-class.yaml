@@ -1,0 +1,19 @@
+{{- if and .Values.pvc.enabled .Values.pvc.storageClass.create }}
+apiVersion: storage.k8s.io/v1
+kind: StorageClass
+metadata:
+  name: {{ .Values.pvc.storageClassName }}
+  labels: {{- include "common.labels" (dict "name" .Values.pvc.storageClassName "chart" .Chart "release" .Release "extraLabels" .Values.extraLabels) | nindent 4 }}
+provisioner: {{ .Values.pvc.storageClass.provisioner }}
+reclaimPolicy: {{ .Values.pvc.storageClass.reclaimPolicy }}
+volumeBindingMode: {{ .Values.pvc.storageClass.volumeBindingMode }}
+allowVolumeExpansion: {{ .Values.pvc.storageClass.allowVolumeExpansion }}
+{{- with .Values.pvc.storageClass.parameters }}
+parameters:
+  {{- toYaml . | nindent 2 }}
+{{- end }}
+{{- with .Values.pvc.storageClass.mountOptions }}
+mountOptions:
+  {{- toYaml . | nindent 2 }}
+{{- end }}
+{{- end }}

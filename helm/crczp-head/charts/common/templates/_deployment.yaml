@@ -28,17 +28,27 @@ spec:
       containers:
         - name: {{ .name }}
           image: "{{ .Values.image.url }}:{{ .Values.image.tag }}"
+          {{- if .Values.image.pullPolicy }}
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          {{- end }}
           {{- if .command }}
           command: ["{{ .command }}"]
           {{- end }}
           {{- if .args }}
           args: {{ .args }}
           {{- end }}
-          {{- if .Values.environments }}
+          {{- if or .Values.environments .Values.secretEnvironments }}
           env:
             {{- range $key, $value := .Values.environments }}
             - name: {{ $key }}
               value: {{ $value | quote }}
+            {{- end }}
+            {{- range $key, $value := .Values.secretEnvironments }}
+            - name: {{ $key }}
+              valueFrom:
+                secretKeyRef:
+                  name: {{ $value.secretName }}
+                  key: {{ $value.secretKey }}
             {{- end }}
           {{- end }}
           {{- if not .portsDisabled }}
@@ -51,7 +61,7 @@ spec:
             {{- if and (eq .protocol "TCP") (.probe) }}
             tcpSocket:
               port: {{ .port }}
-            initialDelaySeconds: 5
+            initialDelaySeconds: 180
             periodSeconds: 10
             {{- end }}
             {{- end }}

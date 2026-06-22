@@ -1,8 +1,8 @@
 replicasCount: 1
 
 image:
-  url: ghcr.io/cyberrangecz/backend-adaptive-training/adaptive-training-service
-  tag: v1.2.0
+  url: cybergoatz.azurecr.io/adaptive-training-service
+  tag: v1.2.2
 
 environments:
   SERVICE_PRECONDITION: uag-service:8084

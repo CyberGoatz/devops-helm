@@ -10,6 +10,10 @@ global:
       issuerIdentifier:
       userInfoUrl:
       responseType:
+  serviceAccounts:
+    training:
+      clientId: training-service
+      clientSecret:
   users:
     - email: crczp-admin@example.com
       iss:
@@ -53,6 +57,9 @@ sandbox:
     user: git
     ansibleNetworkingUrl: https://github.com/cyberrangecz/ansible-stage-one.git
     ansibleNetworkingRev: v1.0.0
+
+mitre:
+  djangoSecretKey:
 
 cluster:
   superuserPassword: password

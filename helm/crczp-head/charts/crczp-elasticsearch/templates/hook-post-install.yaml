@@ -3,17 +3,40 @@ kind: Pod
 metadata:
   name: {{ .Values.global.crczpElasticsearchServiceName }}-hook-postinstall
   annotations:
-    "helm.sh/hook": "post-install"
+    "helm.sh/hook": "post-install,post-upgrade"
     "helm.sh/hook-delete-policy": "before-hook-creation,hook-succeeded"
 spec:
   containers:
-    - name: {{ .Values.global.crczpElasticsearchServiceName }}-post-install-job-template-settings
+    - name: {{ .Values.global.crczpElasticsearchServiceName }}-post-install-job
       image: quay.io/curl/curl:latest
       imagePullPolicy: IfNotPresent
-      command: ['curl', '-H', 'Content-Type: application/json', '-X', 'PUT', '-d', '{"index_patterns":["*"], "order": 100, "settings":{ "number_of_shards": {{ .Values.numberOfShards }}, "number_of_replicas" : {{ .Values.numberOfReplicas }}, "index.max_result_window": {{ .Values.global.crczpElasticsearchServiceIndexMaxResultWindow }}, "index.refresh_interval": "{{ .Values.indexRefreshInterval }}" }}', 'http://{{ .Values.global.crczpElasticsearchServiceName }}:9200/_template/template_1']
-    - name: {{ .Values.global.crczpElasticsearchServiceName }}-post-install-job-template-mappings
-      image: quay.io/curl/curl:latest
-      imagePullPolicy: IfNotPresent
-      command: ['curl', '-H', 'Content-Type: application/json', '-X', 'PUT', '-d', '{"template":"*","index_patterns":["crczp*"],"mappings":{"default":{"properties":{"timestamp":{"type":"date","format":"epoch_millis"},"timestamp_ms":{"type":"date","format":"epoch_millis"},"start_time":{"type":"date","format":"epoch_millis"},"end_time":{"type":"date","format":"epoch_millis"},"game_time":{"type":"date","format":"epoch_millis"}}}}}', 'http://{{ .Values.global.crczpElasticsearchServiceName }}:9200/_template/template_2']
+      command:
+        - /bin/sh
+        - -ec
+      args:
+        - |
+          ES_URL="http://{{ .Values.global.crczpElasticsearchServiceName }}:9200"
+
+          for attempt in $(seq 1 60); do
+            if curl -fsS "${ES_URL}/_cluster/health" >/dev/null; then
+              break
+            fi
+
+            if [ "${attempt}" -eq 60 ]; then
+              echo "Elasticsearch did not become ready in time."
+              exit 1
+            fi
+
+            echo "Waiting for Elasticsearch (${attempt}/60)..."
+            sleep 5
+          done
+
+          curl -fsS -H 'Content-Type: application/json' -X PUT \
+            -d '{"index_patterns":["*"],"order":100,"settings":{"number_of_shards":{{ .Values.numberOfShards }},"number_of_replicas":{{ .Values.numberOfReplicas }},"index.max_result_window":{{ .Values.global.crczpElasticsearchServiceIndexMaxResultWindow }},"index.refresh_interval":"{{ .Values.indexRefreshInterval }}"}}' \
+            "${ES_URL}/_template/template_1"
+
+          curl -fsS -H 'Content-Type: application/json' -X PUT \
+            -d '{"index_patterns":["crczp*"],"mappings":{"properties":{"timestamp":{"type":"date","format":"epoch_millis"},"timestamp_ms":{"type":"date","format":"epoch_millis"},"start_time":{"type":"date","format":"epoch_millis"},"end_time":{"type":"date","format":"epoch_millis"},"game_time":{"type":"date","format":"epoch_millis"}}}}' \
+            "${ES_URL}/_template/template_2"
   restartPolicy: Never
   terminationGracePeriodSeconds: 0

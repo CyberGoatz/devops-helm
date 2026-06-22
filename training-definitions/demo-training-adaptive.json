@@ -288,7 +288,7 @@
           "order": 0,
           "content": "Your goal is to get access to a **server**. You know that there is a **telnet** service running on the server but it is not running on the default port. Your first task is to find the **port** on which the telnet service is running. The flag is the port number.",
           "answer": "2323",
-          "solution": "1. Look for open ports using the command **`nmap 192.168.20.5`**. You can see **ssh** running on port **22** and some other service running on port **2323**. This has to be the **telnet** service.\n\n2. Enter **`2323`** as the flag.",
+          "solution": "1. Look for open ports using the command **`nmap 192.168.20.20`**. You can see **ssh** running on port **22** and some other service running on port **2323**. This has to be the **telnet** service.\n\n2. Enter **`2323`** as the flag.",
           "incorrect_answer_limit": 10,
           "modify_sandbox": false,
           "sandbox_change_expected_duration": 0
@@ -298,7 +298,7 @@
           "order": 1,
           "content": "Your goal is to get access to a **server**. You know that there is a **telnet** service running on the server but it is not running on the default port. Your first task is to find the **port** on which the telnet service is running. The flag is the port number.\n\nA common tool to find open ports is **nmap**. You can learn how to use nmap using **`nmap --help`** or by searching online.",
           "answer": "2323",
-          "solution": "1. Look for open ports using the command **`nmap 192.168.20.5`**. You can see **ssh** running on port **22** and some other service running on port **2323**. This has to be the **telnet** service.\n\n2. Enter **`2323`** as the flag.",
+          "solution": "1. Look for open ports using the command **`nmap 192.168.20.20`**. You can see **ssh** running on port **22** and some other service running on port **2323**. This has to be the **telnet** service.\n\n2. Enter **`2323`** as the flag.",
           "incorrect_answer_limit": 10,
           "modify_sandbox": false,
           "sandbox_change_expected_duration": 0
@@ -340,7 +340,7 @@
           "order": 0,
           "content": "Now you have the port number and you would like to connect, but you don't have any credentials. Luckily you know that user **`alice`** has a weak password. You might be able to guess it. The flag is in alices home directory. There is a list of common passwords placed in your home directory for your convenience.\n\n",
           "answer": "Top_Secret_Flag",
-          "solution": "1. You know that **alice** has a weak password so you can try a dictionary attack. A list of common passwords is ready in your home directory. One of possible tools to make a password attack is **hydra**. A command to find the password is **`hydra -l alice -P passlist.txt telnet://192.168.20.5:2323`**. This will reveal alices password **`bacon`**.\n\n2. Now you can connect to the server by using **`telnet 192.168.20.5 2323`**, entering username **`alice`** and her password **`bacon`**.\n\n3. To read the flag you can use **`cat flag.txt`**. The flag is **`Top_Secret_Flag`**.\n",
+          "solution": "1. You know that **alice** has a weak password so you can try a dictionary attack. A list of common passwords is ready in your home directory. One of possible tools to make a password attack is **hydra**. A command to find the password is **`hydra -l alice -P passlist.txt telnet://192.168.20.20:2323`**. This will reveal alices password **`bacon`**.\n\n2. Now you can connect to the server by using **`telnet 192.168.20.20 2323`**, entering username **`alice`** and her password **`bacon`**.\n\n3. To read the flag you can use **`cat flag.txt`**. The flag is **`Top_Secret_Flag`**.\n",
           "incorrect_answer_limit": 10,
           "modify_sandbox": false,
           "sandbox_change_expected_duration": 0
@@ -350,7 +350,7 @@
           "order": 1,
           "content": "Now you have the port number and you would like to connect, but you don't have any credentials. Luckily you know that user **`alice`** has a weak password. You might be able to guess it. The flag is in alices home directory. There is a list of common passwords placed in your home directory for your convenience.\n\nCommon tools for password attacks are **hydra** and **medusa**. Consult their help commands or man pages to find appropriate options to perform the attack. You can use the list of common passwords stored in your home directory. Use **`ls`** to list files.\n\n",
           "answer": "Top_Secret_Flag",
-          "solution": "1. You know that **alice** has a weak password so you can try a dictionary attack. A list of common passwords is ready in your home directory. One of possible tools to make a password attack is **hydra**. A command to find the password is **`hydra -l alice -P passlist.txt telnet://192.168.20.5:2323`**. This will reveal alices password **`bacon`**.\n\n2. Now you can connect to the server by using **`telnet 192.168.20.5 2323`**, entering username **`alice`** and her password **`bacon`**.\n\n3. To read the flag you can use **`cat flag.txt`**. The flag is **`Top_Secret_Flag`**.\n",
+          "solution": "1. You know that **alice** has a weak password so you can try a dictionary attack. A list of common passwords is ready in your home directory. One of possible tools to make a password attack is **hydra**. A command to find the password is **`hydra -l alice -P passlist.txt telnet://192.168.20.20:2323`**. This will reveal alices password **`bacon`**.\n\n2. Now you can connect to the server by using **`telnet 192.168.20.20 2323`**, entering username **`alice`** and her password **`bacon`**.\n\n3. To read the flag you can use **`cat flag.txt`**. The flag is **`Top_Secret_Flag`**.\n",
           "incorrect_answer_limit": 10,
           "modify_sandbox": false,
           "sandbox_change_expected_duration": 0
@@ -360,7 +360,7 @@
           "order": 2,
           "content": "Now you have the port number and you would like to connect, but you don't have any credentials. Luckily you know that user **`alice`** has a weak password. You might be able to guess it. The flag is in alices home directory. There is a list of common passwords placed in your home directory for your convenience.\n\nCommon tools for password attacks are **hydra** and **medusa**. Consult their help commands or man pages to find appropriate options to perform the attack. You can use the list of common passwords stored in your home directory. Use **`ls`** to list files.\n\nThe command to connect using telnet is **`telnet <host> <port>`**, so in our case **`telnet server 2323`**. You will be prompted to enter an username and password.\n\n",
           "answer": "Top_Secret_Flag",
-          "solution": "1. You know that **alice** has a weak password so you can try a dictionary attack. A list of common passwords is ready in your home directory. One of possible tools to make a password attack is **hydra**. A command to find the password is **`hydra -l alice -P passlist.txt telnet://192.168.20.5:2323`**. This will reveal alices password **`bacon`**.\n\n2. Now you can connect to the server by using **`telnet 192.168.20.5 2323`**, entering username **`alice`** and her password **`bacon`**.\n\n3. To read the flag you can use **`cat flag.txt`**. The flag is **`Top_Secret_Flag`**\n",
+          "solution": "1. You know that **alice** has a weak password so you can try a dictionary attack. A list of common passwords is ready in your home directory. One of possible tools to make a password attack is **hydra**. A command to find the password is **`hydra -l alice -P passlist.txt telnet://192.168.20.20:2323`**. This will reveal alices password **`bacon`**.\n\n2. Now you can connect to the server by using **`telnet 192.168.20.20 2323`**, entering username **`alice`** and her password **`bacon`**.\n\n3. To read the flag you can use **`cat flag.txt`**. The flag is **`Top_Secret_Flag`**\n",
           "incorrect_answer_limit": 10,
           "modify_sandbox": false,
           "sandbox_change_expected_duration": 0

@@ -1,8 +1,8 @@
 replicasCount: 1
 
 image:
-  url: ghcr.io/cyberrangecz/backend-elasticsearch-service/elasticsearch-service-service
-  tag: v1.2.0
+  url: cybergoatz.azurecr.io/elasticsearch-service-service
+  tag: v1.2.1
 
 environments:
   SERVICE_PRECONDITION: uag-service:8084

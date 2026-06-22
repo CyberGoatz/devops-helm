@@ -36,7 +36,7 @@
       "answer": null,
       "answer_variable_name": "telnet_port",
       "content": "Your goal is to get access to the **server**. You know that there is a **telnet** service running on the server but it is not running on the default port. Your first task is to find the **port** on which the telnet service is running. The answer is the port number.\n",
-      "solution": "1. Look for open ports using the command **`nmap -p- 192.168.20.5`**. You can see **ssh** running on port **22** and some other service running on port **${ANSWER}**. This has to be the **telnet** service.\n\n2. Enter **`${ANSWER}`** as the answer.",
+      "solution": "1. Look for open ports using the command **`nmap -p- 192.168.20.20`**. You can see **ssh** running on port **22** and some other service running on port **${ANSWER}**. This has to be the **telnet** service.\n\n2. Enter **`${ANSWER}`** as the answer.",
       "solution_penalized": true,
       "hints": [
         {
@@ -74,12 +74,12 @@
       "answer": null,
       "answer_variable_name": "alice_flag",
       "content": "Now you have the port number and you would like to connect, but you don't have any credentials. Luckily you know that user **`alice`** has a weak password. You might be able to guess it. The answer is in alices home directory. There is a list of common passwords placed in your home directory for your convenience.\n\n",
-      "solution": "Replace **${telnet_port}** with the port number from the previous level:\n\n1. You know that **alice** has a weak password so you can try a dictionary attack. A list of common passwords is ready in your home directory. One of possible tools to make a password attack is **hydra**. A command to find the password is **`hydra -l alice -P passlist.txt telnet://192.168.20.5:${telnet_port}`**. This will reveal alices password **`bacon`**.\n\n2. Now you can connect to the server by using **`telnet 192.168.20.5 ${telnet_port}`**, entering username **`alice`** and her password **`bacon`**.\n\n3. To read the answer you can use **`cat flag.txt`**. The answer is **`${ANSWER}`**\n",
+      "solution": "Replace **${telnet_port}** with the port number from the previous level:\n\n1. You know that **alice** has a weak password so you can try a dictionary attack. A list of common passwords is ready in your home directory. One of possible tools to make a password attack is **hydra**. A command to find the password is **`hydra -l alice -P passlist.txt telnet://192.168.20.20:${telnet_port}`**. This will reveal alices password **`bacon`**.\n\n2. Now you can connect to the server by using **`telnet 192.168.20.20 ${telnet_port}`**, entering username **`alice`** and her password **`bacon`**.\n\n3. To read the answer you can use **`cat flag.txt`**. The answer is **`${ANSWER}`**\n",
       "solution_penalized": true,
       "hints": [
         {
           "title": "Connecting using telnet",
-          "content": "The command to connect using telnet is **`telnet <host> <port>`**, so in our case **`telnet 192.168.20.5 ${telnet_port}`**. You will be prompted to enter an username and password.",
+          "content": "The command to connect using telnet is **`telnet <host> <port>`**, so in our case **`telnet 192.168.20.20 ${telnet_port}`**. You will be prompted to enter an username and password.",
           "hint_penalty": 10,
           "order": 1
         },

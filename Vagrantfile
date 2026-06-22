@@ -6,6 +6,16 @@
 $script = <<-SCRIPT
 set -e
 
+echo 'Acquire::ForceIPv4 "true";' | tee /etc/apt/apt.conf.d/99force-ipv4
+sysctl -w net.ipv6.conf.all.disable_ipv6=1
+sysctl -w net.ipv6.conf.default.disable_ipv6=1
+
+# Use better mirror (faster + avoids edge mirror issues)
+sed -i 's|http://archive.ubuntu.com/ubuntu|http://in.archive.ubuntu.com/ubuntu|g' /etc/apt/sources.list || true
+
+# Now safe to run apt
+apt-get clean
+
 apt update
 apt install nfs-common -y
 
@@ -78,7 +88,7 @@ helm upgrade --install crczp-head /vagrant/helm/crczp-head \
   --create-namespace \
   -f /vagrant/vagrant-values.yaml \
   --timeout 15m \
-  --atomic
+  --debug
 SCRIPT
 
 ##
@@ -90,15 +100,17 @@ Vagrant.configure("2") do |config|
 
   config.vm.provider "virtualbox" do |vb, override|
     override.vm.box = "ubuntu/jammy64"
-    vb.memory = 10240
-    vb.cpus = 4
+    vb.memory = 16384
+    vb.cpus = 12
+    vb.customize ["modifyvm", :id, "--nictype1", "virtio"]
+    vb.customize ["modifyvm", :id, "--nictype2", "82540EM"]
   end
 
   config.vm.provider "libvirt" do |libvirt, override|
     override.vm.box = "generic/ubuntu2204"
     override.vm.synced_folder ".", "/vagrant", type: "nfs", nfs_udp: false, nfs_version: 4
-    libvirt.memory = 10240
-    libvirt.cpus = 4
+    libvirt.memory = 12288
+    libvirt.cpus = 8
     libvirt.driver = "kvm"
     libvirt.disk_bus = 'virtio'
     libvirt.nic_model_type = 'virtio'

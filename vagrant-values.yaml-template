@@ -28,6 +28,10 @@ global:
       label: Login with local Keycloak
       responseType: code
       refreshToken: true
+  serviceAccounts:
+    training:
+      clientId: training-service
+      clientSecret:
   postgres:
     serviceName: postgres-rw.cnpg-system.svc.cluster.local
     port: 5432
@@ -35,8 +39,43 @@ global:
     password: password
 
 crczp-keycloak:
+  realmSync:
+    enabled: true
+  realmConfig:
+    passwordPolicy: "length(8) and digits(1) and upperCase(1) and specialChars(1)"
+    googleIdentityProvider:
+      enabled: false
+      alias: google
+      displayName: Google
+      trustEmail: true
+      storeToken: false
+      addReadTokenRoleOnCreate: false
+      firstBrokerLoginFlowAlias: first broker login
+      clientId:
+      clientSecret:
+      hostedDomain:
+    smtp:
+      enabled: false
+      host: smtp.resend.com
+      port: 587
+      from: no-reply@example.com
+      fromDisplayName: Cyber Goatz
+      replyTo: support@example.com
+      replyToDisplayName: Cyber Goatz Support
+      envelopeFrom: no-reply@example.com
+      ssl: false
+      starttls: true
+      auth: true
+      user: resend
+      password:
   keycloakPassword: password
   grafanaClientSecret: secret
+  # Add every frontend origin that should use the CyberGoatz Keycloak client.
+  cyberGoatzFrontendUrls:
+    - http://localhost:3000
+    # - https://your-frontend.app
+  # Deprecated: use cyberGoatzFrontendUrls for multiple deployed/local frontend origins.
+  cyberGoatzFrontendUrl: http://localhost:3000
 
 crczp-guacamole:
   enabled: False
@@ -45,12 +84,27 @@ sandbox:
   djangoSecretKey:
   headHost: 172.19.0.22
   stackNamePrefix: default0
+  image:
+    # Override these to run a sandbox-service image built inside the Vagrant VM.
+    # Example:
+    # url: sandbox-service
+    # tag: local
+    # pullPolicy: Never
+    url: ghcr.io/cyberrangecz/backend-sandbox-service/sandbox-service
+    tag: v1.6.1
   dnsNameServers:
     - 1.1.1.1
     - 1.0.0.1
   osAuthUrl:
   osApplicationCredentialId:
   osApplicationCredentialSecret:
+  azure:
+    subscriptionId:
+    tenantId:
+    clientId:
+    clientSecret:
+    resourceGroupName:
+    location:
   proxyHost:
   proxyUser:
   proxyKey:
@@ -59,7 +113,36 @@ sandbox:
     #providers: {"https://github.com/": "TOKEN"}
     user: git
     ansibleNetworkingUrl: https://github.com/cyberrangecz/ansible-stage-one.git
-    ansibleNetworkingRev: v1.0.0
+    ansibleNetworkingRev: v2.0.3
+  idleCleanup:
+    enabled: true
+    schedule: "*/15 * * * *"
+    idleMinutes: 60
+    replace: true
+
+frontend:
+  image:
+    # Use a frontend-platform image built from this fork so the Angular admin track UI is available.
+    url: ghcr.io/cybergoatz/frontend-platform
+    tag: v0.1.0
+
+cybergoatz:
+  image:
+    url: ghcr.io/cybergoatz/backend-cybergoatz
+    tag: v0.1.0
+    pullPolicy: IfNotPresent
+  database:
+    synchronize: true
+  publicTraining:
+    timeoutMs: 1500
+  htb:
+    apiUrl: https://labs.hackthebox.com/api/v4
+    profileBaseUrl: https://app.hackthebox.com/public/users
+    tokenEncryptionKey: change-me-generate-32-byte-secret
+    timeoutMs: 5000
 
 cluster:
   superuserPassword: password
+
+mitre:
+  djangoSecretKey:

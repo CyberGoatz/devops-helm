@@ -1,0 +1,200 @@
+{{- if .Values.realmSync.enabled }}
+apiVersion: v1
+kind: Pod
+metadata:
+  name: {{ .Values.name }}-hook-sync-realm
+  annotations:
+    "helm.sh/hook": "post-install,post-upgrade"
+    "helm.sh/hook-delete-policy": "before-hook-creation,hook-succeeded"
+spec:
+  {{- if $.Values.global.imageCredentials.username }}
+  imagePullSecrets:
+    - name: github-auth-secret
+  {{- end }}
+  containers:
+    - name: {{ .Values.name }}-sync-realm
+      image: {{ .Values.realmSync.image }}
+      imagePullPolicy: {{ .Values.realmSync.imagePullPolicy }}
+      command:
+        - /bin/sh
+        - -ec
+        - |
+          SERVER_URL="http://keycloak-service:8080/keycloak"
+          REALM_NAME="{{ .Values.realm }}"
+
+          echo "Waiting for Keycloak admin login..."
+          until /opt/keycloak/bin/kcadm.sh config credentials \
+            --server "${SERVER_URL}" \
+            --realm master \
+            --user "${KEYCLOAK_ADMIN_USER}" \
+            --password "${KEYCLOAK_ADMIN_PASSWORD}" >/dev/null 2>&1; do
+            sleep 5
+          done
+
+          echo "Waiting for realm ${REALM_NAME}..."
+          until /opt/keycloak/bin/kcadm.sh get "realms/${REALM_NAME}" >/dev/null 2>&1; do
+            sleep 5
+          done
+
+          echo "Syncing realm settings from Helm values..."
+          /opt/keycloak/bin/kcadm.sh update "realms/${REALM_NAME}" \
+            -s "verifyEmail=${VERIFY_EMAIL}" \
+            -s "passwordPolicy=${PASSWORD_POLICY}"
+
+          if [ -n "${LOGIN_THEME}" ]; then
+            echo "Syncing login theme ${LOGIN_THEME}..."
+            THEME_SYNCED=false
+            for attempt in 1 2 3 4 5 6 7 8 9 10 11 12; do
+              if /opt/keycloak/bin/kcadm.sh update "realms/${REALM_NAME}" \
+                -s "loginTheme=${LOGIN_THEME}"; then
+                THEME_SYNCED=true
+                break
+              fi
+
+              echo "Login theme ${LOGIN_THEME} is not available yet; retrying (${attempt}/12)..."
+              sleep 5
+            done
+
+            if [ "${THEME_SYNCED}" != "true" ]; then
+              echo "WARNING: Login theme ${LOGIN_THEME} could not be applied during this hook run."
+              echo "WARNING: Keycloak may need to restart with the mounted theme before the realm can reference it."
+            fi
+          fi
+
+          if [ "${TERMS_AND_CONDITIONS_ENABLED}" = "true" ]; then
+            echo "Enabling Terms and Conditions required action..."
+            if /opt/keycloak/bin/kcadm.sh get "authentication/required-actions/TERMS_AND_CONDITIONS" -r "${REALM_NAME}" >/dev/null 2>&1; then
+              /opt/keycloak/bin/kcadm.sh update "authentication/required-actions/TERMS_AND_CONDITIONS" -r "${REALM_NAME}" \
+                -s enabled=true \
+                -s defaultAction=true
+            else
+              echo "WARNING: TERMS_AND_CONDITIONS required action was not found in this Keycloak realm."
+            fi
+          else
+            echo "Disabling Terms and Conditions required action..."
+            if /opt/keycloak/bin/kcadm.sh get "authentication/required-actions/TERMS_AND_CONDITIONS" -r "${REALM_NAME}" >/dev/null 2>&1; then
+              /opt/keycloak/bin/kcadm.sh update "authentication/required-actions/TERMS_AND_CONDITIONS" -r "${REALM_NAME}" \
+                -s defaultAction=false
+            fi
+          fi
+
+          {{- if .Values.realmConfig.smtp.enabled }}
+          /opt/keycloak/bin/kcadm.sh update "realms/${REALM_NAME}" \
+            -s "smtpServer.host=${SMTP_HOST}" \
+            -s "smtpServer.port=${SMTP_PORT}" \
+            -s "smtpServer.from=${SMTP_FROM}" \
+            -s "smtpServer.fromDisplayName=${SMTP_FROM_DISPLAY_NAME}" \
+            -s "smtpServer.replyTo=${SMTP_REPLY_TO}" \
+            -s "smtpServer.replyToDisplayName=${SMTP_REPLY_TO_DISPLAY_NAME}" \
+            -s "smtpServer.envelopeFrom=${SMTP_ENVELOPE_FROM}" \
+            -s "smtpServer.ssl=${SMTP_SSL}" \
+            -s "smtpServer.starttls=${SMTP_STARTTLS}" \
+            -s "smtpServer.auth=${SMTP_AUTH}" \
+            -s "smtpServer.user=${SMTP_USER}" \
+            -s "smtpServer.password=${SMTP_PASSWORD}"
+          {{- else }}
+          /opt/keycloak/bin/kcadm.sh update "realms/${REALM_NAME}" \
+            -s 'smtpServer={}'
+          {{- end }}
+
+          {{- if .Values.realmConfig.googleIdentityProvider.enabled }}
+          echo "Syncing Google identity provider..."
+          if /opt/keycloak/bin/kcadm.sh get "identity-provider/instances/${GOOGLE_IDP_ALIAS}" -r "${REALM_NAME}" >/dev/null 2>&1; then
+            /opt/keycloak/bin/kcadm.sh update "identity-provider/instances/${GOOGLE_IDP_ALIAS}" -r "${REALM_NAME}" \
+              -s "alias=${GOOGLE_IDP_ALIAS}" \
+              -s "displayName=${GOOGLE_IDP_DISPLAY_NAME}" \
+              -s "enabled=true" \
+              -s "trustEmail=${GOOGLE_IDP_TRUST_EMAIL}" \
+              -s "storeToken=${GOOGLE_IDP_STORE_TOKEN}" \
+              -s "addReadTokenRoleOnCreate=${GOOGLE_IDP_ADD_READ_TOKEN_ROLE_ON_CREATE}" \
+              -s "firstBrokerLoginFlowAlias=${GOOGLE_IDP_FIRST_BROKER_LOGIN_FLOW_ALIAS}" \
+              -s "config.clientId=${GOOGLE_IDP_CLIENT_ID}" \
+              -s "config.clientSecret=${GOOGLE_IDP_CLIENT_SECRET}" \
+              -s "config.defaultScope=openid profile email" \
+              -s "config.useJwksUrl=true"
+            {{- if .Values.realmConfig.googleIdentityProvider.hostedDomain }}
+            /opt/keycloak/bin/kcadm.sh update "identity-provider/instances/${GOOGLE_IDP_ALIAS}" -r "${REALM_NAME}" \
+              -s "config.hostedDomain=${GOOGLE_IDP_HOSTED_DOMAIN}"
+            {{- end }}
+          else
+            /opt/keycloak/bin/kcadm.sh create "identity-provider/instances" -r "${REALM_NAME}" \
+              -s "alias=${GOOGLE_IDP_ALIAS}" \
+              -s "providerId=google" \
+              -s "displayName=${GOOGLE_IDP_DISPLAY_NAME}" \
+              -s "enabled=true" \
+              -s "trustEmail=${GOOGLE_IDP_TRUST_EMAIL}" \
+              -s "storeToken=${GOOGLE_IDP_STORE_TOKEN}" \
+              -s "addReadTokenRoleOnCreate=${GOOGLE_IDP_ADD_READ_TOKEN_ROLE_ON_CREATE}" \
+              -s "firstBrokerLoginFlowAlias=${GOOGLE_IDP_FIRST_BROKER_LOGIN_FLOW_ALIAS}" \
+              -s "config.clientId=${GOOGLE_IDP_CLIENT_ID}" \
+              -s "config.clientSecret=${GOOGLE_IDP_CLIENT_SECRET}" \
+              -s "config.defaultScope=openid profile email" \
+              -s "config.useJwksUrl=true"
+            {{- if .Values.realmConfig.googleIdentityProvider.hostedDomain }}
+            /opt/keycloak/bin/kcadm.sh update "identity-provider/instances/${GOOGLE_IDP_ALIAS}" -r "${REALM_NAME}" \
+              -s "config.hostedDomain=${GOOGLE_IDP_HOSTED_DOMAIN}"
+            {{- end }}
+          fi
+          {{- else }}
+          echo "Google identity provider disabled in values."
+          {{- end }}
+
+          echo "Realm settings synced."
+      env:
+        - name: KEYCLOAK_ADMIN_USER
+          value: {{ .Values.keycloakAdmin | quote }}
+        - name: KEYCLOAK_ADMIN_PASSWORD
+          value: {{ .Values.keycloakPassword | quote }}
+        - name: VERIFY_EMAIL
+          value: {{ ternary "true" "false" .Values.realmConfig.verifyEmail | quote }}
+        - name: PASSWORD_POLICY
+          value: {{ .Values.realmConfig.passwordPolicy | default "" | quote }}
+        - name: LOGIN_THEME
+          value: {{ ternary .Values.theme.name "" .Values.theme.enabled | quote }}
+        - name: TERMS_AND_CONDITIONS_ENABLED
+          value: {{ ternary "true" "false" .Values.realmConfig.termsAndConditions.enabled | quote }}
+        - name: SMTP_HOST
+          value: {{ .Values.realmConfig.smtp.host | default "" | quote }}
+        - name: SMTP_PORT
+          value: {{ .Values.realmConfig.smtp.port | toString | quote }}
+        - name: SMTP_FROM
+          value: {{ .Values.realmConfig.smtp.from | default "" | quote }}
+        - name: SMTP_FROM_DISPLAY_NAME
+          value: {{ .Values.realmConfig.smtp.fromDisplayName | default "" | quote }}
+        - name: SMTP_REPLY_TO
+          value: {{ .Values.realmConfig.smtp.replyTo | default "" | quote }}
+        - name: SMTP_REPLY_TO_DISPLAY_NAME
+          value: {{ .Values.realmConfig.smtp.replyToDisplayName | default "" | quote }}
+        - name: SMTP_ENVELOPE_FROM
+          value: {{ .Values.realmConfig.smtp.envelopeFrom | default "" | quote }}
+        - name: SMTP_SSL
+          value: {{ ternary "true" "false" .Values.realmConfig.smtp.ssl | quote }}
+        - name: SMTP_STARTTLS
+          value: {{ ternary "true" "false" .Values.realmConfig.smtp.starttls | quote }}
+        - name: SMTP_AUTH
+          value: {{ ternary "true" "false" .Values.realmConfig.smtp.auth | quote }}
+        - name: SMTP_USER
+          value: {{ .Values.realmConfig.smtp.user | default "" | quote }}
+        - name: SMTP_PASSWORD
+          value: {{ .Values.realmConfig.smtp.password | default "" | quote }}
+        - name: GOOGLE_IDP_ALIAS
+          value: {{ .Values.realmConfig.googleIdentityProvider.alias | default "google" | quote }}
+        - name: GOOGLE_IDP_DISPLAY_NAME
+          value: {{ .Values.realmConfig.googleIdentityProvider.displayName | default "Google" | quote }}
+        - name: GOOGLE_IDP_TRUST_EMAIL
+          value: {{ ternary "true" "false" .Values.realmConfig.googleIdentityProvider.trustEmail | quote }}
+        - name: GOOGLE_IDP_STORE_TOKEN
+          value: {{ ternary "true" "false" .Values.realmConfig.googleIdentityProvider.storeToken | quote }}
+        - name: GOOGLE_IDP_ADD_READ_TOKEN_ROLE_ON_CREATE
+          value: {{ ternary "true" "false" .Values.realmConfig.googleIdentityProvider.addReadTokenRoleOnCreate | quote }}
+        - name: GOOGLE_IDP_FIRST_BROKER_LOGIN_FLOW_ALIAS
+          value: {{ .Values.realmConfig.googleIdentityProvider.firstBrokerLoginFlowAlias | default "first broker login" | quote }}
+        - name: GOOGLE_IDP_CLIENT_ID
+          value: {{ .Values.realmConfig.googleIdentityProvider.clientId | default "" | quote }}
+        - name: GOOGLE_IDP_CLIENT_SECRET
+          value: {{ .Values.realmConfig.googleIdentityProvider.clientSecret | default "" | quote }}
+        - name: GOOGLE_IDP_HOSTED_DOMAIN
+          value: {{ .Values.realmConfig.googleIdentityProvider.hostedDomain | default "" | quote }}
+  restartPolicy: Never
+  terminationGracePeriodSeconds: 0
+{{- end }}

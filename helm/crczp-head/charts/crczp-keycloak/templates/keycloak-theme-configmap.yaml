@@ -1,0 +1,16 @@
+{{- if .Values.theme.enabled }}
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ .Values.name }}-theme-{{ .Values.theme.name }}
+  labels: {{- include "common.labels" (dict "name" (printf "%s-theme" .Values.name) "chart" $.Chart "release" $.Release "extraLabels" $.extraLabels) | nindent 4 }}
+data:
+  theme.properties: |-
+{{ .Files.Get (printf "files/keycloak-theme/%s/login/theme.properties" .Values.theme.name) | indent 4 }}
+{{ range $path, $_ := .Files.Glob (printf "files/keycloak-theme/%s/login/*.ftl" .Values.theme.name) }}
+  {{ base $path }}: |-
+{{ $.Files.Get $path | indent 4 }}
+{{ end }}
+  cyber-goatz.css: |-
+{{ .Files.Get (printf "files/keycloak-theme/%s/login/resources/css/cyber-goatz.css" .Values.theme.name) | indent 4 }}
+{{- end }}

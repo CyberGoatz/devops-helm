@@ -18,6 +18,7 @@ data:
         "adaptiveTraining": "https://{{ .Values.global.headHost }}{{ .Values.global.services.adaptiveTraining.contextPath }}",
         "sandbox": "https://{{ .Values.global.headHost }}{{ .Values.global.services.sandbox.contextPath }}",
         "userAndGroup": "https://{{ .Values.global.headHost }}{{ .Values.global.services.userAndGroup.contextPath }}",
+        "cybergoatz": "https://{{ .Values.global.headHost }}{{ .Values.global.services.cybergoatz.contextPath }}",
         "mitre": "https://{{ .Values.global.headHost }}{{ .Values.global.services.mitre.contextPath }}",
         "guacamole": "https://{{ .Values.global.headHost }}{{ .Values.global.services.guacamole.contextPath }}"
       },
@@ -28,6 +29,8 @@ data:
         "adaptiveTrainingDesigner": "ROLE_ADAPTIVE_TRAINING_DESIGNER",
         "adaptiveTrainingOrganizer": "ROLE_ADAPTIVE_TRAINING_ORGANIZER",
         "trainingTrainee": "ROLE_TRAINING_TRAINEE",
+        "cyberGoatzAccess": "ROLE_CYBERGOATZ_ACCESS",
+        "cyberGoatzWaitlisted": "ROLE_CYBERGOATZ_WAITLISTED",
         "sandboxDesigner": "ROLE_SANDBOX-SERVICE_DESIGNER",
         "sandboxOrganizer": "ROLE_SANDBOX-SERVICE_ORGANIZER"
       },
@@ -54,7 +57,7 @@ data:
               "redirectUri": "https://{{ $.Values.global.headHost }}",
               "scope": "openid email profile{{ if $element.refreshToken }} offline_access{{ end }}",
               "logoutUrl": "{{ $element.logoutUrl }}",
-              "postLogoutRedirectUri": "https://{{ $.Values.global.headHost }}/login",
+              "postLogoutRedirectUri": "https://{{ $.Values.global.headHost }}/",
               "silentRefreshRedirectUri": "https://{{ $.Values.global.headHost }}/silent-refresh.html",
               "clearHashAfterLogin": true,
               "strictDiscoveryDocumentValidation": false,

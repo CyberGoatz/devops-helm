@@ -1,8 +1,8 @@
 replicasCount: 1
 
 image:
-  url: ghcr.io/cyberrangecz/backend-guacamole/guacamole-service
-  tag: v1.0.1
+  url: cybergoatz.azurecr.io/guacamole-service
+  tag: v1.0.3
 
 mounts:
   guacamole-service:

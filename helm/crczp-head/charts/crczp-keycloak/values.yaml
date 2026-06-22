@@ -5,10 +5,66 @@ db:
   username: keycloak
 
 grafanaClientSecret:
+# List of frontend origins that are allowed to use the CyberGoatz OIDC client.
+# Keep localhost here when testing a local Next.js frontend against a deployed backend.
+cyberGoatzFrontendUrls:
+  - http://localhost:3000
+
+# Deprecated: use cyberGoatzFrontendUrls for multiple deployed/local frontend origins.
+cyberGoatzFrontendUrl: http://localhost:3000
 
 keycloakAdmin: admin
 keycloakPassword:
+realmSync:
+  enabled: true
+  image: quay.io/keycloak/keycloak:25.0.1
+  imagePullPolicy: IfNotPresent
 
 development: false
 
+trainingServiceClient:
+  clientId: training-service
+  clientSecret: training-service-secret
+
 realm: CRCZP
+
+theme:
+  enabled: true
+  name: cyber-goatz
+  disableCache: true
+  writableDevMount: true
+
+realmConfig:
+  registrationAllowed: true
+  registrationEmailAsUsername: false
+  rememberMe: true
+  verifyEmail: false
+  resetPasswordAllowed: true
+  termsAndConditions:
+    enabled: true
+  passwordPolicy:
+  smtp:
+    enabled: false
+    host:
+    port: 587
+    from:
+    fromDisplayName:
+    replyTo:
+    replyToDisplayName:
+    envelopeFrom:
+    ssl: false
+    starttls: true
+    auth: true
+    user:
+    password:
+  googleIdentityProvider:
+    enabled: false
+    alias: google
+    displayName: Google
+    trustEmail: true
+    storeToken: false
+    addReadTokenRoleOnCreate: false
+    firstBrokerLoginFlowAlias: first broker login
+    clientId:
+    clientSecret:
+    hostedDomain:

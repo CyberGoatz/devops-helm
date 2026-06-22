@@ -10,10 +10,14 @@ global:
   crczpTerraformBackendType: 'kubernetes'
   corsWhitelist:
   imageCredentials:
-    registry: ghcr.io
+    registry: cybergoatz.azurecr.io
     username:
     password:
 
+  serviceAccounts:
+    training:
+      clientId: training-service
+      clientSecret: training-service-secret
 
   oidcProviders:
     - url:
@@ -40,6 +44,10 @@ global:
       dbName: crczp-adaptive-training
       dbUser: crczp-adaptive-training
       dbPassword: crczp-adaptive-training
+    cybergoatz:
+      dbName: cybergoatz
+      dbUser: cybergoatz
+      dbPassword: cybergoatz
     answersStorage:
       dbName: crczp-answers-storage
       dbUser: crczp-answers-storage
@@ -79,6 +87,11 @@ global:
       name: adaptive-training-service
       port: 8082
       contextPath: /adaptive-training/api/v1/
+      ingressAutoexpose: true
+    cybergoatz:
+      name: cybergoatz-service
+      port: 30001
+      contextPath: /cybergoatz/api/v1/
       ingressAutoexpose: true
     answersStorage:
       name: answers-storage

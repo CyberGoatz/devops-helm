@@ -1,8 +1,8 @@
 replicasCount: 1
 
 image:
-  url: ghcr.io/cyberrangecz/backend-sandbox-service/sandbox-service
-  tag: v1.6.2
+  url: cybergoatz.azurecr.io/sandbox-service
+  tag: v0.1.19
 
 environments:
   SERVICE_PRECONDITION: "uag-service:8084"
@@ -49,6 +49,15 @@ pvc:
   size: 1Gi
   storageClassName: local-path
   accessMode: ReadWriteOnce
+  storageClass:
+    create: false
+    provisioner: file.csi.azure.com
+    reclaimPolicy: Delete
+    volumeBindingMode: Immediate
+    allowVolumeExpansion: true
+    parameters:
+      skuName: Premium_LRS
+    mountOptions: []
 
 stackNamePrefix: default0
 dnsNameServers:
@@ -62,11 +71,18 @@ osConsoleType: spice-html5
 openstackWorkerCount: 4
 ansibleWorkerCount: 4
 defaultWorkerCount: 4
+idleCleanup:
+  enabled: true
+  schedule: "*/15 * * * *"
+  idleMinutes: 60
+  replace: true
+serviceAccountClients:
+  - training-service
 sandboxBuildTimeout: 7200
 sandboxDeleteTimeout: 3600
 sandboxAnsibleTimeout: 7200
-manFlavor: standard.small
-manImage: ubuntu-noble-x86_64
+manFlavor: Standard_B2ats_v2
+manImage: Canonical:0001-com-ubuntu-server-jammy:22_04-lts-gen2:latest
 manUser: ubuntu
 sandboxManCidr:
 proxyHost:
@@ -98,7 +114,7 @@ gitConfig:
   #providers: {"https://github.com/": "TOKEN"}
   user: git
   ansibleNetworkingUrl: https://github.com/cyberrangecz/ansible-stage-one.git
-  ansibleNetworkingRev: v1.8.0
+  ansibleNetworkingRev: v2.0.3
 
 aws:
   accessKeyId:
@@ -107,5 +123,15 @@ aws:
   availabilityZone: eu-central-1a
   baseVpc: BaseNet
   baseSubnet: BaseSubnetA
+
+azure:
+  subscriptionId:
+  tenantId:
+  clientId:
+  clientSecret:
+  resourceGroupName:
+  location:
+  nativeRouting: true
+  omitRouterVms: true
 
 keystoneCA:
