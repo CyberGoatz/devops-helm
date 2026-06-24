@@ -210,10 +210,14 @@
             </#if>
 
             <label class="cg-terms-check" for="termsAccepted">
+              <#assign cyberGoatzPolicyBaseUrl = "">
+              <#if client?? && client.baseUrl?? && client.baseUrl?has_content>
+                <#assign cyberGoatzPolicyBaseUrl = client.baseUrl?remove_ending("/")>
+              </#if>
               <input id="termsAccepted" name="termsAccepted" type="checkbox" required>
               <span>
-                I agree to the <a href="#" target="_blank" rel="noreferrer">Terms of Service</a>
-                and <a href="#" target="_blank" rel="noreferrer">Privacy Policy</a>
+                I agree to the <a href="${cyberGoatzPolicyBaseUrl}/terms" target="_blank" rel="noreferrer">Terms of Service</a>
+                and <a href="${cyberGoatzPolicyBaseUrl}/privacy" target="_blank" rel="noreferrer">Privacy Policy</a>
               </span>
             </label>
 

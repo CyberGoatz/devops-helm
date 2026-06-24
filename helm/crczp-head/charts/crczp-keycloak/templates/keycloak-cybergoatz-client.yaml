@@ -33,6 +33,7 @@ spec:
       - offline_access
     protocol: openid-connect
     publicClient: false
+    baseUrl: "{{ first $cyberGoatzFrontendUrls }}"
     redirectUris:
       {{- range $frontendUrl := $cyberGoatzFrontendUrls }}
       - "{{ $frontendUrl }}/api/auth/callback/keycloak"

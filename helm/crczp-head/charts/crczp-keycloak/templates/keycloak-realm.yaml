@@ -14,6 +14,11 @@ spec:
     rememberMe: {{ .Values.realmConfig.rememberMe }}
     verifyEmail: {{ .Values.realmConfig.verifyEmail }}
     resetPasswordAllowed: {{ .Values.realmConfig.resetPasswordAllowed }}
+    ssoSessionIdleTimeout: {{ .Values.realmConfig.sessions.ssoSessionIdleTimeout }}
+    ssoSessionMaxLifespan: {{ .Values.realmConfig.sessions.ssoSessionMaxLifespan }}
+    clientSessionIdleTimeout: {{ .Values.realmConfig.sessions.clientSessionIdleTimeout }}
+    clientSessionMaxLifespan: {{ .Values.realmConfig.sessions.clientSessionMaxLifespan }}
+    accessTokenLifespan: {{ .Values.realmConfig.sessions.accessTokenLifespan }}
     {{- if .Values.theme.enabled }}
     loginTheme: {{ .Values.theme.name | quote }}
     {{- end }}

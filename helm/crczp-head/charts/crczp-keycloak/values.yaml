@@ -40,6 +40,12 @@ realmConfig:
   rememberMe: true
   verifyEmail: false
   resetPasswordAllowed: true
+  sessions:
+    ssoSessionIdleTimeout: 3600
+    ssoSessionMaxLifespan: 28800
+    clientSessionIdleTimeout: 3600
+    clientSessionMaxLifespan: 28800
+    accessTokenLifespan: 300
   termsAndConditions:
     enabled: true
   passwordPolicy:
