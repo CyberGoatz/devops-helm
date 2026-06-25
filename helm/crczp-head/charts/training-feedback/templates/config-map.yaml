@@ -25,12 +25,13 @@ data:
     elasticsearch-service.uri=http://{{ .Values.global.services.elasticsearch.name }}:{{ .Values.global.services.elasticsearch.port }}{{ .Values.global.services.elasticsearch.contextPath }}
 
     # DATASOURCE (DataSourceAutoConfiguration & DataSourceProperties)
-    spring.datasource.url=jdbc:postgresql://{{ .Values.global.postgres.serviceName }}:{{ .Values.global.postgres.port }}/{{ .Values.global.postgresServices.trainingFeedback.dbName }}
+    spring.datasource.url=jdbc:postgresql://{{ include "common.postgres.appHost" . }}:{{ include "common.postgres.appPort" . }}/{{ .Values.global.postgresServices.trainingFeedback.dbName }}
     spring.datasource.username={{ .Values.global.postgresServices.trainingFeedback.dbUser }}
     spring.datasource.password={{ .Values.global.postgresServices.trainingFeedback.dbPassword }}
     spring.datasource.driver-class-name=org.postgresql.Driver
+{{ include "common.spring.hikari" . | nindent 4 }}
 
     spring.jpa.open-in-view=false
 
     #logging
-    spring.jpa.show-sql=true
+    spring.jpa.show-sql=false

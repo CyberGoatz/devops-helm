@@ -1,0 +1,39 @@
+{{- if and .Values.pvc.enabled .Values.runnerCleanup.enabled }}
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: {{ .Values.global.services.sandbox.name }}-runner-cleanup
+  labels: {{- include "common.labels" (dict "name" (print .Values.global.services.sandbox.name "-runner-cleanup") "chart" .Chart "release" .Release "extraLabels" .Values.extraLabels) | nindent 4 }}
+spec:
+  schedule: {{ .Values.runnerCleanup.schedule | quote }}
+  concurrencyPolicy: Forbid
+  successfulJobsHistoryLimit: 1
+  failedJobsHistoryLimit: 3
+  jobTemplate:
+    spec:
+      ttlSecondsAfterFinished: 86400
+      template:
+        metadata:
+          labels: {{- include "common.labels" (dict "name" (print .Values.global.services.sandbox.name "-runner-cleanup") "chart" .Chart "release" .Release "extraLabels" .Values.extraLabels) | nindent 12 }}
+        spec:
+          restartPolicy: OnFailure
+          containers:
+            - name: runner-cleanup
+              image: {{ .Values.runnerCleanup.image.url }}:{{ .Values.runnerCleanup.image.tag }}
+              imagePullPolicy: IfNotPresent
+              command:
+                - sh
+                - -ec
+                - |
+                  runner_path="/var/opt/crczp/ansible-runner-volumes"
+                  retention_days="{{ .Values.runnerCleanup.retentionDays }}"
+                  find "${runner_path}" -mindepth 2 -maxdepth 2 -type d -mtime +"${retention_days}" -exec rm -rf {} +
+                  find "${runner_path}" -mindepth 1 -maxdepth 1 -type d -empty -delete
+              volumeMounts:
+                - name: ansible-runner-vol
+                  mountPath: /var/opt/crczp/ansible-runner-volumes
+          volumes:
+            - name: ansible-runner-vol
+              persistentVolumeClaim:
+                claimName: {{ .Values.global.services.sandbox.name }}
+{{- end }}

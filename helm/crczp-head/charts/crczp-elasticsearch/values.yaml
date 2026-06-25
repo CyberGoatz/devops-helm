@@ -27,7 +27,7 @@ mounts:
         claimName: crczp-elasticsearch
 
 pvc:
-  size: 500Mi
+  size: 10Gi
 
 numberOfShards: 1
 numberOfReplicas: 0

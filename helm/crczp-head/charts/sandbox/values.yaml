@@ -104,6 +104,18 @@ redis:
   uagCacheTimeout: 86400
   topologyCacheTimeout: 86400
 
+database:
+  connMaxAge: 0
+  connHealthChecks: true
+
+runnerCleanup:
+  enabled: false
+  schedule: "30 2 * * *"
+  retentionDays: 7
+  image:
+    url: busybox
+    tag: 1.36
+
 ansibleRunner:
   image:
     url: ghcr.io/cyberrangecz/crczp-ansible-runner

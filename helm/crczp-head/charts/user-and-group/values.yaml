@@ -30,3 +30,10 @@ mounts:
 
 connectionTimeout:
 maximumPoolSize:
+databasePool:
+  maximumPoolSize: 5
+  minimumIdle: 1
+  connectionTimeout: 10000
+  idleTimeout: 600000
+  maxLifetime: 1800000
+  leakDetectionThreshold: 0

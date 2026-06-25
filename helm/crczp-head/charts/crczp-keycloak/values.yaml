@@ -3,6 +3,10 @@ name: keycloak
 db:
   database: keycloak
   username: keycloak
+  pool:
+    initialSize: 5
+    minSize: 5
+    maxSize: 5
 
 grafanaClientSecret:
 # List of frontend origins that are allowed to use the CyberGoatz OIDC client.
