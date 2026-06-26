@@ -39,7 +39,12 @@ spec:
           echo "Syncing realm settings from Helm values..."
           /opt/keycloak/bin/kcadm.sh update "realms/${REALM_NAME}" \
             -s "verifyEmail=${VERIFY_EMAIL}" \
-            -s "passwordPolicy=${PASSWORD_POLICY}"
+            -s "passwordPolicy=${PASSWORD_POLICY}" \
+            -s "ssoSessionIdleTimeout=${SSO_SESSION_IDLE_TIMEOUT}" \
+            -s "ssoSessionMaxLifespan=${SSO_SESSION_MAX_LIFESPAN}" \
+            -s "clientSessionIdleTimeout=${CLIENT_SESSION_IDLE_TIMEOUT}" \
+            -s "clientSessionMaxLifespan=${CLIENT_SESSION_MAX_LIFESPAN}" \
+            -s "accessTokenLifespan=${ACCESS_TOKEN_LIFESPAN}"
 
           if [ -n "${LOGIN_THEME}" ]; then
             echo "Syncing login theme ${LOGIN_THEME}..."
@@ -149,6 +154,16 @@ spec:
           value: {{ ternary "true" "false" .Values.realmConfig.verifyEmail | quote }}
         - name: PASSWORD_POLICY
           value: {{ .Values.realmConfig.passwordPolicy | default "" | quote }}
+        - name: SSO_SESSION_IDLE_TIMEOUT
+          value: {{ .Values.realmConfig.sessions.ssoSessionIdleTimeout | toString | quote }}
+        - name: SSO_SESSION_MAX_LIFESPAN
+          value: {{ .Values.realmConfig.sessions.ssoSessionMaxLifespan | toString | quote }}
+        - name: CLIENT_SESSION_IDLE_TIMEOUT
+          value: {{ .Values.realmConfig.sessions.clientSessionIdleTimeout | toString | quote }}
+        - name: CLIENT_SESSION_MAX_LIFESPAN
+          value: {{ .Values.realmConfig.sessions.clientSessionMaxLifespan | toString | quote }}
+        - name: ACCESS_TOKEN_LIFESPAN
+          value: {{ .Values.realmConfig.sessions.accessTokenLifespan | toString | quote }}
         - name: LOGIN_THEME
           value: {{ ternary .Values.theme.name "" .Values.theme.enabled | quote }}
         - name: TERMS_AND_CONDITIONS_ENABLED

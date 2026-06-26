@@ -8,6 +8,11 @@ image:
 database:
   synchronize: true
 
+databasePool:
+  maximumPoolSize: 5
+  connectionTimeoutMs: 10000
+  idleTimeoutMs: 600000
+
 publicTraining:
   timeoutMs: 1500
 
@@ -17,4 +22,10 @@ htb:
   tokenEncryptionKey: change-me-generate-32-byte-secret
   timeoutMs: 5000
 
-resources: {}
+resources:
+  requests:
+    cpu: 50m
+    memory: 64Mi
+  limits:
+    cpu: 500m
+    memory: 256Mi

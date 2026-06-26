@@ -4,6 +4,14 @@ image:
   url: cybergoatz.azurecr.io/adaptive-smart-assistant-service
   tag: v1.2.1
 
+resources:
+  requests:
+    cpu: 50m
+    memory: 256Mi
+  limits:
+    cpu: 500m
+    memory: 512Mi
+
 mounts:
   adaptive-smart-assistant:
     extension: .properties
@@ -13,3 +21,11 @@ mounts:
     type:
       configMap:
         name: smart-assistant-configmap
+
+databasePool:
+  maximumPoolSize: 3
+  minimumIdle: 1
+  connectionTimeout: 10000
+  idleTimeout: 600000
+  maxLifetime: 1800000
+  leakDetectionThreshold: 0

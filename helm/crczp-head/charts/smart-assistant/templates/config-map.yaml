@@ -27,17 +27,18 @@ data:
     elasticsearch-service.uri=http://{{ .Values.global.services.elasticsearch.name }}:{{ .Values.global.services.elasticsearch.port }}{{ .Values.global.services.elasticsearch.contextPath }}
 
     # DATASOURCE (DataSourceAutoConfiguration & DataSourceProperties)
-    spring.datasource.url=jdbc:postgresql://{{ .Values.global.postgres.serviceName }}:{{ .Values.global.postgres.port }}/{{ .Values.global.postgresServices.smartAssistant.dbName }}
+    spring.datasource.url=jdbc:postgresql://{{ include "common.postgres.appHost" . }}:{{ include "common.postgres.appPort" . }}/{{ .Values.global.postgresServices.smartAssistant.dbName }}
     spring.datasource.username={{ .Values.global.postgresServices.smartAssistant.dbUser }}
     spring.datasource.password={{ .Values.global.postgresServices.smartAssistant.dbPassword }}
     spring.datasource.driver-class-name=org.postgresql.Driver
+{{ include "common.spring.hikari" . | nindent 4 }}
 
     # JPA (JpaBaseConfiguration, HibernateJpaAutoConfiguration)
     spring.data.jpa.repositories.enabled=true
     spring.jpa.database-platform=org.hibernate.dialect.PostgreSQL9Dialect
     spring.jpa.properties.hibernate.dialect=org.hibernate.dialect.PostgreSQLDialect
     spring.jpa.hibernate.ddl-auto=
-    spring.jpa.show-sql=true
+    spring.jpa.show-sql=false
     spring.jpa.properties.hibernate.temp.use_jdbc_metadata_defaults = false
 
     # spring-cloud

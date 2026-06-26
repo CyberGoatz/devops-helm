@@ -7,4 +7,4 @@ ports:
     protocol: TCP
     probe: true
 pvc:
-  size: 500Mi
+  size: 1Gi

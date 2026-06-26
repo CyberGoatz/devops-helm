@@ -35,6 +35,8 @@ global:
   postgres:
     serviceName: postgres-rw.cnpg-system.svc.cluster.local
     port: 5432
+    appServiceName:
+    appPort: 5432
     user: postgres
     password: password
 
@@ -42,6 +44,12 @@ crczp-keycloak:
   realmSync:
     enabled: true
   realmConfig:
+    sessions:
+      ssoSessionIdleTimeout: 3600
+      ssoSessionMaxLifespan: 28800
+      clientSessionIdleTimeout: 3600
+      clientSessionMaxLifespan: 28800
+      accessTokenLifespan: 300
     passwordPolicy: "length(8) and digits(1) and upperCase(1) and specialChars(1)"
     googleIdentityProvider:
       enabled: false

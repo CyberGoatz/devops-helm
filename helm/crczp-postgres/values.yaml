@@ -1,8 +1,20 @@
 cluster:
   name: postgres
   instances: 1
-  imageName: ghcr.io/cloudnative-pg/postgresql:17-standard-bookworm
-  storageSize: 5Gi
+  imageName: ghcr.io/cloudnative-pg/postgresql:18.3-system-trixie
+  storageSize: 10Gi
   superuserSecret: cnpg-superuser
   superuserPassword: password
   parameters:
+
+pooler:
+  enabled: true
+  name: postgres-pgbouncer-rw
+  instances: 2
+  type: rw
+  poolMode: transaction
+  parameters:
+    max_client_conn: "500"
+    default_pool_size: "4"
+    reserve_pool_size: "1"
+    max_prepared_statements: "256"

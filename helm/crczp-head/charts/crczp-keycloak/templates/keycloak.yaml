@@ -46,6 +46,12 @@ spec:
       value: /keycloak
     - name: http-relative-path
       value: /keycloak
+    - name: db-pool-initial-size
+      value: {{ .Values.db.pool.initialSize | quote }}
+    - name: db-pool-min-size
+      value: {{ .Values.db.pool.minSize | quote }}
+    - name: db-pool-max-size
+      value: {{ .Values.db.pool.maxSize | quote }}
     {{- if and .Values.theme.enabled .Values.theme.disableCache }}
     - name: spi-theme--cache-themes
       value: "false"

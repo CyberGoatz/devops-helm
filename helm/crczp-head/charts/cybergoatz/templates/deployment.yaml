@@ -1,5 +1,4 @@
 {{- $service := .Values.global.services.cybergoatz -}}
-{{- $postgres := .Values.global.postgres -}}
 {{- $database := .Values.global.postgresServices.cybergoatz -}}
 {{- $oidcProvider := first .Values.global.oidcProviders -}}
 {{- $globalPrefix := trimAll "/" $service.contextPath -}}
@@ -31,9 +30,9 @@ spec:
             - name: APP_GLOBAL_PREFIX
               value: {{ $globalPrefix | quote }}
             - name: DB_HOST
-              value: {{ $postgres.serviceName | quote }}
+              value: {{ include "common.postgres.appHost" . | quote }}
             - name: DB_PORT
-              value: {{ $postgres.port | quote }}
+              value: {{ include "common.postgres.appPort" . | quote }}
             - name: DB_USERNAME
               value: {{ $database.dbUser | quote }}
             - name: DB_PASSWORD
@@ -42,6 +41,12 @@ spec:
               value: {{ $database.dbName | quote }}
             - name: DB_SYNCHRONIZE
               value: {{ .Values.database.synchronize | quote }}
+            - name: DB_POOL_MAX
+              value: {{ .Values.databasePool.maximumPoolSize | quote }}
+            - name: DB_CONNECTION_TIMEOUT_MS
+              value: {{ .Values.databasePool.connectionTimeoutMs | quote }}
+            - name: DB_IDLE_TIMEOUT_MS
+              value: {{ .Values.databasePool.idleTimeoutMs | quote }}
             - name: OIDC_ISSUER_URL
               value: {{ ($oidcProvider.issuerIdentifier | default $oidcProvider.url) | quote }}
             - name: USER_AND_GROUP_API_URL

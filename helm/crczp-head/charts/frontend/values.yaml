@@ -4,6 +4,14 @@ image:
   url: cybergoatz.azurecr.io/admin-frontend
   tag: v1.0.4
 
+resources:
+  requests:
+    cpu: 25m
+    memory: 32Mi
+  limits:
+    cpu: 250m
+    memory: 128Mi
+
 mounts:
   config:
     extension: .json

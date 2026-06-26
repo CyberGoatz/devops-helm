@@ -4,6 +4,14 @@ image:
   url: cybergoatz.azurecr.io/user-and-group-service
   tag: v1.0.0
 
+resources:
+  requests:
+    cpu: 100m
+    memory: 384Mi
+  limits:
+    cpu: "1"
+    memory: 768Mi
+
 mounts:
   configs:
     mountPath: /app/etc/
@@ -30,3 +38,10 @@ mounts:
 
 connectionTimeout:
 maximumPoolSize:
+databasePool:
+  maximumPoolSize: 5
+  minimumIdle: 1
+  connectionTimeout: 10000
+  idleTimeout: 600000
+  maxLifetime: 1800000
+  leakDetectionThreshold: 0

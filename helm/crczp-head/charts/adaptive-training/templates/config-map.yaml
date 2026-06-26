@@ -40,21 +40,18 @@ data:
 {{- end }}
 
     # DATASOURCE (DataSourceAutoConfiguration & DataSourceProperties)
-    spring.datasource.url=jdbc:postgresql://{{ .Values.global.postgres.serviceName }}:{{ .Values.global.postgres.port }}/{{ .Values.global.postgresServices.adaptiveTraining.dbName }}
+    spring.datasource.url=jdbc:postgresql://{{ include "common.postgres.appHost" . }}:{{ include "common.postgres.appPort" . }}/{{ .Values.global.postgresServices.adaptiveTraining.dbName }}
     spring.datasource.username={{ .Values.global.postgresServices.adaptiveTraining.dbUser }}
     spring.datasource.password={{ .Values.global.postgresServices.adaptiveTraining.dbPassword }}
     spring.datasource.driver-class-name=org.postgresql.Driver
-    {{- if and .Values.connectionTimeout .Values.maximumPoolSize }}
-    spring.datasource.hikari.maximum-pool-size={{ .Values.maximumPoolSize }}
-    spring.datasource.hikari.connection-timeout={{ .Values.connectionTimeout }}
-    {{- end }}
+{{ include "common.spring.hikari" . | nindent 4 }}
 
     # JPA (JpaBaseConfiguration, HibernateJpaAutoConfiguration)
     spring.data.jpa.repositories.enabled=true
     spring.jpa.database-platform=org.hibernate.dialect.PostgreSQL9Dialect
     spring.jpa.properties.hibernate.dialect=org.hibernate.dialect.PostgreSQLDialect
     spring.jpa.hibernate.ddl-auto=
-    spring.jpa.show-sql=true
+    spring.jpa.show-sql=false
     spring.jpa.properties.hibernate.temp.use_jdbc_metadata_defaults = false
 
     # spring-cloud
@@ -72,7 +69,7 @@ data:
 
     # Logging
     ## set logger levels using pattern logging.level.<logger-name>=<level>, NOT REQUIRED
-    logging.level.cz.cyberrange.platform=DEBUG
+    logging.level.cz.cyberrange.platform=WARN
     crczp.audit.syslog.host={{ .Values.global.crczpSyslogServiceName }}
     crczp.audit.syslog.port=514
     crczp.audit.messages.format=backend-adaptive-training --- CRCZP_PORTAL_EVENTS_AUDIT [%thread] %logger{5} --- %msg%n

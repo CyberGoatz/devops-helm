@@ -4,6 +4,14 @@ image:
   url: cybergoatz.azurecr.io/guacamole-service
   tag: v1.0.3
 
+resources:
+  requests:
+    cpu: 75m
+    memory: 256Mi
+  limits:
+    cpu: 750m
+    memory: 768Mi
+
 mounts:
   guacamole-service:
     extension: .properties
@@ -21,3 +29,13 @@ mounts:
     type:
       secret:
         secretName: crczp-certs
+
+connectionTimeout:
+maximumPoolSize:
+databasePool:
+  maximumPoolSize: 3
+  minimumIdle: 1
+  connectionTimeout: 10000
+  idleTimeout: 600000
+  maxLifetime: 1800000
+  leakDetectionThreshold: 0

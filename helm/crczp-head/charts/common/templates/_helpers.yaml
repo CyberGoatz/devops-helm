@@ -17,3 +17,35 @@ app.kubernetes.io/instance: {{ .release.Name }}
 {{- define "common.imagePullSecret" }}
 {{- printf "{\"auths\": {\"%s\": {\"auth\": \"%s\"}}}" .Values.global.imageCredentials.registry (printf "%s:%s" .Values.global.imageCredentials.username .Values.global.imageCredentials.password | b64enc) | b64enc }}
 {{- end }}
+
+{{- define "common.postgres.appHost" -}}
+{{- default .Values.global.postgres.serviceName .Values.global.postgres.appServiceName -}}
+{{- end -}}
+
+{{- define "common.postgres.appPort" -}}
+{{- default .Values.global.postgres.port .Values.global.postgres.appPort -}}
+{{- end -}}
+
+{{- define "common.spring.hikari" -}}
+{{- $pool := .Values.databasePool | default dict -}}
+{{- $maximumPoolSize := default .Values.maximumPoolSize $pool.maximumPoolSize -}}
+{{- $connectionTimeout := default .Values.connectionTimeout $pool.connectionTimeout -}}
+{{- with $maximumPoolSize }}
+spring.datasource.hikari.maximum-pool-size={{ . | int64 }}
+{{- end }}
+{{- with $pool.minimumIdle }}
+spring.datasource.hikari.minimum-idle={{ . | int64 }}
+{{- end }}
+{{- with $connectionTimeout }}
+spring.datasource.hikari.connection-timeout={{ . | int64 }}
+{{- end }}
+{{- with $pool.idleTimeout }}
+spring.datasource.hikari.idle-timeout={{ . | int64 }}
+{{- end }}
+{{- with $pool.maxLifetime }}
+spring.datasource.hikari.max-lifetime={{ . | int64 }}
+{{- end }}
+{{- if hasKey $pool "leakDetectionThreshold" }}
+spring.datasource.hikari.leak-detection-threshold={{ $pool.leakDetectionThreshold | int64 }}
+{{- end }}
+{{- end -}}
