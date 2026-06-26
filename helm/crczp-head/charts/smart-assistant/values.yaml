@@ -4,6 +4,14 @@ image:
   url: cybergoatz.azurecr.io/adaptive-smart-assistant-service
   tag: v1.2.1
 
+resources:
+  requests:
+    cpu: 50m
+    memory: 256Mi
+  limits:
+    cpu: 500m
+    memory: 512Mi
+
 mounts:
   adaptive-smart-assistant:
     extension: .properties

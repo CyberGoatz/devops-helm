@@ -4,6 +4,14 @@ image:
   url: cybergoatz.azurecr.io/elasticsearch-service-service
   tag: v1.2.1
 
+resources:
+  requests:
+    cpu: 50m
+    memory: 192Mi
+  limits:
+    cpu: 500m
+    memory: 512Mi
+
 environments:
   SERVICE_PRECONDITION: uag-service:8084
 

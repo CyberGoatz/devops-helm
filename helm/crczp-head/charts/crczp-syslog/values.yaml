@@ -4,6 +4,14 @@ image:
   url: ghcr.io/cyberrangecz/docker-dependencies-mirror/syslog-ng
   tag: latest
 
+resources:
+  requests:
+    cpu: 25m
+    memory: 64Mi
+  limits:
+    cpu: 250m
+    memory: 256Mi
+
 externalPorts:
   - port: 515
     protocol: TCP

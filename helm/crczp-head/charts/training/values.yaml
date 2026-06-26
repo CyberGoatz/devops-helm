@@ -4,6 +4,14 @@ image:
   url: cybergoatz.azurecr.io/training-service
   tag: v1.2.3
 
+resources:
+  requests:
+    cpu: 300m
+    memory: 768Mi
+  limits:
+    cpu: "2"
+    memory: 1536Mi
+
 environments:
   SERVICE_PRECONDITION: uag-service:8084
 secretEnvironments:

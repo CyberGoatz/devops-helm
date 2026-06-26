@@ -14,13 +14,13 @@ data:
   pipelines.yml: |
     -   path.config: /usr/share/logstash/pipeline/10-crczp-logstash-portal-actions.conf
         pipeline.id: crczp-logstash-portal-actions
-        pipeline.workers: 2
+        pipeline.workers: {{ .Values.pipelineWorkers.portalActions }}
     -   path.config: /usr/share/logstash/pipeline/20-crczp-logstash-bash-commands.conf
         pipeline.id: crczp-logstash-bash-commands
-        pipeline.workers: 3
+        pipeline.workers: {{ .Values.pipelineWorkers.bashCommands }}
     -   path.config: /usr/share/logstash/pipeline/30-crczp-logstash-msf-commands.conf
         pipeline.id: crczp-logstash-msf-commands
-        pipeline.workers: 3
+        pipeline.workers: {{ .Values.pipelineWorkers.msfCommands }}
 
   10-crczp-logstash-portal-actions.conf: |
     input {

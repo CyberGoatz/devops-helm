@@ -4,6 +4,14 @@ image:
   url: cybergoatz.azurecr.io/training-feedback-service
   tag: v1.2.1
 
+resources:
+  requests:
+    cpu: 75m
+    memory: 384Mi
+  limits:
+    cpu: 750m
+    memory: 768Mi
+
 mounts:
   training-feedback:
     extension: .properties

@@ -2,6 +2,14 @@ image:
   url: docker.elastic.co/elasticsearch/elasticsearch
   tag: 8.1.2
 
+resources:
+  requests:
+    cpu: 100m
+    memory: 1Gi
+  limits:
+    cpu: "1"
+    memory: 1536Mi
+
 ports:
   - port: 9200
     protocol: TCP
@@ -14,7 +22,7 @@ environments:
   node.name: es01
   bootstrap.memory_lock: true
   discovery.type: single-node
-  ES_JAVA_OPTS: -Xms1g -Xmx1g -Dlog4j2.formatMsgNoLookups=true
+  ES_JAVA_OPTS: -Xms768m -Xmx768m -Dlog4j2.formatMsgNoLookups=true
   cluster.max_shards_per_node: 5000
   xpack.security.enabled: false
   action.destructive_requires_name: false

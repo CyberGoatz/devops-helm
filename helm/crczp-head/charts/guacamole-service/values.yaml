@@ -4,6 +4,14 @@ image:
   url: cybergoatz.azurecr.io/guacamole-service
   tag: v1.0.3
 
+resources:
+  requests:
+    cpu: 75m
+    memory: 256Mi
+  limits:
+    cpu: 750m
+    memory: 768Mi
+
 mounts:
   guacamole-service:
     extension: .properties

@@ -4,11 +4,28 @@ image:
   url: cybergoatz.azurecr.io/sandbox-service
   tag: v0.1.19
 
+resources:
+  requests:
+    cpu: 100m
+    memory: 700Mi
+  limits:
+    cpu: "1"
+    memory: 1200Mi
+
+workerResources:
+  requests:
+    cpu: 50m
+    memory: 256Mi
+  limits:
+    cpu: 500m
+    memory: 512Mi
+
 environments:
   SERVICE_PRECONDITION: "uag-service:8084"
   DJANGO_ADMIN_USER: crczp-admin
   DJANGO_ADMIN_PASSWORD:
   DJANGO_ADMIN_EMAIL: crczp-admin@example.com
+  GUNICORN_WORKERS: "3"
 
 mounts:
   config:
@@ -68,9 +85,9 @@ osAuthUrl:
 osApplicationCredentialId:
 osApplicationCredentialSecret:
 osConsoleType: spice-html5
-openstackWorkerCount: 4
-ansibleWorkerCount: 4
-defaultWorkerCount: 4
+openstackWorkerCount: 2
+ansibleWorkerCount: 2
+defaultWorkerCount: 1
 idleCleanup:
   enabled: true
   schedule: "*/15 * * * *"

@@ -1,8 +1,21 @@
 replicasCount: 1
 
+pipelineWorkers:
+  portalActions: 1
+  bashCommands: 1
+  msfCommands: 1
+
 image:
   url: docker.elastic.co/logstash/logstash
   tag: 8.1.2
+
+resources:
+  requests:
+    cpu: 100m
+    memory: 768Mi
+  limits:
+    cpu: "1"
+    memory: 1536Mi
 
 ports:
   - port: 5044
