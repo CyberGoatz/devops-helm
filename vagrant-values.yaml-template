@@ -88,10 +88,39 @@ crczp-keycloak:
 crczp-guacamole:
   enabled: False
 
+crczp-redis:
+  resources:
+    requests:
+      cpu: 25m
+      memory: 64Mi
+    limits:
+      cpu: 500m
+      memory: 512Mi
+  args: '["--appendonly","yes","--appendfsync","everysec","--dir","/data","--save","900","1","--save","300","10","--save","60","10000","--auto-aof-rewrite-percentage","100","--auto-aof-rewrite-min-size","64mb","--aof-use-rdb-preamble","yes","--maxmemory","256mb","--maxmemory-policy","noeviction","--stop-writes-on-bgsave-error","yes"]'
+  persistence:
+    enabled: true
+    size: 2Gi
+    storageClassName:
+    accessMode: ReadWriteOnce
+
 sandbox:
   djangoSecretKey:
   headHost: 172.19.0.22
   stackNamePrefix: default0
+  resources:
+    requests:
+      cpu: 100m
+      memory: 1Gi
+    limits:
+      cpu: "2"
+      memory: 2Gi
+  workerResources:
+    requests:
+      cpu: 100m
+      memory: 512Mi
+    limits:
+      cpu: "1"
+      memory: 1Gi
   image:
     # Override these to run a sandbox-service image built inside the Vagrant VM.
     # Example:

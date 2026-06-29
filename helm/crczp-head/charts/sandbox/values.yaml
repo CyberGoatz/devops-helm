@@ -7,18 +7,18 @@ image:
 resources:
   requests:
     cpu: 100m
-    memory: 700Mi
+    memory: 1Gi
   limits:
-    cpu: "1"
-    memory: 1200Mi
+    cpu: "2"
+    memory: 2Gi
 
 workerResources:
   requests:
-    cpu: 50m
-    memory: 256Mi
-  limits:
-    cpu: 500m
+    cpu: 100m
     memory: 512Mi
+  limits:
+    cpu: "1"
+    memory: 1Gi
 
 environments:
   SERVICE_PRECONDITION: "uag-service:8084"
