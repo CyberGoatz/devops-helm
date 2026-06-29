@@ -2,6 +2,7 @@ global:
   acmeContact:
   guacamoleUserPassword:
   headHost:
+  keycloakRealm: cybergoatz
   oidcProviders:
     - url:
       logoutUrl:

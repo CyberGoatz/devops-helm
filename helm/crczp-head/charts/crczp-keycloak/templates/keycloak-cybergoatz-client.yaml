@@ -36,6 +36,8 @@ spec:
     baseUrl: "{{ first $cyberGoatzFrontendUrls }}"
     redirectUris:
       {{- range $frontendUrl := $cyberGoatzFrontendUrls }}
+      - "{{ $frontendUrl }}"
+      - "{{ $frontendUrl }}/*"
       - "{{ $frontendUrl }}/api/auth/callback/keycloak"
       - "{{ $frontendUrl }}/api/auth/callback/keycloak-register"
       {{- end }}

@@ -14,6 +14,7 @@ Environment overrides:
   TRAEFIK_NAMESPACE     Default: traefik
   TRAEFIK_PUBLIC_IP     Default: 52.224.190.214
   HEAD_HOST             Default: cybergoatz.chainscorehq.com
+  KEYCLOAK_REALM        Default: cybergoatz
   TRAEFIK_VERSION       Default: 40.0.0
   CERT_MANAGER_VERSION  Default: v1.20.2
   HELM_TIMEOUT          Default: 40m
@@ -39,6 +40,7 @@ CRCZP_NAMESPACE="${CRCZP_NAMESPACE:-crczp}"
 TRAEFIK_NAMESPACE="${TRAEFIK_NAMESPACE:-traefik}"
 TRAEFIK_PUBLIC_IP="${TRAEFIK_PUBLIC_IP:-52.224.190.214}"
 HEAD_HOST="${HEAD_HOST:-cybergoatz.chainscorehq.com}"
+KEYCLOAK_REALM="${KEYCLOAK_REALM:-cybergoatz}"
 TRAEFIK_VERSION="${TRAEFIK_VERSION:-40.0.0}"
 CERT_MANAGER_VERSION="${CERT_MANAGER_VERSION:-v1.20.2}"
 HELM_TIMEOUT="${HELM_TIMEOUT:-40m}"
@@ -154,7 +156,7 @@ kubectl -n "${CRCZP_NAMESPACE}" get pods
 helm -n "${CRCZP_NAMESPACE}" status crczp-head
 
 echo "Checking Keycloak issuer"
-curl -k "https://${HEAD_HOST}/keycloak/realms/CRCZP/.well-known/openid-configuration" \
+curl -k "https://${HEAD_HOST}/keycloak/realms/${KEYCLOAK_REALM}/.well-known/openid-configuration" \
   | grep -E '"issuer"|"authorization_endpoint"'
 
 echo "Done"

@@ -1,10 +1,11 @@
 global:
   headHost: 172.19.0.22
+  keycloakRealm: cybergoatz
   tlsSecretName: crczp-certs
   userCount: 10
   users:
     - email: crczp-admin@example.com
-      iss: 'https://172.19.0.22/keycloak/realms/CRCZP'
+      iss: 'https://172.19.0.22/keycloak/realms/cybergoatz'
       fullName: "Demo Admin"
       givenName: "Demo"
       familyName: "Admin"
@@ -12,7 +13,7 @@ global:
       keycloakUsername: crczp-admin
       keycloakPassword: password
     - email: crczp-user@example.com
-      iss: 'https://172.19.0.22/keycloak/realms/CRCZP'
+      iss: 'https://172.19.0.22/keycloak/realms/cybergoatz'
       fullName: "Demo User"
       givenName: "Demo"
       familyName: "User"
@@ -22,9 +23,9 @@ global:
   tlsPrivateKey:
   tlsPublicKey:
   oidcProviders:
-    - url: https://172.19.0.22/keycloak/realms/CRCZP
-      logoutUrl: https://172.19.0.22/keycloak/realms/CRCZP/protocol/openid-connect/logout
-      clientId: CRCZP-client
+    - url: https://172.19.0.22/keycloak/realms/cybergoatz
+      logoutUrl: https://172.19.0.22/keycloak/realms/cybergoatz/protocol/openid-connect/logout
+      clientId: cybergoatz-client
       label: Login with local Keycloak
       responseType: code
       refreshToken: true
@@ -41,6 +42,7 @@ global:
     password: password
 
 crczp-keycloak:
+  realm: cybergoatz
   realmSync:
     enabled: true
   realmConfig:
