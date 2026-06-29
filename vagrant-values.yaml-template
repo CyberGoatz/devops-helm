@@ -88,6 +88,11 @@ crczp-keycloak:
 crczp-guacamole:
   enabled: False
 
+guacamole-service:
+  replicasCount: 1
+  # Dev-only value for local Vagrant. Production values must use a stable generated secret.
+  ticketEncryptionKey: vagrant-dev-guacamole-ticket-key-change-me
+
 crczp-redis:
   resources:
     requests:
