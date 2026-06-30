@@ -51,7 +51,8 @@ spec:
             THEME_SYNCED=false
             for attempt in 1 2 3 4 5 6 7 8 9 10 11 12; do
               if /opt/keycloak/bin/kcadm.sh update "realms/${REALM_NAME}" \
-                -s "loginTheme=${LOGIN_THEME}"; then
+                -s "loginTheme=${LOGIN_THEME}" \
+                -s "emailTheme=${LOGIN_THEME}"; then
                 THEME_SYNCED=true
                 break
               fi

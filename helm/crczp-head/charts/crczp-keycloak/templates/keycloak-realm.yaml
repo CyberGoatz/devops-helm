@@ -21,6 +21,7 @@ spec:
     accessTokenLifespan: {{ .Values.realmConfig.sessions.accessTokenLifespan }}
     {{- if .Values.theme.enabled }}
     loginTheme: {{ .Values.theme.name | quote }}
+    emailTheme: {{ .Values.theme.name | quote }}
     {{- end }}
     {{- if .Values.realmConfig.passwordPolicy }}
     passwordPolicy: {{ .Values.realmConfig.passwordPolicy | quote }}
