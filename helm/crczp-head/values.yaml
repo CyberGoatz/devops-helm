@@ -19,6 +19,9 @@ global:
     training:
       clientId: training-service
       clientSecret: training-service-secret
+    invite:
+      clientId: cybergoatz-invite-service
+      clientSecret: cybergoatz-invite-service-secret
 
   oidcProviders:
     - url:

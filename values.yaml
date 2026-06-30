@@ -15,6 +15,9 @@ global:
     training:
       clientId: training-service
       clientSecret:
+    invite:
+      clientId: cybergoatz-invite-service
+      clientSecret:
   users:
     - email: crczp-admin@example.com
       iss:

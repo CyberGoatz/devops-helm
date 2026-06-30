@@ -1,0 +1,31 @@
+{{- $inviteServiceClientId := dig "serviceAccounts" "invite" "clientId" .Values.inviteServiceClient.clientId .Values.global }}
+{{- $inviteServiceClientSecret := dig "serviceAccounts" "invite" "clientSecret" .Values.inviteServiceClient.clientSecret .Values.global }}
+apiVersion: legacy.k8s.keycloak.org/v1alpha1
+kind: KeycloakClient
+metadata:
+  name: cybergoatz-invite-service-client
+  labels:
+    app: external-sso
+spec:
+  realmSelector:
+    matchLabels:
+      app: external-sso
+  serviceAccountClientRoles:
+    realm-management:
+      - manage-users
+      - view-users
+      - query-users
+  client:
+    clientId: {{ $inviteServiceClientId | quote }}
+    clientAuthenticatorType: client-secret
+    directAccessGrantsEnabled: false
+    implicitFlowEnabled: false
+    name: "CyberGoatz Invite Service"
+    defaultClientScopes:
+      - roles
+    protocol: openid-connect
+    fullScopeAllowed: true
+    publicClient: false
+    secret: {{ $inviteServiceClientSecret | quote }}
+    serviceAccountsEnabled: true
+    standardFlowEnabled: false

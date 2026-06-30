@@ -1,6 +1,8 @@
 {{- $service := .Values.global.services.cybergoatz -}}
 {{- $database := .Values.global.postgresServices.cybergoatz -}}
 {{- $oidcProvider := first .Values.global.oidcProviders -}}
+{{- $inviteServiceClientId := dig "serviceAccounts" "invite" "clientId" .Values.keycloak.adminClientId .Values.global -}}
+{{- $inviteServiceClientSecret := dig "serviceAccounts" "invite" "clientSecret" .Values.keycloak.adminClientSecret .Values.global -}}
 {{- $globalPrefix := trimAll "/" $service.contextPath -}}
 apiVersion: apps/v1
 kind: Deployment
@@ -49,8 +51,24 @@ spec:
               value: {{ .Values.databasePool.idleTimeoutMs | quote }}
             - name: OIDC_ISSUER_URL
               value: {{ ($oidcProvider.issuerIdentifier | default $oidcProvider.url) | quote }}
+            - name: KEYCLOAK_ADMIN_BASE_URL
+              value: {{ .Values.keycloak.adminBaseUrl | quote }}
+            - name: KEYCLOAK_REALM
+              value: {{ (.Values.keycloak.realm | default .Values.global.keycloakRealm) | quote }}
+            - name: KEYCLOAK_ADMIN_CLIENT_ID
+              value: {{ $inviteServiceClientId | quote }}
+            - name: KEYCLOAK_ADMIN_CLIENT_SECRET
+              value: {{ $inviteServiceClientSecret | quote }}
+            - name: KEYCLOAK_INVITE_CLIENT_ID
+              value: {{ .Values.keycloak.inviteClientId | quote }}
+            - name: KEYCLOAK_INVITE_REDIRECT_URI
+              value: {{ .Values.keycloak.inviteRedirectUri | quote }}
+            - name: KEYCLOAK_INVITE_LIFESPAN_SECONDS
+              value: {{ .Values.keycloak.inviteLifespanSeconds | quote }}
             - name: USER_AND_GROUP_API_URL
               value: "http://{{ .Values.global.services.userAndGroup.name }}:{{ .Values.global.services.userAndGroup.port }}{{ .Values.global.services.userAndGroup.contextPath }}"
+            - name: UAG_APPROVED_GROUP_NAME
+              value: {{ .Values.uag.approvedGroupName | quote }}
             - name: TRAINING_API_URL
               value: "http://{{ .Values.global.services.training.name }}:{{ .Values.global.services.training.port }}{{ .Values.global.services.training.contextPath }}"
             - name: TRAINING_PUBLIC_API_TIMEOUT_MS

@@ -33,6 +33,9 @@ global:
     training:
       clientId: training-service
       clientSecret:
+    invite:
+      clientId: cybergoatz-invite-service
+      clientSecret: cybergoatz-invite-service-secret
   postgres:
     serviceName: postgres-rw.cnpg-system.svc.cluster.local
     port: 5432
@@ -179,6 +182,14 @@ cybergoatz:
     synchronize: true
   publicTraining:
     timeoutMs: 1500
+  keycloak:
+    adminBaseUrl: http://keycloak-service:8080/keycloak
+    realm: cybergoatz
+    adminClientId: cybergoatz-invite-service
+    adminClientSecret: cybergoatz-invite-service-secret
+    inviteClientId: cyber-goatz
+    inviteRedirectUri: http://localhost:3000/onboarding
+    inviteLifespanSeconds: 86400
   htb:
     apiUrl: https://labs.hackthebox.com/api/v4
     profileBaseUrl: https://app.hackthebox.com/public/users
