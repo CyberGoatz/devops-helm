@@ -1,16 +1,3 @@
-apiVersion: v1
-kind: Secret
-metadata:
-  name: {{ .Values.name }}-initial-admin
-  annotations:
-    "helm.sh/hook": "pre-install"
-    "helm.sh/hook-delete-policy": "before-hook-creation"
-    "helm.sh/hook-weight": "-5"
-data:
-  username: {{ .Values.keycloakAdmin | b64enc }}
-  password: {{ .Values.keycloakPassword | b64enc }}
-type: kubernetes.io/basic-auth
----
 apiVersion: k8s.keycloak.org/v2alpha1
 kind: Keycloak
 metadata:
@@ -109,6 +96,20 @@ spec:
                 {{ end }}
                 - key: cyber-goatz.css
                   path: login/resources/css/cyber-goatz.css
+                - key: email-theme.properties
+                  path: email/theme.properties
+                {{ range $path, $_ := .Files.Glob (printf "files/keycloak-theme/%s/email/messages/*.properties" .Values.theme.name) }}
+                - key: email-messages-{{ base $path }}
+                  path: email/messages/{{ base $path }}
+                {{ end }}
+                {{ range $path, $_ := .Files.Glob (printf "files/keycloak-theme/%s/email/html/*.ftl" .Values.theme.name) }}
+                - key: email-html-{{ base $path }}
+                  path: email/html/{{ base $path }}
+                {{ end }}
+                {{ range $path, $_ := .Files.Glob (printf "files/keycloak-theme/%s/email/text/*.ftl" .Values.theme.name) }}
+                - key: email-text-{{ base $path }}
+                  path: email/text/{{ base $path }}
+                {{ end }}
           {{- else }}
           - name: {{ .Values.theme.name }}-theme
             configMap:
@@ -122,5 +123,19 @@ spec:
                 {{ end }}
                 - key: cyber-goatz.css
                   path: login/resources/css/cyber-goatz.css
+                - key: email-theme.properties
+                  path: email/theme.properties
+                {{ range $path, $_ := .Files.Glob (printf "files/keycloak-theme/%s/email/messages/*.properties" .Values.theme.name) }}
+                - key: email-messages-{{ base $path }}
+                  path: email/messages/{{ base $path }}
+                {{ end }}
+                {{ range $path, $_ := .Files.Glob (printf "files/keycloak-theme/%s/email/html/*.ftl" .Values.theme.name) }}
+                - key: email-html-{{ base $path }}
+                  path: email/html/{{ base $path }}
+                {{ end }}
+                {{ range $path, $_ := .Files.Glob (printf "files/keycloak-theme/%s/email/text/*.ftl" .Values.theme.name) }}
+                - key: email-text-{{ base $path }}
+                  path: email/text/{{ base $path }}
+                {{ end }}
           {{- end }}
   {{- end }}

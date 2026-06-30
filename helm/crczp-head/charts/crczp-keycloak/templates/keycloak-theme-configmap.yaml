@@ -13,4 +13,18 @@ data:
 {{ end }}
   cyber-goatz.css: |-
 {{ .Files.Get (printf "files/keycloak-theme/%s/login/resources/css/cyber-goatz.css" .Values.theme.name) | indent 4 }}
+  email-theme.properties: |-
+{{ .Files.Get (printf "files/keycloak-theme/%s/email/theme.properties" .Values.theme.name) | indent 4 }}
+{{ range $path, $_ := .Files.Glob (printf "files/keycloak-theme/%s/email/messages/*.properties" .Values.theme.name) }}
+  email-messages-{{ base $path }}: |-
+{{ $.Files.Get $path | indent 4 }}
+{{ end }}
+{{ range $path, $_ := .Files.Glob (printf "files/keycloak-theme/%s/email/html/*.ftl" .Values.theme.name) }}
+  email-html-{{ base $path }}: |-
+{{ $.Files.Get $path | indent 4 }}
+{{ end }}
+{{ range $path, $_ := .Files.Glob (printf "files/keycloak-theme/%s/email/text/*.ftl" .Values.theme.name) }}
+  email-text-{{ base $path }}: |-
+{{ $.Files.Get $path | indent 4 }}
+{{ end }}
 {{- end }}

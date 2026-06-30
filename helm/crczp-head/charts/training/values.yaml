@@ -53,6 +53,6 @@ sandboxExpiration:
   initialDelayMs: 60000
 
 sandboxServiceAccount:
-  tokenUri: http://keycloak-service:8080/keycloak/realms/CRCZP/protocol/openid-connect/token
+  tokenUri: http://keycloak-service:8080/keycloak/realms/cybergoatz/protocol/openid-connect/token
   clientId: training-service
   clientSecret: training-service-secret

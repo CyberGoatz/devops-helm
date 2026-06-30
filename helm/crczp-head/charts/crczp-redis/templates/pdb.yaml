@@ -1,0 +1,11 @@
+{{- if .Values.pdb.enabled }}
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: {{ .Values.global.redis.serviceName }}
+  labels: {{- include "common.labels" (dict "name" .Values.global.redis.serviceName "chart" .Chart "release" .Release "extraLabels" .Values.extraLabels) | nindent 4 }}
+spec:
+  minAvailable: {{ .Values.pdb.minAvailable }}
+  selector:
+    matchLabels: {{- include "common.matchLabels" (dict "name" .Values.global.redis.serviceName "release" .Release) | nindent 6 }}
+{{- end }}

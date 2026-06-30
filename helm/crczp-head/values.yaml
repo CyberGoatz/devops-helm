@@ -1,5 +1,6 @@
 global:
   headHost: 172.19.0.22
+  keycloakRealm: cybergoatz
   tlsSecretName: crczp-certs
   crczpSyslogServiceName: crczp-syslog-ng
   crczpLogstashServiceName: crczp-logstash
@@ -18,6 +19,9 @@ global:
     training:
       clientId: training-service
       clientSecret: training-service-secret
+    invite:
+      clientId: cybergoatz-invite-service
+      clientSecret: cybergoatz-invite-service-secret
 
   oidcProviders:
     - url:

@@ -1,0 +1,3 @@
+{{- if .Values.persistence.enabled }}
+{{- include "common.pvc" (dict "name" .Values.global.redis.serviceName "pvc" .Values.persistence "chart" .Chart "release" .Release "extraLabels" .Values.extraLabels) }}
+{{- end }}

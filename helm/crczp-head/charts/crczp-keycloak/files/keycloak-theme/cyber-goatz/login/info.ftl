@@ -78,8 +78,8 @@
 
         <div class="cg-visual-copy">
           <p class="cg-eyebrow">Account status</p>
-          <h1>Your account request has been processed.</h1>
-          <p>Continue when the action is complete, or return to the application to sign in again.</p>
+          <h1>Your CyberGoatz invitation is ready.</h1>
+          <p>Finish the required account steps to activate access to the platform.</p>
         </div>
         
         <div class="cg-status-grid" aria-hidden="true">
@@ -96,7 +96,9 @@
           <div class="cg-form-heading">
             <p class="cg-eyebrow">Status update</p>
             <h2>
-              <#if messageHeader??>
+              <#if requiredActions??>
+                Finish your CyberGoatz invitation
+              <#elseif messageHeader??>
                 ${messageHeader}
               <#elseif message?has_content>
                 ${kcSanitize(message.summary)?no_esc}
@@ -108,7 +110,11 @@
 
           <#if message?has_content>
             <div class="cg-message-card">
-              <p>${kcSanitize(message.summary)?no_esc}</p>
+              <#if requiredActions??>
+                <p>Complete these account steps to activate your CyberGoatz access.</p>
+              <#else>
+                <p>${kcSanitize(message.summary)?no_esc}</p>
+              </#if>
               <#if requiredActions??>
                 <ul class="cg-message-list">
                   <#list requiredActions as reqActionItem>
@@ -124,7 +130,7 @@
               <#if pageRedirectUri?? && pageRedirectUri?has_content>
                 <a class="cg-primary cg-link-button" href="${pageRedirectUri}">${msg("backToApplication")}</a>
               <#elseif actionUri?? && actionUri?has_content>
-                <a class="cg-primary cg-link-button" href="${actionUri}">${msg("proceedWithAction")}</a>
+                <a class="cg-primary cg-link-button" href="${actionUri}">Continue</a>
               <#elseif client?? && client.baseUrl?? && client.baseUrl?has_content>
                 <a class="cg-primary cg-link-button" href="${client.baseUrl}">${msg("backToApplication")}</a>
               <#else>

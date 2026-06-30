@@ -14,7 +14,7 @@ data:
 
     ## Allows you to specify allowed origins for CORS mapping. You could set it as, e.g., http://domain1.com, http://domain2.com, etc. The default value is: *
     {{- if .Values.global.corsWhitelist }}
-    cors.allowed.origins=https://{{ .Values.global.headHost }},{{- range $index, $origin := .Values.global.corsWhitelist -}}{{ if $index }},{{ end }}{{ $origin }}{{- end }}
+    cors.allowed.origins=https://{{ .Values.global.headHost }},{{- range $index, $origin := .Values.global.corsWhitelist -}}{{ if $index }},{{ end }}{{ trimSuffix "/" $origin }}{{- end }}
     {{- else }}
     cors.allowed.origins=https://{{ .Values.global.headHost }}
     {{- end }}
@@ -36,6 +36,13 @@ data:
     crczp.identity.providers[{{ $index }}].issuer={{ $element.issuerIdentifier | default $element.url }}
     crczp.identity.providers[{{ $index }}].userInfoEndpoint={{ $element.userInfoUrl | default "" }}
 {{- end }}
+
+    # Redis-backed short-lived websocket console tickets.
+    spring.data.redis.host={{ .Values.global.redis.serviceName }}
+    spring.data.redis.port=6379
+    guacamole.console-ticket.ttl-seconds=60
+    guacamole.console-ticket.encryption-key=${GUACAMOLE_TICKET_ENCRYPTION_KEY:}
+    guacamole.websocket.allowed-origins=${cors.allowed.origins:*}
 
     # DATASOURCE (DataSourceAutoConfiguration & DataSourceProperties)
     spring.datasource.url=jdbc:postgresql://{{ include "common.postgres.appHost" . }}:{{ include "common.postgres.appPort" . }}/{{ .Values.global.postgresServices.guacamole.dbName }}

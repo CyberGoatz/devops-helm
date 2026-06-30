@@ -1,8 +1,11 @@
 replicasCount: 1
 
+ticketEncryptionKey: change-me-generate-32-byte-secret
+
 image:
   url: cybergoatz.azurecr.io/guacamole-service
-  tag: v1.0.3
+  tag: v1.0.4
+  pullPolicy: Always
 
 resources:
   requests:
@@ -39,3 +42,8 @@ databasePool:
   idleTimeout: 600000
   maxLifetime: 1800000
   leakDetectionThreshold: 0
+
+secretEnvironments:
+  GUACAMOLE_TICKET_ENCRYPTION_KEY:
+    secretName: guacamole-service-secrets
+    secretKey: ticket-encryption-key

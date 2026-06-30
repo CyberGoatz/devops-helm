@@ -1,3 +1,4 @@
 global:
   headHost: 172.19.0.22
+  keycloakRealm: cybergoatz
   userCount: 0

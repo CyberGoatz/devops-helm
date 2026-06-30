@@ -1,4 +1,6 @@
-{{- $trainingServiceClientId := dig "serviceAccounts" "training" "clientId" .Values.sandboxServiceAccount.clientId .Values.global }}
+{{- $keycloakRealm := .Values.global.keycloakRealm | default "cybergoatz" -}}
+{{- $trainingServiceClientId := dig "serviceAccounts" "training" "clientId" .Values.sandboxServiceAccount.clientId .Values.global -}}
+{{- $trainingServiceTokenUri := .Values.sandboxServiceAccount.tokenUri | default (printf "http://keycloak-service:8080/keycloak/realms/%s/protocol/openid-connect/token" $keycloakRealm) -}}
 apiVersion: v1
 kind: ConfigMap
 metadata:
@@ -40,7 +42,7 @@ data:
     training.sandbox.expiration.enabled={{ .Values.sandboxExpiration.enabled }}
     training.sandbox.expiration.scan-delay-ms={{ .Values.sandboxExpiration.scanDelayMs }}
     training.sandbox.expiration.initial-delay-ms={{ .Values.sandboxExpiration.initialDelayMs }}
-    training.sandbox.service-account.token-uri={{ .Values.sandboxServiceAccount.tokenUri }}
+    training.sandbox.service-account.token-uri={{ $trainingServiceTokenUri }}
     training.sandbox.service-account.client-id={{ $trainingServiceClientId }}
 
     # OpenID Connect (OIDC) configuration settings for a resource servers configuration

@@ -51,7 +51,8 @@ spec:
             THEME_SYNCED=false
             for attempt in 1 2 3 4 5 6 7 8 9 10 11 12; do
               if /opt/keycloak/bin/kcadm.sh update "realms/${REALM_NAME}" \
-                -s "loginTheme=${LOGIN_THEME}"; then
+                -s "loginTheme=${LOGIN_THEME}" \
+                -s "emailTheme=${LOGIN_THEME}"; then
                 THEME_SYNCED=true
                 break
               fi
@@ -144,6 +145,85 @@ spec:
           echo "Google identity provider disabled in values."
           {{- end }}
 
+          if [ -n "${INVITE_SERVICE_CLIENT_ID}" ]; then
+            echo "Verifying invite service user-management roles from KeycloakClient desired state..."
+            CLIENT_READY=false
+            for attempt in 1 2 3 4 5 6 7 8 9 10 11 12; do
+              if /opt/keycloak/bin/kcadm.sh get clients -r "${REALM_NAME}" -q "clientId=${INVITE_SERVICE_CLIENT_ID}" | grep -q '"id"'; then
+                CLIENT_READY=true
+                break
+              fi
+
+              echo "Invite service client is not available yet; retrying (${attempt}/12)..."
+              sleep 5
+            done
+
+            if [ "${CLIENT_READY}" = "true" ]; then
+              INVITE_CLIENT_UUID=$(/opt/keycloak/bin/kcadm.sh get clients -r "${REALM_NAME}" -q "clientId=${INVITE_SERVICE_CLIENT_ID}" --fields id --format csv 2>/dev/null | head -n 1 | tr -d '"\r')
+              echo "Invite service client UUID: ${INVITE_CLIENT_UUID}"
+              INVITE_SERVICE_ACCOUNT_USER_ID=$(/opt/keycloak/bin/kcadm.sh get "clients/${INVITE_CLIENT_UUID}/service-account-user" -r "${REALM_NAME}" --fields id --format csv 2>/dev/null | head -n 1 | tr -d '"\r')
+              REALM_MANAGEMENT_CLIENT_UUID=$(/opt/keycloak/bin/kcadm.sh get clients -r "${REALM_NAME}" -q clientId=realm-management --fields id --format csv 2>/dev/null | head -n 1 | tr -d '"\r')
+
+              if [ -z "${INVITE_SERVICE_ACCOUNT_USER_ID}" ]; then
+                echo "ERROR: service account user for ${INVITE_SERVICE_CLIENT_ID} was not found."
+                exit 1
+              fi
+
+              if [ -z "${REALM_MANAGEMENT_CLIENT_UUID}" ]; then
+                echo "ERROR: realm-management client was not found."
+                exit 1
+              fi
+
+              echo "Invite service account user UUID: ${INVITE_SERVICE_ACCOUNT_USER_ID}"
+              echo "realm-management client UUID: ${REALM_MANAGEMENT_CLIENT_UUID}"
+              ROLES_READY=false
+              ASSIGNED_ROLES=""
+              for attempt in 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24; do
+                ASSIGNED_ROLES=$(/opt/keycloak/bin/kcadm.sh get "users/${INVITE_SERVICE_ACCOUNT_USER_ID}/role-mappings/clients/${REALM_MANAGEMENT_CLIENT_UUID}" -r "${REALM_NAME}")
+                MISSING_ROLES=""
+                for role in manage-users view-users query-users; do
+                  if ! echo "${ASSIGNED_ROLES}" | grep -q "\"name\" : \"${role}\""; then
+                    MISSING_ROLES="${MISSING_ROLES} ${role}"
+                  fi
+                done
+
+                if [ -z "${MISSING_ROLES}" ]; then
+                  ROLES_READY=true
+                  break
+                fi
+
+                echo "Invite service account roles are not reconciled yet; missing:${MISSING_ROLES}; retrying (${attempt}/24)..."
+                sleep 5
+              done
+
+              if [ "${ROLES_READY}" != "true" ]; then
+                echo "ERROR: KeycloakClient serviceAccountClientRoles did not reconcile for invite service account."
+                echo "Expected realm-management roles: manage-users view-users query-users"
+                echo "${ASSIGNED_ROLES}"
+                exit 1
+              fi
+
+              echo "Invite service account realm-management roles verified."
+
+              echo "Verifying invite service Keycloak Admin API access..."
+              /opt/keycloak/bin/kcadm.sh config credentials \
+                --server "${SERVER_URL}" \
+                --realm "${REALM_NAME}" \
+                --client "${INVITE_SERVICE_CLIENT_ID}" \
+                --secret "${INVITE_SERVICE_CLIENT_SECRET}" >/dev/null
+              /opt/keycloak/bin/kcadm.sh get users -r "${REALM_NAME}" --fields id --format csv >/dev/null
+              /opt/keycloak/bin/kcadm.sh config credentials \
+                --server "${SERVER_URL}" \
+                --realm master \
+                --user "${KEYCLOAK_ADMIN_USER}" \
+                --password "${KEYCLOAK_ADMIN_PASSWORD}" >/dev/null
+              echo "Invite service Keycloak Admin API access verified."
+            else
+              echo "ERROR: Invite service client was not found; service-account roles could not be verified."
+              exit 1
+            fi
+          fi
+
           echo "Realm settings synced."
       env:
         - name: KEYCLOAK_ADMIN_USER
@@ -210,6 +290,10 @@ spec:
           value: {{ .Values.realmConfig.googleIdentityProvider.clientSecret | default "" | quote }}
         - name: GOOGLE_IDP_HOSTED_DOMAIN
           value: {{ .Values.realmConfig.googleIdentityProvider.hostedDomain | default "" | quote }}
+        - name: INVITE_SERVICE_CLIENT_ID
+          value: {{ (dig "serviceAccounts" "invite" "clientId" .Values.inviteServiceClient.clientId .Values.global) | quote }}
+        - name: INVITE_SERVICE_CLIENT_SECRET
+          value: {{ (dig "serviceAccounts" "invite" "clientSecret" .Values.inviteServiceClient.clientSecret .Values.global) | quote }}
   restartPolicy: Never
   terminationGracePeriodSeconds: 0
 {{- end }}

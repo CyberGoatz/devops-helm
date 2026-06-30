@@ -9,8 +9,31 @@ resources:
     cpu: 25m
     memory: 64Mi
   limits:
-    cpu: 250m
-    memory: 256Mi
+    cpu: 500m
+    memory: 512Mi
+
+args: '["--appendonly","yes","--appendfsync","everysec","--dir","/data","--save","900","1","--save","300","10","--save","60","10000","--auto-aof-rewrite-percentage","100","--auto-aof-rewrite-min-size","64mb","--aof-use-rdb-preamble","yes","--maxmemory","256mb","--maxmemory-policy","noeviction","--stop-writes-on-bgsave-error","yes"]'
+
+strategy: Recreate
+
+persistence:
+  enabled: true
+  size: 2Gi
+  storageClassName:
+  accessMode: ReadWriteOnce
+
+pdb:
+  enabled: true
+  minAvailable: 1
+
+mounts:
+  redis-data:
+    extension: ""
+    mountPath: /data
+    isOneFile: false
+    type:
+      persistentVolumeClaim:
+        claimName: crczp-redis
 
 ports:
   - port: 6379

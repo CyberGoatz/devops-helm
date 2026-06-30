@@ -1,10 +1,11 @@
 global:
   headHost: 172.19.0.22
+  keycloakRealm: cybergoatz
   tlsSecretName: crczp-certs
   userCount: 10
   users:
     - email: crczp-admin@example.com
-      iss: 'https://172.19.0.22/keycloak/realms/CRCZP'
+      iss: 'https://172.19.0.22/keycloak/realms/cybergoatz'
       fullName: "Demo Admin"
       givenName: "Demo"
       familyName: "Admin"
@@ -12,7 +13,7 @@ global:
       keycloakUsername: crczp-admin
       keycloakPassword: password
     - email: crczp-user@example.com
-      iss: 'https://172.19.0.22/keycloak/realms/CRCZP'
+      iss: 'https://172.19.0.22/keycloak/realms/cybergoatz'
       fullName: "Demo User"
       givenName: "Demo"
       familyName: "User"
@@ -22,9 +23,9 @@ global:
   tlsPrivateKey:
   tlsPublicKey:
   oidcProviders:
-    - url: https://172.19.0.22/keycloak/realms/CRCZP
-      logoutUrl: https://172.19.0.22/keycloak/realms/CRCZP/protocol/openid-connect/logout
-      clientId: CRCZP-client
+    - url: https://172.19.0.22/keycloak/realms/cybergoatz
+      logoutUrl: https://172.19.0.22/keycloak/realms/cybergoatz/protocol/openid-connect/logout
+      clientId: cybergoatz-client
       label: Login with local Keycloak
       responseType: code
       refreshToken: true
@@ -32,6 +33,9 @@ global:
     training:
       clientId: training-service
       clientSecret:
+    invite:
+      clientId: cybergoatz-invite-service
+      clientSecret: cybergoatz-invite-service-secret
   postgres:
     serviceName: postgres-rw.cnpg-system.svc.cluster.local
     port: 5432
@@ -41,6 +45,7 @@ global:
     password: password
 
 crczp-keycloak:
+  realm: cybergoatz
   realmSync:
     enabled: true
   realmConfig:
@@ -88,10 +93,44 @@ crczp-keycloak:
 crczp-guacamole:
   enabled: False
 
+guacamole-service:
+  replicasCount: 1
+  # Dev-only value for local Vagrant. Production values must use a stable generated secret.
+  ticketEncryptionKey: vagrant-dev-guacamole-ticket-key-change-me
+
+crczp-redis:
+  resources:
+    requests:
+      cpu: 25m
+      memory: 64Mi
+    limits:
+      cpu: 500m
+      memory: 512Mi
+  args: '["--appendonly","yes","--appendfsync","everysec","--dir","/data","--save","900","1","--save","300","10","--save","60","10000","--auto-aof-rewrite-percentage","100","--auto-aof-rewrite-min-size","64mb","--aof-use-rdb-preamble","yes","--maxmemory","256mb","--maxmemory-policy","noeviction","--stop-writes-on-bgsave-error","yes"]'
+  persistence:
+    enabled: true
+    size: 2Gi
+    storageClassName:
+    accessMode: ReadWriteOnce
+
 sandbox:
   djangoSecretKey:
   headHost: 172.19.0.22
   stackNamePrefix: default0
+  resources:
+    requests:
+      cpu: 100m
+      memory: 1Gi
+    limits:
+      cpu: "2"
+      memory: 2Gi
+  workerResources:
+    requests:
+      cpu: 100m
+      memory: 512Mi
+    limits:
+      cpu: "1"
+      memory: 1Gi
   image:
     # Override these to run a sandbox-service image built inside the Vagrant VM.
     # Example:
@@ -143,6 +182,14 @@ cybergoatz:
     synchronize: true
   publicTraining:
     timeoutMs: 1500
+  keycloak:
+    adminBaseUrl: http://keycloak-service:8080/keycloak
+    realm: cybergoatz
+    adminClientId: cybergoatz-invite-service
+    adminClientSecret: cybergoatz-invite-service-secret
+    inviteClientId: cyber-goatz
+    inviteRedirectUri: http://localhost:3000/onboarding
+    inviteLifespanSeconds: 86400
   htb:
     apiUrl: https://labs.hackthebox.com/api/v4
     profileBaseUrl: https://app.hackthebox.com/public/users

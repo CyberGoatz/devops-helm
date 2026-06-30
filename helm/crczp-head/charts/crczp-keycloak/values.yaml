@@ -30,7 +30,11 @@ trainingServiceClient:
   clientId: training-service
   clientSecret: training-service-secret
 
-realm: CRCZP
+inviteServiceClient:
+  clientId: cybergoatz-invite-service
+  clientSecret: cybergoatz-invite-service-secret
+
+realm: cybergoatz
 
 theme:
   enabled: true

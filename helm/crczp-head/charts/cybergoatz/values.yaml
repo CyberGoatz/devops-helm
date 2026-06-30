@@ -16,6 +16,18 @@ databasePool:
 publicTraining:
   timeoutMs: 1500
 
+keycloak:
+  adminBaseUrl: http://keycloak-service:8080/keycloak
+  realm:
+  adminClientId: cybergoatz-invite-service
+  adminClientSecret: cybergoatz-invite-service-secret
+  inviteClientId: cyber-goatz
+  inviteRedirectUri: http://localhost:3000/onboarding
+  inviteLifespanSeconds: 86400
+
+uag:
+  approvedGroupName: Approved Users
+
 htb:
   apiUrl: https://labs.hackthebox.com/api/v4
   profileBaseUrl: https://app.hackthebox.com/public/users
