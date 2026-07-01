@@ -26,6 +26,10 @@ realmSync:
 
 development: false
 
+# Admin Angular frontend origins allowed by the admin OIDC client.
+# Keep this separate from cyberGoatzFrontendUrls to avoid mixing admin and user-facing redirects.
+adminFrontendUrls: []
+
 trainingServiceClient:
   clientId: training-service
   clientSecret: training-service-secret
