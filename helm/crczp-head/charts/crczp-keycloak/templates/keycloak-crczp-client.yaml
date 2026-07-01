@@ -1,3 +1,11 @@
+{{- $adminFrontendUrls := list -}}
+{{- if .Values.adminFrontendUrls -}}
+{{- range .Values.adminFrontendUrls -}}
+{{- $adminFrontendUrls = append $adminFrontendUrls (trimSuffix "/" .) -}}
+{{- end -}}
+{{- else -}}
+{{- $adminFrontendUrls = append $adminFrontendUrls (printf "https://%s" $.Values.global.headHost) -}}
+{{- end -}}
 apiVersion: legacy.k8s.keycloak.org/v1alpha1
 kind: KeycloakClient
 metadata:
@@ -30,11 +38,16 @@ spec:
     protocol: openid-connect
     publicClient: true
     redirectUris:
-      - "https://{{ $.Values.global.headHost }}"
-      - "https://{{ $.Values.global.headHost }}/login"
-      - "https://{{ $.Values.global.headHost }}/index.html"
-      - "https://{{ $.Values.global.headHost }}/silent-refresh.html"
-      {{- if .Values.development }}
-      - "https://localhost:4200"
+      {{- range $frontendUrl := $adminFrontendUrls }}
+      - "{{ $frontendUrl }}"
+      - "{{ $frontendUrl }}/"
+      - "{{ $frontendUrl }}/*"
+      - "{{ $frontendUrl }}/login"
+      - "{{ $frontendUrl }}/index.html"
+      - "{{ $frontendUrl }}/silent-refresh.html"
       {{- end }}
     standardFlowEnabled: true
+    webOrigins:
+      {{- range $frontendUrl := $adminFrontendUrls }}
+      - "{{ $frontendUrl }}"
+      {{- end }}
