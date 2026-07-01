@@ -135,8 +135,8 @@ runnerCleanup:
 
 ansibleRunner:
   image:
-    url: ghcr.io/cyberrangecz/crczp-ansible-runner
-    tag: 1.1.0
+    url: cybergoatz.azurecr.io/cybergoatz-ansible-runner
+    tag: 1.1.1
 
 gitConfig:
   providers: {}

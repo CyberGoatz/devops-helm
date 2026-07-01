@@ -1,7 +1,7 @@
 cluster:
   name: postgres
   instances: 1
-  imageName: ghcr.io/cloudnative-pg/postgresql:18.3-system-trixie
+  imageName: cybergoatz.azurecr.io/postgresql-testing:18.4-system-trixie
   storageSize: 10Gi
   superuserSecret: cnpg-superuser
   superuserPassword: password

@@ -137,7 +137,7 @@ sandbox:
     # url: sandbox-service
     # tag: local
     # pullPolicy: Never
-    url: ghcr.io/cyberrangecz/backend-sandbox-service/sandbox-service
+    url: cybergoatz.azurecr.io/cybergoatz/backend-sandbox-service/sandbox-service
     tag: v1.6.1
   dnsNameServers:
     - 1.1.1.1
@@ -170,12 +170,12 @@ sandbox:
 frontend:
   image:
     # Use a frontend-platform image built from this fork so the Angular admin track UI is available.
-    url: ghcr.io/cybergoatz/frontend-platform
+    url: azurecr.io/cybergoatz/frontend-platform
     tag: v0.1.0
 
 cybergoatz:
   image:
-    url: ghcr.io/cybergoatz/backend-cybergoatz
+    url: azurecr.io/cybergoatz/backend-cybergoatz
     tag: v0.1.0
     pullPolicy: IfNotPresent
   database:

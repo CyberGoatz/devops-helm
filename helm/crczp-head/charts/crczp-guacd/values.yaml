@@ -1,6 +1,6 @@
 name: guacd
 image:
-  url: ghcr.io/cyberrangecz/docker-dependencies-mirror/guacd
+  url: cybergoatz.azurecr.io/cybergoatz/docker-dependencies-mirror/guacd
   tag: 1.6.0
 ports:
   - port: 4822
