@@ -1,11 +1,49 @@
 cluster:
   name: postgres
-  instances: 1
+  instances: 2
   imageName: cybergoatz.azurecr.io/postgresql-testing:18.4-system-trixie
   storageSize: 10Gi
+  enablePDB: true
+  minSyncReplicas: 0
+  maxSyncReplicas: 0
   superuserSecret: cnpg-superuser
   superuserPassword: password
+  affinity:
+    nodeSelector:
+      kubernetes.azure.com/agentpool: userpool
+    enablePodAntiAffinity: true
+    topologyKey: kubernetes.io/hostname
+    podAntiAffinityType: required
+  resources:
+    requests:
+      cpu: 500m
+      memory: 1Gi
+    limits:
+      cpu: "2"
+      memory: 2Gi
   parameters:
+
+backup:
+  enabled: false
+  destinationPath: ""
+  storageAccountName: ""
+  containerName: ""
+  path: postgres
+  retentionPolicy: "14d"
+  azureCredentials:
+    secretName: cnpg-azure-backup-creds
+    storageAccountKey: AZURE_STORAGE_ACCOUNT
+    storageKeyKey: AZURE_STORAGE_KEY
+  wal:
+    compression: gzip
+  data:
+    compression: gzip
+  scheduledBackup:
+    name: postgres-daily-backup
+    schedule: "0 0 2 * * *"
+    backupOwnerReference: cluster
+    target: prefer-standby
+    immediate: true
 
 pooler:
   enabled: true
@@ -13,6 +51,27 @@ pooler:
   instances: 2
   type: rw
   poolMode: transaction
+  nodeSelector:
+    kubernetes.azure.com/agentpool: userpool
+  podLabels:
+    app.kubernetes.io/component: pgbouncer
+    app.kubernetes.io/name: postgres-pgbouncer-rw
+  affinity:
+    enablePodAntiAffinity: true
+    topologyKey: kubernetes.io/hostname
+    podAntiAffinityType: required
+  deploymentStrategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 0
+      maxUnavailable: 1
+  resources:
+    requests:
+      cpu: 100m
+      memory: 128Mi
+    limits:
+      cpu: 500m
+      memory: 512Mi
   parameters:
     max_client_conn: "500"
     default_pool_size: "4"

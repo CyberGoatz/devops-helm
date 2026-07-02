@@ -14,15 +14,57 @@ metadata:
 spec:
   instances: {{ .Values.cluster.instances }}
   imageName: {{ .Values.cluster.imageName }}
+  enablePDB: {{ .Values.cluster.enablePDB }}
+  minSyncReplicas: {{ .Values.cluster.minSyncReplicas }}
+  maxSyncReplicas: {{ .Values.cluster.maxSyncReplicas }}
   storage:
     size: {{ .Values.cluster.storageSize }}
   superuserSecret:
     name: {{ .Values.cluster.superuserSecret }}
   enableSuperuserAccess: true
+{{- if .Values.cluster.affinity }}
+  affinity:
+{{- if .Values.cluster.affinity.nodeSelector }}
+    nodeSelector:
+{{ toYaml .Values.cluster.affinity.nodeSelector | indent 6 }}
+{{- end }}
+    enablePodAntiAffinity: {{ .Values.cluster.affinity.enablePodAntiAffinity }}
+    topologyKey: {{ .Values.cluster.affinity.topologyKey }}
+    podAntiAffinityType: {{ .Values.cluster.affinity.podAntiAffinityType }}
+{{- end }}
+{{- if .Values.cluster.resources }}
+  resources:
+{{ toYaml .Values.cluster.resources | indent 4 }}
+{{- end }}
 {{- if .Values.cluster.parameters }}
   postgresql:
     parameters:
 {{ toYaml .Values.cluster.parameters | indent 6 }}
+{{- end }}
+{{- if .Values.backup.enabled }}
+{{- $destinationPath := .Values.backup.destinationPath }}
+{{- if not $destinationPath }}
+{{- $destinationPath = printf "https://%s.blob.core.windows.net/%s/%s" .Values.backup.storageAccountName .Values.backup.containerName .Values.backup.path }}
+{{- end }}
+  backup:
+    barmanObjectStore:
+      destinationPath: {{ $destinationPath | quote }}
+      azureCredentials:
+        storageAccount:
+          name: {{ .Values.backup.azureCredentials.secretName }}
+          key: {{ .Values.backup.azureCredentials.storageAccountKey }}
+        storageKey:
+          name: {{ .Values.backup.azureCredentials.secretName }}
+          key: {{ .Values.backup.azureCredentials.storageKeyKey }}
+{{- if .Values.backup.wal }}
+      wal:
+{{ toYaml .Values.backup.wal | indent 8 }}
+{{- end }}
+{{- if .Values.backup.data }}
+      data:
+{{ toYaml .Values.backup.data | indent 8 }}
+{{- end }}
+    retentionPolicy: {{ .Values.backup.retentionPolicy | quote }}
 {{- end }}
 {{- if .Values.pooler.enabled }}
 ---
@@ -35,8 +77,62 @@ spec:
     name: {{ .Values.cluster.name }}
   instances: {{ .Values.pooler.instances }}
   type: {{ .Values.pooler.type }}
+{{- if .Values.pooler.deploymentStrategy }}
+  deploymentStrategy:
+{{ toYaml .Values.pooler.deploymentStrategy | indent 4 }}
+{{- end }}
   pgbouncer:
     poolMode: {{ .Values.pooler.poolMode }}
     parameters:
 {{ toYaml .Values.pooler.parameters | indent 6 }}
+  template:
+    metadata:
+      labels:
+{{ toYaml .Values.pooler.podLabels | indent 8 }}
+    spec:
+{{- if .Values.pooler.nodeSelector }}
+      nodeSelector:
+{{ toYaml .Values.pooler.nodeSelector | indent 8 }}
+{{- end }}
+{{- if .Values.pooler.resources }}
+      containers:
+        - name: pgbouncer
+          resources:
+{{ toYaml .Values.pooler.resources | indent 12 }}
+{{- else }}
+      containers: []
+{{- end }}
+{{- if .Values.pooler.affinity.enablePodAntiAffinity }}
+      affinity:
+        podAntiAffinity:
+{{- if eq .Values.pooler.affinity.podAntiAffinityType "required" }}
+          requiredDuringSchedulingIgnoredDuringExecution:
+            - labelSelector:
+                matchLabels:
+                  cnpg.io/poolerName: {{ .Values.pooler.name | quote }}
+              topologyKey: {{ .Values.pooler.affinity.topologyKey | quote }}
+{{- else }}
+          preferredDuringSchedulingIgnoredDuringExecution:
+            - weight: 100
+              podAffinityTerm:
+                labelSelector:
+                  matchLabels:
+                    cnpg.io/poolerName: {{ .Values.pooler.name | quote }}
+                topologyKey: {{ .Values.pooler.affinity.topologyKey | quote }}
+{{- end }}
+{{- end }}
+{{- end }}
+{{- if .Values.backup.enabled }}
+---
+apiVersion: postgresql.cnpg.io/v1
+kind: ScheduledBackup
+metadata:
+  name: {{ .Values.backup.scheduledBackup.name }}
+spec:
+  schedule: {{ .Values.backup.scheduledBackup.schedule | quote }}
+  backupOwnerReference: {{ .Values.backup.scheduledBackup.backupOwnerReference }}
+  cluster:
+    name: {{ .Values.cluster.name }}
+  target: {{ .Values.backup.scheduledBackup.target }}
+  immediate: {{ .Values.backup.scheduledBackup.immediate }}
 {{- end }}
