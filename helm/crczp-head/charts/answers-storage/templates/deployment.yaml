@@ -1,5 +1,5 @@
 {{- $ports := list (dict "port" .Values.global.services.answersStorage.port "protocol" "TCP" "probe" true) -}}
-{{- include "common.deployment.header" (dict "name" .Values.global.services.answersStorage.name "replicasCount" .Values.replicasCount "chart" .Chart "release" .Release "extraLabels" .Values.extraLabels) }}
+{{- include "common.deployment.header" (dict "name" .Values.global.services.answersStorage.name "replicasCount" .Values.replicasCount "autoscaling" .Values.autoscaling "chart" .Chart "release" .Release "extraLabels" .Values.extraLabels) }}
 {{- include "common.deployment.containers" (dict "name" .Values.global.services.answersStorage.name "ports" $ports "Values" .Values) }}
           lifecycle:
             postStart:
@@ -13,3 +13,4 @@
         - name: github-auth-secret
       {{- end }}
 {{- include "common.deployment.volumes" (dict "Values" .Values) }}
+{{- include "common.hpa" (dict "name" .Values.global.services.answersStorage.name "Values" .Values "chart" .Chart "release" .Release "extraLabels" .Values.extraLabels) }}

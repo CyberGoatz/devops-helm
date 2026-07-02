@@ -1,5 +1,11 @@
 replicasCount: 1
 
+autoscaling:
+  enabled: false
+  minReplicas: 1
+  maxReplicas: 2
+  targetCPUUtilizationPercentage: 70
+
 image:
   url: cybergoatz.azurecr.io/sandbox-service
   tag: v0.1.19

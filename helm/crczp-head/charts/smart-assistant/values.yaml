@@ -1,5 +1,11 @@
 replicasCount: 1
 
+autoscaling:
+  enabled: false
+  minReplicas: 1
+  maxReplicas: 3
+  targetCPUUtilizationPercentage: 70
+
 image:
   url: cybergoatz.azurecr.io/adaptive-smart-assistant-service
   tag: v1.2.1

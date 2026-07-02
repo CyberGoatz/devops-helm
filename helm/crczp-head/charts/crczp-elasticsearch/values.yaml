@@ -2,6 +2,12 @@ image:
   url: docker.elastic.co/elasticsearch/elasticsearch
   tag: 8.1.2
 
+replicasCount: 1
+
+statefulSet:
+  podManagementPolicy: OrderedReady
+  headlessServiceNameSuffix: headless
+
 resources:
   requests:
     cpu: 100m
@@ -30,12 +36,14 @@ environments:
 mounts:
   data-elasticsearch:
     mountPath: /usr/share/elasticsearch/data
-    type:
-      persistentVolumeClaim:
-        claimName: crczp-elasticsearch
 
 pvc:
+  accessMode: ReadWriteOnce
   size: 10Gi
+  storageClassName:
+
+volumeClaimTemplate:
+  name: data-elasticsearch
 
 numberOfShards: 1
 numberOfReplicas: 0

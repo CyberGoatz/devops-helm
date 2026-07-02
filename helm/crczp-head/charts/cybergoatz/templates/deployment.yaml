@@ -12,7 +12,9 @@ metadata:
     reloader.stakater.com/auto: "true"
   labels: {{- include "common.labels" (dict "name" $service.name "chart" .Chart "release" .Release "extraLabels" .Values.extraLabels) | nindent 4 }}
 spec:
+  {{- if not .Values.autoscaling.enabled }}
   replicas: {{ .Values.replicasCount }}
+  {{- end }}
   selector:
     matchLabels: {{- include "common.matchLabels" (dict "name" $service.name "release" .Release) | nindent 6 }}
   template:
@@ -103,3 +105,4 @@ spec:
       imagePullSecrets:
         - name: github-auth-secret
       {{- end }}
+{{- include "common.hpa" (dict "name" $service.name "Values" .Values "chart" .Chart "release" .Release "extraLabels" .Values.extraLabels) }}
