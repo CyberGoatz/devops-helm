@@ -39,7 +39,7 @@ global:
   postgres:
     serviceName: postgres-rw.cnpg-system.svc.cluster.local
     port: 5432
-    appServiceName:
+    appServiceName: postgres-pgbouncer-rw.cnpg-system.svc.cluster.local
     appPort: 5432
     user: postgres
     password: password
@@ -95,6 +95,11 @@ crczp-guacamole:
 
 guacamole-service:
   replicasCount: 1
+  autoscaling:
+    enabled: false
+    minReplicas: 1
+    maxReplicas: 3
+    targetCPUUtilizationPercentage: 70
   # Dev-only value for local Vagrant. Production values must use a stable generated secret.
   ticketEncryptionKey: vagrant-dev-guacamole-ticket-key-change-me
 
@@ -117,6 +122,11 @@ sandbox:
   djangoSecretKey:
   headHost: 172.19.0.22
   stackNamePrefix: default0
+  autoscaling:
+    enabled: false
+    minReplicas: 1
+    maxReplicas: 2
+    targetCPUUtilizationPercentage: 70
   resources:
     requests:
       cpu: 100m
@@ -168,12 +178,22 @@ sandbox:
     replace: true
 
 frontend:
+  autoscaling:
+    enabled: false
+    minReplicas: 1
+    maxReplicas: 3
+    targetCPUUtilizationPercentage: 70
   image:
     # Use a frontend-platform image built from this fork so the Angular admin track UI is available.
     url: azurecr.io/cybergoatz/frontend-platform
     tag: v0.1.0
 
 cybergoatz:
+  autoscaling:
+    enabled: false
+    minReplicas: 1
+    maxReplicas: 3
+    targetCPUUtilizationPercentage: 70
   image:
     url: azurecr.io/cybergoatz/backend-cybergoatz
     tag: v0.1.0
@@ -197,7 +217,65 @@ cybergoatz:
     timeoutMs: 5000
 
 cluster:
+  instances: 1
+  enablePDB: true
+  minSyncReplicas: 0
+  maxSyncReplicas: 0
   superuserPassword: password
+  affinity:
+    nodeSelector:
+    enablePodAntiAffinity: false
+    topologyKey: kubernetes.io/hostname
+    podAntiAffinityType: preferred
+  resources:
+    requests:
+      cpu: 500m
+      memory: 1Gi
+    limits:
+      cpu: "2"
+      memory: 2Gi
+
+backup:
+  enabled: false
+  destinationPath: ""
+  storageAccountName: ""
+  containerName: ""
+  path: postgres
+  retentionPolicy: "14d"
+  azureCredentials:
+    secretName: cnpg-azure-backup-creds
+    storageAccountKey: AZURE_STORAGE_ACCOUNT
+    storageKeyKey: AZURE_STORAGE_KEY
+  wal:
+    compression: gzip
+  data:
+    compression: gzip
+  scheduledBackup:
+    name: postgres-daily-backup
+    schedule: "0 0 2 * * *"
+    backupOwnerReference: cluster
+    target: prefer-standby
+    immediate: true
+
+pooler:
+  instances: 1
+  nodeSelector:
+  affinity:
+    enablePodAntiAffinity: false
+    topologyKey: kubernetes.io/hostname
+    podAntiAffinityType: preferred
+  deploymentStrategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 0
+      maxUnavailable: 1
+  resources:
+    requests:
+      cpu: 100m
+      memory: 128Mi
+    limits:
+      cpu: 500m
+      memory: 512Mi
 
 mitre:
   djangoSecretKey:

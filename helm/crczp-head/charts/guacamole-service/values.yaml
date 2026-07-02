@@ -1,5 +1,11 @@
 replicasCount: 1
 
+autoscaling:
+  enabled: false
+  minReplicas: 1
+  maxReplicas: 3
+  targetCPUUtilizationPercentage: 70
+
 ticketEncryptionKey: change-me-generate-32-byte-secret
 
 image:

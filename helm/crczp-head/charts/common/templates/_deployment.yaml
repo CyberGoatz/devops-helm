@@ -8,7 +8,10 @@ metadata:
     reloader.stakater.com/auto: "true"
   labels: {{- include "common.labels" . | nindent 4 }}
 spec:
+  {{- $autoscaling := .autoscaling | default dict }}
+  {{- if not $autoscaling.enabled }}
   replicas: {{ .replicasCount }}
+  {{- end }}
   selector:
     matchLabels: {{- include "common.matchLabels" . | nindent 6 }}
   {{- if .strategy }}
@@ -22,6 +25,54 @@ spec:
       {{- if .serviceAccountName }}
       serviceAccountName: {{ .serviceAccountName }}
       {{- end }}
+{{- end }}
+
+{{- define "common.hpa" -}}
+{{- $autoscaling := .Values.autoscaling | default dict -}}
+{{- if $autoscaling.enabled }}
+---
+apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: {{ .name }}
+  labels: {{- include "common.labels" . | nindent 4 }}
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: {{ .name }}
+  minReplicas: {{ $autoscaling.minReplicas | default 1 }}
+  maxReplicas: {{ $autoscaling.maxReplicas | default 3 }}
+  metrics:
+    {{- if $autoscaling.targetCPUUtilizationPercentage }}
+    - type: Resource
+      resource:
+        name: cpu
+        target:
+          type: Utilization
+          averageUtilization: {{ $autoscaling.targetCPUUtilizationPercentage }}
+    {{- end }}
+    {{- if $autoscaling.targetMemoryUtilizationPercentage }}
+    - type: Resource
+      resource:
+        name: memory
+        target:
+          type: Utilization
+          averageUtilization: {{ $autoscaling.targetMemoryUtilizationPercentage }}
+    {{- end }}
+    {{- if not (or $autoscaling.targetCPUUtilizationPercentage $autoscaling.targetMemoryUtilizationPercentage) }}
+    - type: Resource
+      resource:
+        name: cpu
+        target:
+          type: Utilization
+          averageUtilization: 70
+    {{- end }}
+  {{- with $autoscaling.behavior }}
+  behavior:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+{{- end }}
 {{- end }}
 
 {{- define "common.deployment.containers" }}

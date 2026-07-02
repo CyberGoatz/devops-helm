@@ -1,0 +1,16 @@
+{{- $name := .Values.global.crczpElasticsearchServiceName -}}
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ printf "%s-%s" $name .Values.statefulSet.headlessServiceNameSuffix }}
+  labels: {{- include "common.labels" (dict "name" $name "chart" .Chart "release" .Release "extraLabels" .Values.extraLabels) | nindent 4 }}
+spec:
+  clusterIP: None
+  selector: {{- include "common.matchLabels" (dict "name" $name "release" .Release) | nindent 4 }}
+  ports:
+    {{- range .Values.ports }}
+    - port: {{ .port }}
+      name: {{ .port | quote }}
+      targetPort: {{ .port }}
+      protocol: {{ .protocol }}
+    {{- end }}
