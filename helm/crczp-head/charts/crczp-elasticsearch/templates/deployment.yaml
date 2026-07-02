@@ -1,5 +1,20 @@
-{{- include "common.deployment.header" (dict "name" .Values.global.crczpElasticsearchServiceName "strategy" "Recreate" "replicasCount" 1 "chart" .Chart "release" .Release "extraLabels" .Values.extraLabels) }}
-{{- include "common.deployment.containers" (dict "name" .Values.global.crczpElasticsearchServiceName "ports" .Values.ports "Values" .Values) }}
+{{- $name := .Values.global.crczpElasticsearchServiceName -}}
+{{- $claimName := .Values.volumeClaimTemplate.name -}}
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: {{ $name }}
+  labels: {{- include "common.labels" (dict "name" $name "chart" .Chart "release" .Release "extraLabels" .Values.extraLabels) | nindent 4 }}
+spec:
+  serviceName: {{ printf "%s-%s" $name .Values.statefulSet.headlessServiceNameSuffix }}
+  replicas: {{ .Values.replicasCount }}
+  podManagementPolicy: {{ .Values.statefulSet.podManagementPolicy }}
+  selector:
+    matchLabels: {{- include "common.matchLabels" (dict "name" $name "release" .Release) | nindent 6 }}
+  template:
+    metadata:
+      labels: {{- include "common.labels" (dict "name" $name "chart" .Chart "release" .Release "extraLabels" .Values.extraLabels) | nindent 8 }}
+    spec:
       initContainers:
         - name: change-ownership-container
           image: quay.io/curl/curl:latest
@@ -8,6 +23,47 @@
             runAsUser: 0
             privileged: true
           volumeMounts:
-            - name: data-elasticsearch
+            - name: {{ $claimName }}
               mountPath: /usr/share/elasticsearch/data
-{{- include "common.deployment.volumes" (dict "Values" .Values) }}
+      containers:
+        - name: {{ $name }}
+          image: "{{ .Values.image.url }}:{{ .Values.image.tag }}"
+          {{- if .Values.image.pullPolicy }}
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          {{- end }}
+          {{- if .Values.environments }}
+          env:
+            {{- range $key, $value := .Values.environments }}
+            - name: {{ $key }}
+              value: {{ $value | quote }}
+            {{- end }}
+          {{- end }}
+          ports:
+            {{- range .Values.ports }}
+            - containerPort: {{ .port }}
+              name: {{ printf "tcp-%v" .port | quote }}
+              protocol: {{ .protocol }}
+            {{- end }}
+          readinessProbe:
+            tcpSocket:
+              port: 9200
+            initialDelaySeconds: 180
+            periodSeconds: 10
+          resources:
+            {{- toYaml .Values.resources | nindent 12 }}
+          volumeMounts:
+            - name: {{ $claimName }}
+              mountPath: /usr/share/elasticsearch/data
+  volumeClaimTemplates:
+    - metadata:
+        name: {{ $claimName }}
+        labels: {{- include "common.labels" (dict "name" $name "chart" .Chart "release" .Release "extraLabels" .Values.extraLabels) | nindent 10 }}
+      spec:
+        accessModes:
+          - {{ .Values.pvc.accessMode | default "ReadWriteOnce" }}
+        {{- if .Values.pvc.storageClassName }}
+        storageClassName: {{ .Values.pvc.storageClassName }}
+        {{- end }}
+        resources:
+          requests:
+            storage: {{ .Values.pvc.size }}
