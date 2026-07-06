@@ -22,6 +22,12 @@ databasePool:
 publicTraining:
   timeoutMs: 1500
 
+rateLimit:
+  publicProfileLimit: 60
+  publicProfileTtlSeconds: 60
+  redisFailOpen: true
+  trustProxyHops: 1
+
 keycloak:
   adminBaseUrl: http://keycloak-service:8080/keycloak
   realm:

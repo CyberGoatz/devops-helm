@@ -227,6 +227,11 @@ cybergoatz:
     profileBaseUrl: https://app.hackthebox.com/public/users
     tokenEncryptionKey: change-me-generate-32-byte-secret
     timeoutMs: 5000
+  rateLimit:
+    publicProfileLimit: 60
+    publicProfileTtlSeconds: 60
+    redisFailOpen: true
+    trustProxyHops: 1
 
 cluster:
   instances: 1

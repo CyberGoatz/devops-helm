@@ -75,6 +75,16 @@ spec:
               value: "http://{{ .Values.global.services.training.name }}:{{ .Values.global.services.training.port }}{{ .Values.global.services.training.contextPath }}"
             - name: TRAINING_PUBLIC_API_TIMEOUT_MS
               value: {{ .Values.publicTraining.timeoutMs | quote }}
+            - name: RATE_LIMIT_REDIS_URL
+              value: "redis://{{ .Values.global.redis.serviceName }}:{{ .Values.global.redis.port }}/{{ .Values.global.redis.db }}"
+            - name: RATE_LIMIT_REDIS_FAIL_OPEN
+              value: {{ .Values.rateLimit.redisFailOpen | quote }}
+            - name: RATE_LIMIT_PUBLIC_PROFILE_LIMIT
+              value: {{ .Values.rateLimit.publicProfileLimit | quote }}
+            - name: RATE_LIMIT_PUBLIC_PROFILE_TTL_SECONDS
+              value: {{ .Values.rateLimit.publicProfileTtlSeconds | quote }}
+            - name: APP_TRUST_PROXY_HOPS
+              value: {{ .Values.rateLimit.trustProxyHops | quote }}
             - name: HTB_API_URL
               value: {{ .Values.htb.apiUrl | quote }}
             - name: HTB_PROFILE_BASE_URL
@@ -84,7 +94,11 @@ spec:
             - name: HTB_TOKEN_ENCRYPTION_KEY
               value: {{ .Values.htb.tokenEncryptionKey | quote }}
             - name: CORS_ORIGIN
-              value: "https://{{ .Values.global.headHost }}{{- range $origin := .Values.global.corsWhitelist }},{{ $origin }}{{- end }}"
+              {{- if .Values.global.corsWhitelist }}
+              value: "{{- range $index, $origin := .Values.global.corsWhitelist -}}{{ if $index }},{{ end }}{{ $origin }}{{- end }}"
+              {{- else }}
+              value: "https://{{ .Values.global.headHost }}"
+              {{- end }}
           readinessProbe:
             httpGet:
               path: "/{{ $globalPrefix }}/health"
