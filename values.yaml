@@ -2,6 +2,10 @@ global:
   acmeContact:
   guacamoleUserPassword:
   headHost:
+  adminHost:
+  apiHost:
+  authHost:
+  certificateDnsNames: []
   keycloakRealm: cybergoatz
   oidcProviders:
     - url:

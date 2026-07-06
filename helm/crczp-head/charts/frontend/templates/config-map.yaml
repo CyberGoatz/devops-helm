@@ -1,3 +1,6 @@
+{{- $headHost := .Values.global.headHost -}}
+{{- $adminHost := .Values.global.adminHost | default $headHost -}}
+{{- $apiHost := .Values.global.apiHost | default $headHost -}}
 apiVersion: v1
 kind: ConfigMap
 metadata:
@@ -14,13 +17,13 @@ data:
         "retryCount": 3
       },
       "basePaths": {
-        "linearTraining": "https://{{ .Values.global.headHost }}{{ .Values.global.services.training.contextPath }}",
-        "adaptiveTraining": "https://{{ .Values.global.headHost }}{{ .Values.global.services.adaptiveTraining.contextPath }}",
-        "sandbox": "https://{{ .Values.global.headHost }}{{ .Values.global.services.sandbox.contextPath }}",
-        "userAndGroup": "https://{{ .Values.global.headHost }}{{ .Values.global.services.userAndGroup.contextPath }}",
-        "cybergoatz": "https://{{ .Values.global.headHost }}{{ .Values.global.services.cybergoatz.contextPath }}",
-        "mitre": "https://{{ .Values.global.headHost }}{{ .Values.global.services.mitre.contextPath }}",
-        "guacamole": "https://{{ .Values.global.headHost }}{{ .Values.global.services.guacamole.contextPath }}"
+        "linearTraining": "https://{{ $apiHost }}{{ .Values.global.services.training.contextPath }}",
+        "adaptiveTraining": "https://{{ $apiHost }}{{ .Values.global.services.adaptiveTraining.contextPath }}",
+        "sandbox": "https://{{ $apiHost }}{{ .Values.global.services.sandbox.contextPath }}",
+        "userAndGroup": "https://{{ $apiHost }}{{ .Values.global.services.userAndGroup.contextPath }}",
+        "cybergoatz": "https://{{ $apiHost }}{{ .Values.global.services.cybergoatz.contextPath }}",
+        "mitre": "https://{{ $apiHost }}{{ .Values.global.services.mitre.contextPath }}",
+        "guacamole": "https://{{ $apiHost }}{{ .Values.global.services.guacamole.contextPath }}"
       },
       "roleMapping": {
         "uagAdmin": "ROLE_USER_AND_GROUP_ADMINISTRATOR",
@@ -38,10 +41,10 @@ data:
         "guardMainPageRedirect": "home",
         "guardLoginPageRedirect": "login",
         "interceptorAllowedUrls": [
-          "https://{{ .Values.global.headHost }}"
+          "https://{{ $apiHost }}"
         ],
         "authorizationStrategyConfig": {
-          "authorizationUrl": "https://{{ .Values.global.headHost }}{{ .Values.global.services.userAndGroup.contextPath }}users/info"
+          "authorizationUrl": "https://{{ $apiHost }}{{ .Values.global.services.userAndGroup.contextPath }}users/info"
         },
         "navigateToRequestedRoutePostLogin": true,
         "providers": [
@@ -54,11 +57,11 @@ data:
               "requireHttps": true,
               "issuer": "{{ $element.url }}",
               "clientId": "{{ $element.clientId }}",
-              "redirectUri": "https://{{ $.Values.global.headHost }}",
+              "redirectUri": "https://{{ $adminHost }}/",
               "scope": "openid email profile{{ if $element.refreshToken }} offline_access{{ end }}",
               "logoutUrl": "{{ $element.logoutUrl }}",
-              "postLogoutRedirectUri": "https://{{ $.Values.global.headHost }}/",
-              "silentRefreshRedirectUri": "https://{{ $.Values.global.headHost }}/silent-refresh.html",
+              "postLogoutRedirectUri": "https://{{ $adminHost }}/",
+              "silentRefreshRedirectUri": "https://{{ $adminHost }}/silent-refresh.html",
               "clearHashAfterLogin": true,
               "strictDiscoveryDocumentValidation": false,
               "skipIssuerCheck": true,
