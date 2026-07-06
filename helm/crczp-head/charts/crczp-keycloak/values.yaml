@@ -19,12 +19,21 @@ cyberGoatzFrontendUrl: http://localhost:3000
 
 keycloakAdmin: admin
 keycloakPassword:
+
+# Bootstrap user passwords are rendered into KeycloakUser resources on initial Helm install.
+# Keep this false so user-managed password changes are not overwritten on upgrades/reconciles.
+bootstrapUsers:
+  reconcilePasswords: false
+
 realmSync:
   enabled: true
   image: quay.io/keycloak/keycloak:25.0.1
   imagePullPolicy: IfNotPresent
 
 development: false
+
+publicIngress:
+  exposeAdmin: true
 
 # Admin Angular frontend origins allowed by the admin OIDC client.
 # Keep this separate from cyberGoatzFrontendUrls to avoid mixing admin and user-facing redirects.

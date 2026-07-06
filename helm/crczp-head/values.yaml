@@ -1,5 +1,8 @@
 global:
   headHost: 172.19.0.22
+  adminHost:
+  apiHost:
+  authHost:
   keycloakRealm: cybergoatz
   tlsSecretName: crczp-certs
   crczpSyslogServiceName: crczp-syslog-ng

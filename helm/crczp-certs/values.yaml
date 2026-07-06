@@ -3,6 +3,10 @@ global:
   tlsPrivateKey:
   tlsPublicKey:
   headHost: 172.19.0.22
+  adminHost:
+  apiHost:
+  authHost:
+  certificateDnsNames: []
   acmeServer: https://acme-v02.api.letsencrypt.org/directory
   acmeContact: yourname@email.com
 

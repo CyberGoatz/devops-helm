@@ -1,5 +1,12 @@
 global:
   headHost: 172.19.0.22
+  adminHost: 172.19.0.22
+  apiHost: 172.19.0.22
+  authHost: 172.19.0.22
+  corsWhitelist:
+    - http://localhost:3000
+    - https://172.19.0.22
+    - https://localhost:4200
   keycloakRealm: cybergoatz
   tlsSecretName: crczp-certs
   userCount: 10
@@ -27,6 +34,8 @@ global:
       logoutUrl: https://172.19.0.22/keycloak/realms/cybergoatz/protocol/openid-connect/logout
       clientId: cybergoatz-client
       label: Login with local Keycloak
+      issuerIdentifier: https://172.19.0.22/keycloak/realms/cybergoatz
+      userInfoUrl: https://172.19.0.22/keycloak/realms/cybergoatz/protocol/openid-connect/userinfo
       responseType: code
       refreshToken: true
   serviceAccounts:
@@ -87,6 +96,9 @@ crczp-keycloak:
   cyberGoatzFrontendUrls:
     - http://localhost:3000
     # - https://your-frontend.app
+  adminFrontendUrls:
+    - https://172.19.0.22/
+    - https://localhost:4200/
   # Deprecated: use cyberGoatzFrontendUrls for multiple deployed/local frontend origins.
   cyberGoatzFrontendUrl: http://localhost:3000
 
@@ -215,6 +227,11 @@ cybergoatz:
     profileBaseUrl: https://app.hackthebox.com/public/users
     tokenEncryptionKey: change-me-generate-32-byte-secret
     timeoutMs: 5000
+  rateLimit:
+    publicProfileLimit: 60
+    publicProfileTtlSeconds: 60
+    redisFailOpen: true
+    trustProxyHops: 1
 
 cluster:
   instances: 1

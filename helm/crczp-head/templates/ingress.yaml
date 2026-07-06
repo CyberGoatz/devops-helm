@@ -1,3 +1,6 @@
+{{- $headHost := .Values.global.headHost -}}
+{{- $adminHost := .Values.global.adminHost | default $headHost -}}
+{{- $apiHost := .Values.global.apiHost | default $headHost -}}
 apiVersion: traefik.io/v1alpha1
 kind: IngressRoute
 metadata:
@@ -10,11 +13,15 @@ spec:
   routes:
     {{- range $key, $value := .Values.global.services }}
     {{- if $value.ingressAutoexpose  }}
+    {{- $routeHost := $apiHost -}}
+    {{- if eq $key "angularFrontend" -}}
+    {{- $routeHost = $adminHost -}}
+    {{- end }}
     - kind: Rule
-      {{- if mustRegexMatch "^((25[0-5]|(2[0-4]|1\\d|[1-9]|)\\d)\\.){3}(25[0-5]|(2[0-4]|1\\d|[1-9]|)\\d)$" $.Values.global.headHost }}
+      {{- if mustRegexMatch "^((25[0-5]|(2[0-4]|1\\d|[1-9]|)\\d)\\.){3}(25[0-5]|(2[0-4]|1\\d|[1-9]|)\\d)$" $routeHost }}
       match: PathPrefix(`{{ $value.contextPath }}`)
       {{- else }}
-      match: Host(`{{ $.Values.global.headHost }}`) && PathPrefix(`{{ $value.contextPath }}`)
+      match: Host(`{{ $routeHost }}`) && PathPrefix(`{{ $value.contextPath }}`)
       {{- end }}
       services:
         - kind: Service
@@ -23,20 +30,20 @@ spec:
     {{- end }}
     {{- end }}
     - kind: Rule
-      {{- if mustRegexMatch "^((25[0-5]|(2[0-4]|1\\d|[1-9]|)\\d)\\.){3}(25[0-5]|(2[0-4]|1\\d|[1-9]|)\\d)$" $.Values.global.headHost }}
+      {{- if mustRegexMatch "^((25[0-5]|(2[0-4]|1\\d|[1-9]|)\\d)\\.){3}(25[0-5]|(2[0-4]|1\\d|[1-9]|)\\d)$" $apiHost }}
       match: PathPrefix(`{{ .Values.global.services.userAndGroup.contextPath }}microservices`) && (Method(`GET`) || Method(`PUT`) || Method(`DELETE`) || Method(`PATCH`) || Method(`HEAD`))
       {{- else }}
-      match: Host(`{{ $.Values.global.headHost }}`) && PathPrefix(`{{ .Values.global.services.userAndGroup.contextPath }}microservices`) && (Method(`GET`) || Method(`PUT`) || Method(`DELETE`) || Method(`PATCH`) || Method(`HEAD`))
+      match: Host(`{{ $apiHost }}`) && PathPrefix(`{{ .Values.global.services.userAndGroup.contextPath }}microservices`) && (Method(`GET`) || Method(`PUT`) || Method(`DELETE`) || Method(`PATCH`) || Method(`HEAD`))
       {{- end }}
       services:
         - kind: Service
           name: uag-service
           port: 8084
     - kind: Rule
-      {{- if mustRegexMatch "^((25[0-5]|(2[0-4]|1\\d|[1-9]|)\\d)\\.){3}(25[0-5]|(2[0-4]|1\\d|[1-9]|)\\d)$" $.Values.global.headHost }}
+      {{- if mustRegexMatch "^((25[0-5]|(2[0-4]|1\\d|[1-9]|)\\d)\\.){3}(25[0-5]|(2[0-4]|1\\d|[1-9]|)\\d)$" $apiHost }}
       match: PathPrefix(`{{ .Values.global.services.userAndGroup.contextPath }}`) && ! PathPrefix(`{{ .Values.global.services.userAndGroup.contextPath }}microservices`)
       {{- else }}
-      match: Host(`{{ $.Values.global.headHost }}`) && PathPrefix(`{{ .Values.global.services.userAndGroup.contextPath }}`) && ! PathPrefix(`{{ .Values.global.services.userAndGroup.contextPath }}microservices`)
+      match: Host(`{{ $apiHost }}`) && PathPrefix(`{{ .Values.global.services.userAndGroup.contextPath }}`) && ! PathPrefix(`{{ .Values.global.services.userAndGroup.contextPath }}microservices`)
       {{- end }}
       services:
         - kind: Service
@@ -45,4 +52,8 @@ spec:
   tls:
     secretName: {{ .Values.global.tlsSecretName }}
     domains:
-    - main: {{ .Values.global.headHost }}
+    - main: {{ $adminHost }}
+      {{- if ne $apiHost $adminHost }}
+      sans:
+      - {{ $apiHost }}
+      {{- end }}

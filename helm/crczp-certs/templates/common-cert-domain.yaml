@@ -25,5 +25,20 @@ spec:
   issuerRef:
     name: letsencrypt-prod
   dnsNames:
+  {{- if or .Values.global.adminHost .Values.global.apiHost .Values.global.authHost }}
+  {{- with .Values.global.adminHost }}
+  - {{ . }}
+  {{- end }}
+  {{- with .Values.global.apiHost }}
+  - {{ . }}
+  {{- end }}
+  {{- with .Values.global.authHost }}
+  - {{ . }}
+  {{- end }}
+  {{- else }}
   - {{ .Values.global.headHost }}
+  {{- end }}
+  {{- range .Values.global.certificateDnsNames }}
+  - {{ . }}
+  {{- end }}
 {{- end }}

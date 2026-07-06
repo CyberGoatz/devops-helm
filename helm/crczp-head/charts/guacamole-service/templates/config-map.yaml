@@ -14,7 +14,7 @@ data:
 
     ## Allows you to specify allowed origins for CORS mapping. You could set it as, e.g., http://domain1.com, http://domain2.com, etc. The default value is: *
     {{- if .Values.global.corsWhitelist }}
-    cors.allowed.origins=https://{{ .Values.global.headHost }},{{- range $index, $origin := .Values.global.corsWhitelist -}}{{ if $index }},{{ end }}{{ trimSuffix "/" $origin }}{{- end }}
+    cors.allowed.origins={{- range $index, $origin := .Values.global.corsWhitelist -}}{{ if $index }},{{ end }}{{ trimSuffix "/" $origin }}{{- end }}
     {{- else }}
     cors.allowed.origins=https://{{ .Values.global.headHost }}
     {{- end }}

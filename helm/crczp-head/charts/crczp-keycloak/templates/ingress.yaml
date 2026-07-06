@@ -1,3 +1,7 @@
+{{- $headHost := .Values.global.headHost -}}
+{{- $authHost := .Values.global.authHost | default $headHost -}}
+{{- $realm := .Values.realm | default .Values.global.keycloakRealm -}}
+{{- $publicPaths := list (printf "/keycloak/realms/%s" $realm) "/keycloak/resources" "/keycloak/js" "/keycloak/robots.txt" -}}
 apiVersion: traefik.io/v1alpha1
 kind: IngressRoute
 metadata:
@@ -8,17 +12,32 @@ spec:
     - web
     - websecure
   routes:
+    {{- if .Values.publicIngress.exposeAdmin }}
     - kind: Rule
-      {{- if mustRegexMatch "^((25[0-5]|(2[0-4]|1\\d|[1-9]|)\\d)\\.){3}(25[0-5]|(2[0-4]|1\\d|[1-9]|)\\d)$" $.Values.global.headHost }}
+      {{- if mustRegexMatch "^((25[0-5]|(2[0-4]|1\\d|[1-9]|)\\d)\\.){3}(25[0-5]|(2[0-4]|1\\d|[1-9]|)\\d)$" $authHost }}
       match: PathPrefix(`/keycloak`)
       {{- else }}
-      match: Host(`{{ $.Values.global.headHost }}`) && PathPrefix(`/keycloak`)
+      match: Host(`{{ $authHost }}`) && PathPrefix(`/keycloak`)
       {{- end }}
       services:
         - kind: Service
           name: keycloak-service
           port: 8080
+    {{- else }}
+    {{- range $path := $publicPaths }}
+    - kind: Rule
+      {{- if mustRegexMatch "^((25[0-5]|(2[0-4]|1\\d|[1-9]|)\\d)\\.){3}(25[0-5]|(2[0-4]|1\\d|[1-9]|)\\d)$" $authHost }}
+      match: PathPrefix(`{{ $path }}`)
+      {{- else }}
+      match: Host(`{{ $authHost }}`) && PathPrefix(`{{ $path }}`)
+      {{- end }}
+      services:
+        - kind: Service
+          name: keycloak-service
+          port: 8080
+    {{- end }}
+    {{- end }}
   tls:
-    secretName: {{ $.Values.global.tlsSecretName }}
+    secretName: {{ .Values.global.tlsSecretName }}
     domains:
-    - main: {{ $.Values.global.headHost }}
+    - main: {{ $authHost }}
