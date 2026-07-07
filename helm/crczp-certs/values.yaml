@@ -1,5 +1,5 @@
 global:
-  tlsSecretName: crczp-certs
+  tlsSecretName: cybergoatz-certs
   tlsPrivateKey:
   tlsPublicKey:
   headHost: 172.19.0.22

@@ -31,4 +31,4 @@ mounts:
     subPath: false
     type:
       secret:
-        secretName: crczp-certs
+        secretName: cybergoatz-certs

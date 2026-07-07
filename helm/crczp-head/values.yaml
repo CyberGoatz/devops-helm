@@ -4,7 +4,7 @@ global:
   apiHost:
   authHost:
   keycloakRealm: cybergoatz
-  tlsSecretName: crczp-certs
+  tlsSecretName: cybergoatz-certs
   crczpSyslogServiceName: crczp-syslog-ng
   crczpLogstashServiceName: crczp-logstash
   crczpElasticsearchServiceName: crczp-elasticsearch

@@ -49,7 +49,7 @@ mounts:
     subPath: true
     type:
       secret:
-        secretName: crczp-certs
+        secretName: cybergoatz-certs
   proxy-key:
     extension: ""
     mountPath: /root/.ssh/
