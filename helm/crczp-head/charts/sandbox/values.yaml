@@ -7,8 +7,8 @@ autoscaling:
   targetCPUUtilizationPercentage: 70
 
 image:
-  url: cybergoatz.azurecr.io/sandbox-service
-  tag: v0.1.19
+  url: acrcybergoatzprod.azurecr.io/sandbox-service
+  tag: v0.1.20
 
 resources:
   requests:
@@ -141,8 +141,8 @@ runnerCleanup:
 
 ansibleRunner:
   image:
-    url: cybergoatz.azurecr.io/cybergoatz-ansible-runner
-    tag: v1.1.1
+    url: acrcybergoatzprod.azurecr.io/cybergoatz-ansible-runner
+    tag: v1.1.3
 
 gitConfig:
   providers: {}

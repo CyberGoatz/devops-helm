@@ -7,8 +7,8 @@ autoscaling:
   targetCPUUtilizationPercentage: 70
 
 image:
-  url: cybergoatz.azurecr.io/admin-frontend
-  tag: v1.0.4
+  url: acrcybergoatzprod.azurecr.io/admin-frontend
+  tag: v1.0.6
 
 resources:
   requests:

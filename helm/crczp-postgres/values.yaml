@@ -1,8 +1,9 @@
 cluster:
   name: postgres
   instances: 2
-  imageName: cybergoatz.azurecr.io/postgresql-testing:18.4-system-trixie
-  storageSize: 10Gi
+  imageName: acrcybergoatzprod.azurecr.io/postgresql:18.4-system-trixie
+  storageSize: 32Gi
+  storageClass: managed-csi
   enablePDB: true
   minSyncReplicas: 0
   maxSyncReplicas: 0

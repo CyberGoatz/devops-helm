@@ -1,8 +1,8 @@
 replicasCount: 1
 
 image:
-  url: cybergoatz.azurecr.io/elasticsearch-service-service
-  tag: v1.2.1
+  url: acrcybergoatzprod.azurecr.io/elasticsearch-service-service
+  tag: v1.2.2
 
 resources:
   requests:

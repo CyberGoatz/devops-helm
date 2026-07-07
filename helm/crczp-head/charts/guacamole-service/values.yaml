@@ -9,8 +9,8 @@ autoscaling:
 ticketEncryptionKey: change-me-generate-32-byte-secret
 
 image:
-  url: cybergoatz.azurecr.io/guacamole-service
-  tag: v1.0.4
+  url: acrcybergoatzprod.azurecr.io/guacamole-service
+  tag: v1.0.5
   pullPolicy: Always
 
 resources:

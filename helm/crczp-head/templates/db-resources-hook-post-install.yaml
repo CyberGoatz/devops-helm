@@ -10,7 +10,7 @@ metadata:
 spec:
   containers:
     - name: head-post-install-job
-      image: cybergoatz.azurecr.io/postgresql-testing:17-standard-bookworm
+      image: acrcybergoatzprod.azurecr.io/postgresql:17-standard-bookworm
       imagePullPolicy: IfNotPresent
       command:
         - "/bin/bash"

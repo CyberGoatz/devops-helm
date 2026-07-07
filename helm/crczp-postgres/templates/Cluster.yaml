@@ -19,6 +19,7 @@ spec:
   maxSyncReplicas: {{ .Values.cluster.maxSyncReplicas }}
   storage:
     size: {{ .Values.cluster.storageSize }}
+    storageClass: {{ .Values.cluster.storageClass }}
   superuserSecret:
     name: {{ .Values.cluster.superuserSecret }}
   enableSuperuserAccess: true

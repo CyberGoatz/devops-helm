@@ -7,8 +7,8 @@ autoscaling:
   targetCPUUtilizationPercentage: 70
 
 image:
-  url: cybergoatz.azurecr.io/cybergoatz-service
-  tag: v1.0.0
+  url: acrcybergoatzprod.azurecr.io/cybergoatz-service
+  tag: v1.0.1
   pullPolicy: IfNotPresent
 
 database:

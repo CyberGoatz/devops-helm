@@ -7,8 +7,8 @@ autoscaling:
   targetCPUUtilizationPercentage: 70
 
 image:
-  url: cybergoatz.azurecr.io/training-feedback-service
-  tag: v1.2.1
+  url: acrcybergoatzprod.azurecr.io/training-feedback-service
+  tag: v1.2.2
 
 resources:
   requests:
