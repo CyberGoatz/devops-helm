@@ -227,9 +227,15 @@ spec:
           echo "Realm settings synced."
       env:
         - name: KEYCLOAK_ADMIN_USER
-          value: {{ .Values.keycloakAdmin | quote }}
+          valueFrom:
+            secretKeyRef:
+              name: {{ .Values.name }}-initial-admin
+              key: username
         - name: KEYCLOAK_ADMIN_PASSWORD
-          value: {{ .Values.keycloakPassword | quote }}
+          valueFrom:
+            secretKeyRef:
+              name: {{ .Values.name }}-initial-admin
+              key: password
         - name: VERIFY_EMAIL
           value: {{ ternary "true" "false" .Values.realmConfig.verifyEmail | quote }}
         - name: PASSWORD_POLICY

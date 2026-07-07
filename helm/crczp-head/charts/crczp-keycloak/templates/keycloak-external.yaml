@@ -8,11 +8,13 @@ spec:
   url: http://keycloak-service:8080
   contextRoot: /keycloak/
 ---
+{{- $adminSecretName := printf "%s-initial-admin" .Values.name -}}
+{{- $existingAdminSecret := lookup "v1" "Secret" .Release.Namespace $adminSecretName -}}
 apiVersion: v1
 kind: Secret
 metadata:
   name: credential-external-keycloak
 type: Opaque
-stringData:
-  ADMIN_USERNAME: {{ .Values.keycloakAdmin | quote }}
-  ADMIN_PASSWORD: {{ .Values.keycloakPassword | quote }}
+data:
+  ADMIN_USERNAME: {{- if and $existingAdminSecret (hasKey $existingAdminSecret.data "username") }} {{ index $existingAdminSecret.data "username" | quote }}{{- else }} {{ .Values.keycloakAdmin | b64enc | quote }}{{- end }}
+  ADMIN_PASSWORD: {{- if and $existingAdminSecret (hasKey $existingAdminSecret.data "password") }} {{ index $existingAdminSecret.data "password" | quote }}{{- else }} {{ .Values.keycloakPassword | b64enc | quote }}{{- end }}
