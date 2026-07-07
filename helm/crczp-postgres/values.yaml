@@ -11,7 +11,7 @@ cluster:
   superuserPassword: password
   affinity:
     nodeSelector:
-      kubernetes.azure.com/agentpool: userpool
+      kubernetes.azure.com/agentpool: user
     enablePodAntiAffinity: true
     topologyKey: kubernetes.io/hostname
     podAntiAffinityType: required
@@ -53,7 +53,7 @@ pooler:
   type: rw
   poolMode: transaction
   nodeSelector:
-    kubernetes.azure.com/agentpool: userpool
+    kubernetes.azure.com/agentpool: user
   podLabels:
     app.kubernetes.io/component: pgbouncer
     app.kubernetes.io/name: postgres-pgbouncer-rw
