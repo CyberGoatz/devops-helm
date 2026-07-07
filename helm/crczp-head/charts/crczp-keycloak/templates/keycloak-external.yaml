@@ -14,5 +14,5 @@ metadata:
   name: credential-external-keycloak
 type: Opaque
 stringData:
-  ADMIN_USERNAME: {{ .Values.keycloakAdmin }}
-  ADMIN_PASSWORD: {{ .Values.keycloakPassword }}
+  ADMIN_USERNAME: {{ .Values.keycloakAdmin | quote }}
+  ADMIN_PASSWORD: {{ .Values.keycloakPassword | quote }}
