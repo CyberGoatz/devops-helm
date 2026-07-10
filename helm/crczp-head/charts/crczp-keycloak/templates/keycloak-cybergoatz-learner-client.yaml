@@ -6,10 +6,12 @@
 {{- else -}}
 {{- $cyberGoatzFrontendUrls = append $cyberGoatzFrontendUrls (trimSuffix "/" (.Values.cyberGoatzFrontendUrl | default "http://localhost:3000")) -}}
 {{- end -}}
+{{- $learnerClientId := .Values.learnerClient.clientId | default "cybergoatz-learner" -}}
+{{- $learnerClientSecret := required "crczp-keycloak.learnerClient.clientSecret is required" .Values.learnerClient.clientSecret -}}
 apiVersion: legacy.k8s.keycloak.org/v1alpha1
 kind: KeycloakClient
 metadata:
-  name: cyber-goatz-client
+  name: cybergoatz-learner
   labels:
     app: external-sso
 spec:
@@ -20,7 +22,7 @@ spec:
     attributes:
       pkce.code.challenge.method: S256
       post.logout.redirect.uris: +
-    clientId: cyber-goatz
+    clientId: {{ $learnerClientId | quote }}
     clientAuthenticatorType: client-secret
     defaultClientScopes:
       - email
@@ -41,7 +43,7 @@ spec:
       - "{{ $frontendUrl }}/api/auth/callback/keycloak"
       - "{{ $frontendUrl }}/api/auth/callback/keycloak-register"
       {{- end }}
-    secret: "cyber-goatz-client"
+    secret: {{ $learnerClientSecret | quote }}
     standardFlowEnabled: true
     webOrigins:
       {{- range $frontendUrl := $cyberGoatzFrontendUrls }}

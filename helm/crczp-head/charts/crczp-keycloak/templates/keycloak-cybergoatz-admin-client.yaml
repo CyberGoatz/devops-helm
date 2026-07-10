@@ -6,10 +6,11 @@
 {{- else -}}
 {{- $adminFrontendUrls = append $adminFrontendUrls (printf "https://%s" ($.Values.global.adminHost | default $.Values.global.headHost)) -}}
 {{- end -}}
+{{- $adminClientId := .Values.adminClient.clientId | default "cybergoatz-admin" -}}
 apiVersion: legacy.k8s.keycloak.org/v1alpha1
 kind: KeycloakClient
 metadata:
-  name: crczp-client
+  name: cybergoatz-admin
   labels:
     app: external-sso
 spec:
@@ -20,7 +21,7 @@ spec:
     attributes:
       pkce.code.challenge.method: S256
       post.logout.redirect.uris: +
-    clientId: {{ range $.Values.global.oidcProviders }}{{- if contains "keycloak" .url }}{{ .clientId }}{{- end }}{{- end }}
+    clientId: {{ $adminClientId | quote }}
     clientAuthenticatorType: client-secret
     defaultClientScopes:
       - email

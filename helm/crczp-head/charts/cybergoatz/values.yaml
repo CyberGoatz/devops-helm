@@ -33,7 +33,7 @@ keycloak:
   realm:
   adminClientId: cybergoatz-invite-service
   adminClientSecret: cybergoatz-invite-service-secret
-  inviteClientId: cyber-goatz
+  inviteClientId: cybergoatz-invite
   inviteRedirectUri: http://localhost:3000/onboarding
   inviteLifespanSeconds: 86400
 

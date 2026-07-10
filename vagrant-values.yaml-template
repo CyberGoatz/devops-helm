@@ -32,7 +32,7 @@ global:
   oidcProviders:
     - url: https://172.19.0.22/keycloak/realms/cybergoatz
       logoutUrl: https://172.19.0.22/keycloak/realms/cybergoatz/protocol/openid-connect/logout
-      clientId: cybergoatz-client
+      clientId: cybergoatz-admin
       label: Login with local Keycloak
       issuerIdentifier: https://172.19.0.22/keycloak/realms/cybergoatz
       userInfoUrl: https://172.19.0.22/keycloak/realms/cybergoatz/protocol/openid-connect/userinfo
@@ -55,6 +55,11 @@ global:
 
 crczp-keycloak:
   realm: cybergoatz
+  adminClient:
+    clientId: cybergoatz-admin
+  learnerClient:
+    clientId: cybergoatz-learner
+    clientSecret: cybergoatz-learner-secret
   realmSync:
     enabled: true
   realmConfig:
@@ -219,7 +224,7 @@ cybergoatz:
     realm: cybergoatz
     adminClientId: cybergoatz-invite-service
     adminClientSecret: cybergoatz-invite-service-secret
-    inviteClientId: cyber-goatz
+    inviteClientId: cybergoatz-invite
     inviteRedirectUri: http://localhost:3000/onboarding
     inviteLifespanSeconds: 86400
   htb:

@@ -39,6 +39,13 @@ publicIngress:
 # Keep this separate from cyberGoatzFrontendUrls to avoid mixing admin and user-facing redirects.
 adminFrontendUrls: []
 
+adminClient:
+  clientId: cybergoatz-admin
+
+learnerClient:
+  clientId: cybergoatz-learner
+  clientSecret:
+
 trainingServiceClient:
   clientId: training-service
   clientSecret: training-service-secret

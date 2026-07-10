@@ -29,7 +29,7 @@ global:
   oidcProviders:
     - url:
       logoutUrl:
-      clientId:
+      clientId: cybergoatz-admin
       label:
       issuerIdentifier:
       userInfoUrl:

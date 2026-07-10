@@ -10,7 +10,7 @@ global:
   oidcProviders:
     - url:
       logoutUrl:
-      clientId:
+      clientId: cybergoatz-admin
       label:
       issuerIdentifier:
       userInfoUrl:
@@ -40,6 +40,13 @@ global:
       keycloakUsername:
       keycloakPassword:
   userCount: 0
+
+crczp-keycloak:
+  adminClient:
+    clientId: cybergoatz-admin
+  learnerClient:
+    clientId: cybergoatz-learner
+    clientSecret:
 
 crczp-guacamole:
   guacamole:
