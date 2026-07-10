@@ -4,7 +4,7 @@ kind: Secret
 metadata:
   name: {{ .Values.global.tlsSecretName }}
   labels: {{- include "common.labels" (dict "chart" .Chart "release" .Release "extraLabels" .Values.extraLabels) | nindent 4 }}
-type: Opaque
+type: kubernetes.io/tls
 data:
   tls.crt: {{ .Values.global.tlsPublicKey }}
   tls.key: {{ .Values.global.tlsPrivateKey }}
